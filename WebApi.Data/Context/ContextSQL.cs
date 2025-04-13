@@ -77,7 +77,7 @@ namespace WebApi.Data
             DataTable dt;
             try
             {
-                dt = Fill("List").Tables[0];
+                dt = Fill("List");
             }
             catch (Exception ex)
             {
@@ -90,29 +90,29 @@ namespace WebApi.Data
         {
             Dictionary<string, string> lDictionary = new Dictionary<string, string>();
             List<dynamic> lDynamic = new List<dynamic>();
-            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
             lDictionary.Add("Id", Id.ToString());
             try
             {
-                ds = Fill("Get", lDictionary);
+                dt = Fill("Get", lDictionary);
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
-            return EntityBase.ToList<TEntity>(ds.Tables[0]).SingleOrDefault();
+            return EntityBase.ToList<TEntity>(dt).SingleOrDefault();
         }
 
         public List<dynamic> Find(Dictionary<string, string> lParam)
         {
             List<dynamic> lDynamic = new List<dynamic>();
-            DataSet ds;
+            DataTable dt;
             try
             {
-                ds = Fill("Find", lParam);
-                if (ds.Tables.Count > 0)
+                dt = Fill("Find", lParam);
+                if (dt.Rows.Count > 0)
                 {
-                    lDynamic = EntityBase.ToDynamic(ds.Tables[0]);
+                    lDynamic = EntityBase.ToDynamic(dt);
                 }
             }
             catch (Exception ex)
@@ -165,9 +165,10 @@ namespace WebApi.Data
 
         #region Store Procedures Common Function
 
-        public DataSet Fill(string FunctionName, Dictionary<string, string> Parameters = null)
+        public DataTable Fill(string FunctionName, Dictionary<string, string> Parameters = null)
         {
             DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
             SqlCommand cmd = new SqlCommand();
             SqlDataAdapter da;
             StringBuilder sbKey = new StringBuilder();
@@ -199,13 +200,12 @@ namespace WebApi.Data
                     cn.InfoMessage += cn_InfoMessage;
                     cn.Open();
                     da.Fill(ds);
+                    dt = ds.Tables[0];
                     cn.Close();
                 }
 
                 if (MessageError.Length > 0)
                 {
-                    ds = new DataSet();
-                    ds.Tables.Add(new DataTable());
                     throw new ContextSQLException(MessageError);
                 }
             }
@@ -225,7 +225,7 @@ namespace WebApi.Data
             {
                 cmd.Dispose();
             }
-            return ds;
+            return dt;
         }
 
 
