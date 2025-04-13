@@ -1,0 +1,547 @@
+﻿
+
+  private static async Task Main()
+        {
+
+            HttpClient httpClient = new HttpClient();
+            const string url = @"https://localhost:44389";
+            const string userName = @"admin";
+            const string password = @"1234";
+
+
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(AuthenticationSchemes.Basic.ToString(), Convert.ToBase64String(Encoding.ASCII.GetBytes($"{userName}:{password}")));
+            var response = await httpClient.GetAsync($"{url}/api/values/basic");
+            response.EnsureSuccessStatusCode();
+            var result = await response.Content.ReadAsStringAsync();
+            Console.WriteLine(result);
+        }
+
+
+
+
+        private void Test() {
+            HtmlWeb web = new HtmlWeb();
+            List<CarrefourProduct> lProduct = new List<CarrefourProduct>();
+            List<CarrefourProduct> lProductTemp = new List<CarrefourProduct>();
+            List<CarrefourProduct> lProductNoDuplicado = new List<CarrefourProduct>();
+            HtmlDocument oDoc = new HtmlDocument();
+            StringBuilder sbLink = new StringBuilder();
+            const string LINK = "http://www.carrefour.es/supermercado";
+            const string PAGINA = "c"; //24
+            string sJson = string.Empty;
+            string sId = string.Empty;
+            HtmlNodeCollection hc;
+            List<string> lTipoProducto = new List<string>();
+            int iPagina;
+
+            //lTipoProducto.Add("/la-despensa/cat20001/");
+            //lTipoProducto.Add("/la-despensa/alimentacion/cat20009/");
+            //lTipoProducto.Add("/la-despensa/alimentacion/aceites-y-vinagres/cat20066/");
+            //lTipoProducto.Add("/la-despensa/alimentacion/salsas-y-tomate-frito/cat20076/");
+            //lTipoProducto.Add("/la-despensa/alimentacion/pastas/cat20073/");
+            //lTipoProducto.Add("/la-despensa/alimentacion/arroz-y-cous-cous/cat20068/");
+            //lTipoProducto.Add("/la-despensa/alimentacion/legumbres/cat20071/");
+            //lTipoProducto.Add("/la-despensa/alimentacion/especias-y-sazonadores/cat20069/");
+            //lTipoProducto.Add("/la-despensa/alimentacion/harinas-y-levaduras/cat20070/");
+            //lTipoProducto.Add("/la-despensa/alimentacion/sales-y-bicarbonatos/cat20075/");
+            //lTipoProducto.Add("/la-despensa/alimentacion/vitaminas-y-complementos/cat70008/");
+            //lTipoProducto.Add("/la-despensa/alimentacion/semillas/cat20118/");
+            //lTipoProducto.Add("/la-despensa/alimentacion/nutricion-deportiva/cat70006/");
+            //lTipoProducto.Add("/la-despensa/alimentacion/vino-de-cocinar/cat20077/");
+            //lTipoProducto.Add("/la-despensa/lacteos/leche/cat20093/");
+            //lTipoProducto.Add("/la-despensa/lacteos/bebida-vegetal/cat20090/");
+            //lTipoProducto.Add("/la-despensa/lacteos/batidos-y-horchatas/cat20089/");
+            //lTipoProducto.Add("/la-despensa/lacteos/mantequillas-y-margarinas/cat20095/");
+            //lTipoProducto.Add("/la-despensa/lacteos/nata/cat20096/");
+            //lTipoProducto.Add("/la-despensa/lacteos/leche-condensada-evaporada-y-en-polvo/cat20094/");
+            //lTipoProducto.Add("/la-despensa/lacteos/listo-para-beber/cat410003/");
+            //lTipoProducto.Add("/la-despensa/lacteos/bechamel/cat20091/");
+            //lTipoProducto.Add("/la-despensa/dulce-y-desayuno/cat20010/");
+            //lTipoProducto.Add("/la-despensa/dulce-y-desayuno/cafes/cat20100/");
+            //lTipoProducto.Add("/la-despensa/dulce-y-desayuno/galletas/cat20084/");
+            //lTipoProducto.Add("/la-despensa/dulce-y-desayuno/chocolates-turrones-y-bombones/cat20081/");
+            //lTipoProducto.Add("/la-despensa/dulce-y-desayuno/cereales-y-barritas/cat20080/");
+            //lTipoProducto.Add("/la-despensa/dulce-y-desayuno/cacaos-y-cereales-solubles/cat20079/");
+            //lTipoProducto.Add("/la-despensa/dulce-y-desayuno/azucar-y-edulcorantes/cat20078/");
+            //lTipoProducto.Add("/la-despensa/dulce-y-desayuno/infusiones-y-tes/cat20105/");
+            //lTipoProducto.Add("/la-despensa/dulce-y-desayuno/dulces-y-golosinas/cat20083/");
+            //lTipoProducto.Add("/la-despensa/dulce-y-desayuno/mermeladas-membrillos-y-compotas/cat20085/");
+            //lTipoProducto.Add("/la-despensa/dulce-y-desayuno/cremas-de-cacao-avellana-y-cacahuete/cat20082/");
+            //lTipoProducto.Add("/la-despensa/dulce-y-desayuno/reposteria-para-preparar/cat20087/");
+            //lTipoProducto.Add("/la-despensa/dulce-y-desayuno/miel/cat20086/");
+            //lTipoProducto.Add("/la-despensa/dulce-y-desayuno/siropes-aromas-y-decoracion/cat20088/");
+            //lTipoProducto.Add("/la-despensa/yogures-y-postres/yogur-natural-y-sabores/cat360008/");
+            //lTipoProducto.Add("/la-despensa/yogures-y-postres/bifidus/cat360002/");
+            //lTipoProducto.Add("/la-despensa/yogures-y-postres/colesterol-oseo-y-tension/cat360010/");
+            //lTipoProducto.Add("/la-despensa/yogures-y-postres/yogures-griegos-y-enriquecidos/cat360003/");
+            //lTipoProducto.Add("/la-despensa/yogures-y-postres/yogures-infantiles/cat360007/");
+            //lTipoProducto.Add("/la-despensa/yogures-y-postres/yogures-desnatados/cat360006/");
+            //lTipoProducto.Add("/la-despensa/yogures-y-postres/yogures-liquidos/cat360012/");
+            //lTipoProducto.Add("/la-despensa/yogures-y-postres/natillas-cremas-y-copas/cat360011/");
+            //lTipoProducto.Add("/la-despensa/yogures-y-postres/gelatina/cat650021/");
+            //lTipoProducto.Add("/la-despensa/yogures-y-postres/flanes/cat360013/");
+            //lTipoProducto.Add("/la-despensa/yogures-y-postres/otros-postres/cat360016/");
+            //lTipoProducto.Add("/la-despensa/yogures-y-postres/mousse/cat360015/");
+            //lTipoProducto.Add("/la-despensa/yogures-y-postres/vegetal/cat360014/");
+            //lTipoProducto.Add("/la-despensa/yogures-y-postres/proteina/cat360009/");
+            //lTipoProducto.Add("/la-despensa/conservas-sopas-y-precocinados/cat20013/");
+            //lTipoProducto.Add("/la-despensa/conservas-sopas-y-precocinados/gazpacho-y-salmorejo/cat500001/");
+            //lTipoProducto.Add("/la-despensa/conservas-sopas-y-precocinados/caldos-sopas-y-pure/cat20108/");
+            //lTipoProducto.Add("/la-despensa/conservas-sopas-y-precocinados/pizzas/cat20115/");
+            //lTipoProducto.Add("/la-despensa/conservas-sopas-y-precocinados/conservas-de-vegetales/cat20113/");
+            //lTipoProducto.Add("/la-despensa/conservas-sopas-y-precocinados/platos-preparados/cat20116/");
+            //lTipoProducto.Add("/la-despensa/conservas-sopas-y-precocinados/croquetas-y-rebozados/cat20114/");
+            //lTipoProducto.Add("/la-despensa/conservas-sopas-y-precocinados/conservas-de-tomate/cat20112/");
+            //lTipoProducto.Add("/la-despensa/conservas-sopas-y-precocinados/platos-tradicionales/cat20117/");
+            //lTipoProducto.Add("/la-despensa/conservas-sopas-y-precocinados/tortillas-empanadillas-y-sandwiches/cat20120/");
+            //lTipoProducto.Add("/la-despensa/conservas-sopas-y-precocinados/salteados-de-verdura-arroz-y-paella/cat20119/");
+            //lTipoProducto.Add("/la-despensa/conservas-sopas-y-precocinados/conservas-de-frutas/cat20110/");
+            //lTipoProducto.Add("/la-despensa/conservas-sopas-y-precocinados/conservas-de-carne/cat20109/");
+            //lTipoProducto.Add("/la-despensa/aperitivos/cat390001/");
+            //lTipoProducto.Add("/la-despensa/aperitivos/frutos-secos/cat390003/");
+            //lTipoProducto.Add("/la-despensa/aperitivos/aceitunas-y-encurtidos/cat20067/");
+            //lTipoProducto.Add("/la-despensa/aperitivos/patatas-fritas/cat20072/");
+            //lTipoProducto.Add("/la-despensa/aperitivos/snacks/cat20074/");
+            //lTipoProducto.Add("/la-despensa/aperitivos/tortitas/cat390007/");
+            //lTipoProducto.Add("/la-despensa/aperitivos/palomitas/cat390005/");
+            //lTipoProducto.Add("/la-despensa/aperitivos/galletas-saladas/cat390002/");
+            //lTipoProducto.Add("/la-despensa/aperitivos/frutas-desecadas/cat390004/");
+            //lTipoProducto.Add("/la-despensa/aperitivos/torreznos-y-cortezas/cat390006/");
+            //lTipoProducto.Add("/la-despensa/helados/tarrinas/cat460007/");
+            //lTipoProducto.Add("/la-despensa/helados/bombon/cat460003/");
+            //lTipoProducto.Add("/la-despensa/helados/polos/cat460006/");
+            //lTipoProducto.Add("/la-despensa/helados/conos/cat460004/");
+            //lTipoProducto.Add("/la-despensa/helados/sandwiches/cat460005/");
+            //lTipoProducto.Add("/la-despensa/helados/frutas-heladas/cat460009/");
+            //lTipoProducto.Add("/la-despensa/helados/hielo/cat460011/");
+            //lTipoProducto.Add("/la-despensa/helados/tartas-heladas/cat460010/");
+            //lTipoProducto.Add("/la-despensa/helados/barquillos/cat460012/");
+            //lTipoProducto.Add("/la-despensa/helados/bloques/cat460002/");
+            //lTipoProducto.Add("/la-despensa/huevos/huevos-frescos/cat20178/");
+            //lTipoProducto.Add("/la-despensa/huevos/claras-de-huevo/cat700001/");
+
+            //lTipoProducto.Add("/bebidas/refrescos/colas/cat650010/");
+            //lTipoProducto.Add("/bebidas/refrescos/cat650001/");
+            //lTipoProducto.Add("/bebidas/refrescos/sabores-con-gas/cat650011/");
+            //lTipoProducto.Add("/bebidas/refrescos/sabores-sin-gas/cat650012/");
+            //lTipoProducto.Add("/bebidas/refrescos/isotonicas/cat650013/");
+            //lTipoProducto.Add("/bebidas/refrescos/tonica/cat650014/");
+            //lTipoProducto.Add("/bebidas/refrescos/bitter-y-ginger-ale/cat650015/");
+            //lTipoProducto.Add("/bebidas/refrescos/te/cat650016/");
+            //lTipoProducto.Add("/bebidas/refrescos/energeticas/cat650017/");
+            //lTipoProducto.Add("/bebidas/refrescos/gaseosa/cat650018/");
+            //lTipoProducto.Add("/bebidas/cerveza/cat20023/");
+            //lTipoProducto.Add("/bebidas/cerveza/rubia/cat20189/");
+            //lTipoProducto.Add("/bebidas/cerveza/radler-clara/cat20188/");
+            //lTipoProducto.Add("/bebidas/cerveza/tostada-roja/cat20190/");
+            //lTipoProducto.Add("/bebidas/cerveza/sin-alcohol/cat610003/");
+            //lTipoProducto.Add("/bebidas/cerveza/artesanas/cat30001/");
+            //lTipoProducto.Add("/bebidas/cerveza/negra/cat20187/");
+            //lTipoProducto.Add("/cerveza/todas-las-cervezas/cat140001/");
+            //lTipoProducto.Add("/bebidas/aguas-y-zumos/agua-hasta-075-litros/cat650003/");
+            //lTipoProducto.Add("/bebidas/aguas-y-zumos/agua-de-075-a-2-litros/cat650004/");
+            //lTipoProducto.Add("/bebidas/aguas-y-zumos/agua-de-mas-de-2-litros/cat650005/");
+            //lTipoProducto.Add("/bebidas/aguas-y-zumos/agua-con-gas/cat650006/");
+            //lTipoProducto.Add("/bebidas/aguas-y-zumos/agua-con-sabor/cat650007/");
+            //lTipoProducto.Add("/bebidas/aguas-y-zumos/zumos-refrigerados/cat650008/");
+            //lTipoProducto.Add("/bebidas/aguas-y-zumos/zumos-no-refrigerados/cat650009/");
+            //lTipoProducto.Add("/bebidas/alcoholes/cat20022/");
+            //lTipoProducto.Add("/bebidas/alcoholes/ginebra/cat20181/");
+            //lTipoProducto.Add("/bebidas/alcoholes/whisky-y-bourbon/cat20186/");
+            //lTipoProducto.Add("/bebidas/alcoholes/ron/cat20182/");
+            //lTipoProducto.Add("/bebidas/alcoholes/vodka/cat20185/");
+            //lTipoProducto.Add("/bebidas/alcoholes/tequila/cat20183/");
+            //lTipoProducto.Add("/bebidas/alcoholes/vermouth/cat20184/");
+            //lTipoProducto.Add("/bebidas/alcoholes/brandy-y-conac/cat20179/");
+            //lTipoProducto.Add("/bebidas/alcoholes/cockteles-y-combinados/cat20180/");
+            //lTipoProducto.Add("/bebidas/vinos/tinto/cat20203/");
+            //lTipoProducto.Add("/bebidas/vinos/blanco/cat20199/");
+            //lTipoProducto.Add("/bebidas/vinos/rosado/cat20201/");
+            //lTipoProducto.Add("/bebidas/vinos/de-mesa/cat20198/");
+            //lTipoProducto.Add("/bebidas/vinos/vinos-internacionales/cat20204/");
+            //lTipoProducto.Add("/bebidas/vinos/sangria-y-tinto-de-verano/cat20202/");
+            //lTipoProducto.Add("/bebidas/vinos/generosos-y-dulces/cat20200/");
+            //lTipoProducto.Add("/bebidas/vinos/estuches-de-vino/cat570002/");
+            //lTipoProducto.Add("/bebidas/cava-y-champagne/cat20024/");
+            //lTipoProducto.Add("/bebidas/cava-y-champagne/cavas/cat370006/");
+            //lTipoProducto.Add("/bebidas/cava-y-champagne/estuches-de-cava/cat370008/");
+            //lTipoProducto.Add("/bebidas/licores-y-cremas/cat20025/");
+            //lTipoProducto.Add("/bebidas/licores-y-cremas/licores-y-orujo/cat20195/");
+            //lTipoProducto.Add("/bebidas/licores-y-cremas/cremas/cat20193/");
+            //lTipoProducto.Add("/bebidas/licores-y-cremas/anis-y-chinchon/cat20192/");
+            //lTipoProducto.Add("/bebidas/licores-y-cremas/licores-sin-alcohol/cat20194/");
+            //lTipoProducto.Add("/bebidas/licores-y-cremas/pacharan/cat20196/");
+            //lTipoProducto.Add("/bebidas/sidra/cat20026/");
+            //lTipoProducto.Add("/bebidas/sidra/cider/cat370011/");
+            //lTipoProducto.Add("/bebidas/sidra/achampanada/cat370009/");
+            //lTipoProducto.Add("/bebidas/sidra/natural/cat370010/");
+            //lTipoProducto.Add("/bebidas/sidra/sin-alcohol/cat370012/");
+
+            //lTipoProducto.Add("/limpieza-y-hogar/cat20005/");
+            //lTipoProducto.Add("/limpieza-y-hogar/cat20005/");
+            //lTipoProducto.Add("/limpieza-y-hogar/cuidado-de-la-ropa/detergentes/cat20303/");
+            //lTipoProducto.Add("/limpieza-y-hogar/cuidado-de-la-ropa/suavizantes/cat20307/c");
+            //lTipoProducto.Add("/limpieza-y-hogar/cuidado-de-la-ropa/aditivos-y-quitamanchas/cat20305/c");
+            //lTipoProducto.Add("/limpieza-y-hogar/cuidado-de-la-ropa/limpiadores-y-antical-para-lavadora/cat20304/c");
+            //lTipoProducto.Add("limpieza-y-hogar/cuidado-de-la-ropa/lejias-lavadora/cat290001/");
+            //lTipoProducto.Add("limpieza-y-hogar/cuidado-de-la-ropa/tendido-y-planchado/cat20263/");
+            //lTipoProducto.Add("limpieza-y-hogar/cuidado-de-la-ropa/agua-de-plancha-y-apresto/cat20302/");
+            //lTipoProducto.Add("limpieza-y-hogar/cuidado-de-la-ropa/toallitas-atrapacolores/cat20309/c");
+            //lTipoProducto.Add("/limpieza-y-hogar/cuidado-de-la-ropa/tinte-para-la-ropa/cat20308/");
+            //lTipoProducto.Add("limpieza-y-hogar/papel-y-celulosa/cat20046/c");
+            //lTipoProducto.Add("limpieza-y-hogar/papel-y-celulosa/papel-higienico/cat20320/c");
+            //lTipoProducto.Add("/limpieza-y-hogar/papel-y-celulosa/papel-cocina-y-multiusos/cat20319/c");
+            //lTipoProducto.Add("limpieza-y-hogar/papel-y-celulosa/servilletas/cat20321/c");
+            //lTipoProducto.Add("limpieza-y-hogar/papel-y-celulosa/panuelos/cat20318/c");
+            //lTipoProducto.Add("limpieza-y-hogar/papel-y-celulosa/toallitas-gafas/cat20322/c");
+            //lTipoProducto.Add("limpieza-y-hogar/productos-para-cocina/cat20043/c");
+            //lTipoProducto.Add("limpieza-y-hogar/productos-para-cocina/lavavajillas-a-maquina/cat20296/c");
+            //lTipoProducto.Add("limpieza-y-hogar/productos-para-cocina/lavavajillas-a-mano/cat20295/c");
+            //lTipoProducto.Add("limpieza-y-hogar/productos-para-cocina/lavavajillas-a-mano/cat20295/c");
+            //lTipoProducto.Add("limpieza-y-hogar/productos-para-cocina/quitagrasas/cat20299/c");
+            //lTipoProducto.Add("limpieza-y-hogar/productos-para-cocina/vitroceramicas-e-induccion/cat20301/c");
+            //lTipoProducto.Add("limpieza-y-hogar/productos-para-cocina/limpiadores-electrodomesticos-cocina/cat20298/c");
+            //lTipoProducto.Add("limpieza-y-hogar/productos-para-bano/cat20042/c");
+            //lTipoProducto.Add("limpieza-y-hogar/productos-para-bano/wc/cat20294/");
+            //lTipoProducto.Add("limpieza-y-hogar/productos-para-bano/limpiadores-bano/cat20293/c");
+            //lTipoProducto.Add("/limpieza-y-hogar/productos-para-bano/desatascadores-y-limpia-tuberias/cat310001/c");
+            //lTipoProducto.Add("limpieza-y-hogar/productos-para-bano/limpiadores-antical-bano/cat20292/c");
+            //lTipoProducto.Add("limpieza-y-hogar/productos-para-bano/limpiajuntas/cat310002/c");
+            //lTipoProducto.Add("limpieza-y-hogar/productos-para-toda-la-casa/cat20045/c");
+            //lTipoProducto.Add("limpieza-y-hogar/productos-para-toda-la-casa/suelos/cat20310/c");
+            //lTipoProducto.Add("limpieza-y-hogar/productos-para-toda-la-casa/lejias-y-amoniacos/cat20312/c");
+            //lTipoProducto.Add("limpieza-y-hogar/productos-para-toda-la-casa/limpiacristales-y-multiusos/cat20317/c");
+            //lTipoProducto.Add("limpieza-y-hogar/productos-para-toda-la-casa/insecticidas/cat20311/c");
+            //lTipoProducto.Add("limpieza-y-hogar/productos-para-toda-la-casa/limpia-muebles/cat20313/c");
+            //lTipoProducto.Add("limpieza-y-hogar/productos-para-toda-la-casa/limpiador-de-alfombras-y-tapicerias/cat20315/c");
+            //lTipoProducto.Add("/limpieza-y-hogar/productos-para-toda-la-casa/limpiametales/cat20316/c");
+            //lTipoProducto.Add("limpieza-y-hogar/utensilios-de-limpieza/cat20047/c");
+            //lTipoProducto.Add("limpieza-y-hogar/utensilios-de-limpieza/bolsas-de-basura/cat20324/c");
+            //lTipoProducto.Add("limpieza-y-hogar/utensilios-de-limpieza/bayetas-microfibra-atrapapolvo/cat20323/c");
+            //lTipoProducto.Add("limpieza-y-hogar/utensilios-de-limpieza/estropajos/cat20328/c");
+            //lTipoProducto.Add("limpieza-y-hogar/utensilios-de-limpieza/fregonas/cat20329/c");
+            //lTipoProducto.Add("/limpieza-y-hogar/utensilios-de-limpieza/escobas-mopas-y-recogedores/cat20327/c");
+            //lTipoProducto.Add("limpieza-y-hogar/utensilios-de-limpieza/guantes/cat20330/c");
+            //lTipoProducto.Add("limpieza-y-hogar/utensilios-de-limpieza/cubos-de-basura/cat20325/c");
+            //lTipoProducto.Add("limpieza-y-hogar/utensilios-de-limpieza/cubos-de-fregar-y-barrenos/cat20326/c");
+            //lTipoProducto.Add("limpieza-y-hogar/utensilios-de-limpieza/otros-utiles/cat20331/c");
+            //lTipoProducto.Add("/limpieza-y-hogar/utensilios-de-limpieza/palos-y-sujetapalos/cat20332/c");
+            //lTipoProducto.Add("limpieza-y-hogar/utensilios-de-limpieza/plumeros-rodillos-y-recambios/cat20333/c");
+            //lTipoProducto.Add("limpieza-y-hogar/conservacion-de-alimentos/cat20039/c");
+            //lTipoProducto.Add("limpieza-y-hogar/conservacion-de-alimentos/papel-de-aluminio/cat20276/c");
+            //lTipoProducto.Add("limpieza-y-hogar/conservacion-de-alimentos/bolsas/cat20274/c");
+            //lTipoProducto.Add("limpieza-y-hogar/conservacion-de-alimentos/film-transparente/cat20275/c");
+            //lTipoProducto.Add("limpieza-y-hogar/conservacion-de-alimentos/papel-y-moldes-para-horno/cat20277/c");
+            //lTipoProducto.Add("limpieza-y-hogar/ambientadores/cat20036/c");
+            //lTipoProducto.Add("limpieza-y-hogar/ambientadores/electricos/cat20252/c");
+            //lTipoProducto.Add("limpieza-y-hogar/ambientadores/automaticos/cat20249/c");
+            //lTipoProducto.Add("limpieza-y-hogar/ambientadores/decorativos/cat20251/c");
+            //lTipoProducto.Add("limpieza-y-hogar/ambientadores/aerosol-o-pistola/cat20247/c");
+            //lTipoProducto.Add("/limpieza-y-hogar/ambientadores/absorbeolores/cat20246/c");
+            //lTipoProducto.Add("limpieza-y-hogar/ambientadores/coche/cat20250/c");
+            //lTipoProducto.Add("limpieza-y-hogar/ambientadores/antihumedad/cat20248/c");
+            //lTipoProducto.Add("limpieza-y-hogar/ambientadores/un-toque/cat20253/c");
+            //lTipoProducto.Add("limpieza-y-hogar/calzado/cat20038/c");
+            //lTipoProducto.Add("limpieza-y-hogar/calzado/desodorantes-para-calzado/cat20269/c");
+            //lTipoProducto.Add("limpieza-y-hogar/calzado/plantillas-de-calzado/cat20273/c");
+            //lTipoProducto.Add("/limpieza-y-hogar/calzado/crema/cat20268/c");
+            //lTipoProducto.Add("limpieza-y-hogar/calzado/esponjas-autobrillantes/cat20270/c");
+            //lTipoProducto.Add("/limpieza-y-hogar/calzado/limpiador-de-piel-y-ante/cat20271/c");
+            //lTipoProducto.Add("limpieza-y-hogar/calzado/limpiador-liquido/cat20272/c");
+            //lTipoProducto.Add("/limpieza-y-hogar/menaje/cat20041/c");
+            //lTipoProducto.Add("limpieza-y-hogar/menaje/menaje-desechable/cat20286/c");
+            //lTipoProducto.Add("limpieza-y-hogar/menaje/utensilios-de-cocina/cat20290/c");
+            //lTipoProducto.Add("/limpieza-y-hogar/menaje/jarras-y-filtros-de-agua/cat20285/c");
+            //lTipoProducto.Add("limpieza-y-hogar/menaje/vajillas-y-vasos/cat20291/c");
+            //lTipoProducto.Add("limpieza-y-hogar/menaje/cuberteria/cat220005/c");
+            //lTipoProducto.Add("limpieza-y-hogar/menaje/hermeticos/cat130003/c");
+            //lTipoProducto.Add("/limpieza-y-hogar/menaje/cafeteras-y-accesorios/cat20284/c");
+            //lTipoProducto.Add("limpieza-y-hogar/menaje/manteleria/cat220004/c");
+            //lTipoProducto.Add("/limpieza-y-hogar/papeleria/cat260001/c");
+            //lTipoProducto.Add("limpieza-y-hogar/papeleria/folios-y-papeles-especiales/cat260010/c");
+            //lTipoProducto.Add("limpieza-y-hogar/papeleria/boligrafos-y-correctores/cat260005/c");
+            //lTipoProducto.Add("/limpieza-y-hogar/papeleria/lapices-y-accesorios/cat260012/c");
+            //lTipoProducto.Add("limpieza-y-hogar/papeleria/marcadores/cat260014/c");
+            //lTipoProducto.Add("limpieza-y-hogar/papeleria/colorear/cat260006/c");
+            //lTipoProducto.Add("limpieza-y-hogar/papeleria/pequeno-accesorio/cat260015/c");
+            //lTipoProducto.Add("limpieza-y-hogar/papeleria/cuadernos-y-carpetas/cat260007/c");
+            //lTipoProducto.Add("/limpieza-y-hogar/papeleria/archivadores/cat260004/c");
+            //lTipoProducto.Add("limpieza-y-hogar/papeleria/maquinaria-de-oficina/cat260013/c");
+            //lTipoProducto.Add("/limpieza-y-hogar/bazar/cat20037/c");
+            //lTipoProducto.Add("limpieza-y-hogar/bazar/pilas/cat20262/c");
+            //lTipoProducto.Add("limpieza-y-hogar/bazar/bombillas-y-tubos/cat20256/c");
+            //lTipoProducto.Add("limpieza-y-hogar/bazar/barbacoas-y-accesorios/cat20283/c");
+            //lTipoProducto.Add("limpieza-y-hogar/bazar/jardineria/cat20280/c");
+            //lTipoProducto.Add("limpieza-y-hogar/bazar/accesorios-de-bano/cat20255/c");
+            //lTipoProducto.Add("limpieza-y-hogar/bazar/pegamentos-y-siliconas/cat20261/c");
+            //lTipoProducto.Add("limpieza-y-hogar/bazar/automovil/cat20254/c");
+            //lTipoProducto.Add("limpieza-y-hogar/bazar/herramientas/cat20265/c");
+            //lTipoProducto.Add("limpieza-y-hogar/bazar/burletes/cat20266/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/cat20004/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/bano-e-higiene-corporal/cat20028/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/bano-e-higiene-corporal/geles-de-bano/cat20208/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/bano-e-higiene-corporal/desodorantes/cat20206/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/bano-e-higiene-corporal/jabon-de-manos/cat20209/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/bano-e-higiene-corporal/colonias/cat20205/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/bano-e-higiene-corporal/esponjas-manoplas-y-cepillos-de-bano/cat20207/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/bano-e-higiene-corporal/ojos-y-oreja/cat20210/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/bano-e-higiene-corporal/sales-de-bano/cat20211/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/bano-e-higiene-corporal/perfumeria-para-regalar/cat9216208/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/cabello/cat20031/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/cabello/champus/cat20222/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/cabello/cuidado-y-tratamientos-del-cabello/cat20223/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/cabello/acondicionadores/cat20220/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/cabello/tinte/cat20225/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/cabello/fijadores/cat20224/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/cabello/cepillos-peines-y-accesorios/cat20221/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/cuidado-y-proteccion-corporal/cat20033/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/cuidado-y-proteccion-corporal/piel/cat20233/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/cuidado-y-proteccion-corporal/body-milk-hidratacion-bajo-la-ducha/cat20232/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/cuidado-y-proteccion-corporal/protectores-solares-y-after-sun/cat20235/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/cuidado-y-proteccion-corporal/limpieza-facial/cat20231/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/cuidado-y-proteccion-corporal/productos-para-viaje/cat20245/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/cuidado-y-proteccion-corporal/pies/cat20234/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/boca-y-sonrisa/cat20030/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/boca-y-sonrisa/dentifricos/cat20216/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/boca-y-sonrisa/enjuagues-bucales/cat20217/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/boca-y-sonrisa/cepillos-recambios-y-accesorios/cat20215/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/boca-y-sonrisa/protesis/cat20219/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/boca-y-sonrisa/protector-labial/cat20218/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/higiene-intima/cat20035/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/higiene-intima/compresas/cat20240/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/higiene-intima/tampones/cat20243/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/higiene-intima/protege-slip/cat20242/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/higiene-intima/incontinencia/cat20241/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/higiene-intima/toallitas-y-geles-intimos/cat20244/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/depilacion-y-afeitado/cat20034/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/depilacion-y-afeitado/maquinillas-y-recambios/cat20239/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/depilacion-y-afeitado/depilacion/cat20238/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/depilacion-y-afeitado/afeitado/cat20236/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/depilacion-y-afeitado/after-shave/cat20237/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/cosmetica/cat20032/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/cosmetica/ojos/cat20228/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/cosmetica/unas/cat20230/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/cosmetica/rostro/cat20229/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/cosmetica/accesorios-de-maquillaje-y-manicura-y-pedicura/cat20226/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/cosmetica/labios/cat20227/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/cosmetica/estuches-de-bano-y-cosmetica/cat190008/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/bienestar-sexual/cat20029/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/bienestar-sexual/preservativos/cat20214/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/bienestar-sexual/lubricantes/cat20213/c");
+            //lTipoProducto.Add("perfumeria-e-higiene/bienestar-sexual/estimuladores/cat20212/c");
+            //lTipoProducto.Add("bebe/cat20006/c");
+            //lTipoProducto.Add("bebe/panales-y-toallitas/cat20050/c");
+            //lTipoProducto.Add("bebe/panales-y-toallitas/panales-dodot/cat20347/c");
+            //lTipoProducto.Add("bebe/panales-y-toallitas/panales-carrefour-baby/cat20346/c");
+            //lTipoProducto.Add("bebe/panales-y-toallitas/panales-huggies/cat11628426/c");
+            //lTipoProducto.Add("bebe/panales-y-toallitas/toallitas/cat20344/c");
+            //lTipoProducto.Add("bebe/panales-y-toallitas/banadores/cat210003/c");
+            //lTipoProducto.Add("/bebe/panales-y-toallitas/panales-de-noche/cat20349/c");
+            //lTipoProducto.Add("bebe/panales-y-toallitas/otras-marcas/cat16983488/c");
+            //lTipoProducto.Add("bebe/alimentacion-infantil/cat20048/c");
+            //lTipoProducto.Add("bebe/alimentacion-infantil/leches-infantiles/cat20334/c");
+            //lTipoProducto.Add("bebe/alimentacion-infantil/tarritos-y-platos-preparados/cat20338/c");
+            //lTipoProducto.Add("bebe/alimentacion-infantil/postres-zumos-petit-y-yogures-infantiles/cat20337/c");
+            //lTipoProducto.Add("bebe/alimentacion-infantil/papillas-y-galletas/cat20335/c");
+            //lTipoProducto.Add("bebe/alimentacion-infantil/complementos-alimenticios-e-infusiones-para-bebe/cat400010/c");
+            //lTipoProducto.Add("bebe/perfumeria-e-higiene/cat20049/c");
+            //lTipoProducto.Add("bebe/perfumeria-e-higiene/jabon-liquido/cat20343/c");
+            //lTipoProducto.Add("bebe/perfumeria-e-higiene/champu/cat20341/c");
+            //lTipoProducto.Add("bebe/perfumeria-e-higiene/crema-corporal-talcos-y-anti-irritacion/cat20342/c");
+            //lTipoProducto.Add("bebe/perfumeria-e-higiene/colonia/cat20364/c");
+            //lTipoProducto.Add("bebe/perfumeria-e-higiene/aceite-corporal/cat20363/c");
+            //lTipoProducto.Add("bebe/perfumeria-e-higiene/bastoncillos-algodon-y-sueros/cat20340/c");
+            //lTipoProducto.Add("bebe/perfumeria-e-higiene/acondicionador/cat20366/c");
+            //lTipoProducto.Add("bebe/perfumeria-e-higiene/lotes-multiproducto/cat400009/c");
+            //lTipoProducto.Add("bebe/perfumeria-e-higiene/protectores-solares/cat20365/c");
+            //lTipoProducto.Add("bebe/embarazo-y-lactancia/cat400001/c");
+            //lTipoProducto.Add("bebe/embarazo-y-lactancia/discos-pezoneras-y-sacaleches/cat400008/c");
+            //lTipoProducto.Add("bebe/embarazo-y-lactancia/compresas-y-protegeslips/cat400006/c");
+            //lTipoProducto.Add("bebe/embarazo-y-lactancia/cremas-y-aceites/cat400005/c");
+            //lTipoProducto.Add("bebe/puericultura/cat400002/c");
+            //lTipoProducto.Add("bebe/puericultura/chupetes-biberones-y-tetinas/cat400003/c");
+            //lTipoProducto.Add("bebe/puericultura/accesorios/cat400004/c");
+            //lTipoProducto.Add("bebe/puericultura/baberos-protegecamas-y-bolsas-para-panales/cat16299254/");
+            //lTipoProducto.Add("mascotas/cat20007/c");
+            //lTipoProducto.Add("mascotas/perros/cat20057/c");
+            //lTipoProducto.Add("/mascotas/perros/pienso-para-perros/cat20377/c");
+            //lTipoProducto.Add("mascotas/perros/premios-snacks-y-huesos/cat20384/c");
+            //lTipoProducto.Add("mascotas/perros/confort/cat20382/c");
+            //lTipoProducto.Add("mascotas/perros/higiene/cat20381/c");
+            //lTipoProducto.Add("mascotas/perros/champus-para-perro/cat20379/c");
+            //lTipoProducto.Add("mascotas/perros/comederos/cat80004/c");
+            //lTipoProducto.Add("mascotas/perros/juguetes/cat20383/c");
+            //lTipoProducto.Add("mascotas/perros/collares-y-correas/cat20380/c");
+            //lTipoProducto.Add("/mascotas/gatos/cat20054/c");
+            //lTipoProducto.Add("mascotas/gatos/pienso-para-gatos/cat20370/c");
+            //lTipoProducto.Add("mascotas/gatos/premios-y-snacks/cat20372/c");
+            //lTipoProducto.Add("mascotas/gatos/arena/cat20371/c");
+            //lTipoProducto.Add("mascotas/gatos/accesorios-e-higiene/cat20369/c");
+            //lTipoProducto.Add("mascotas/conejos-y-roedores/cat20053/c");
+            //lTipoProducto.Add("mascotas/conejos-y-roedores/pienso-para-conejos-y-rodeores/cat20368/c");
+            //lTipoProducto.Add("mascotas/conejos-y-roedores/accesorios-e-higiene/cat20367/c");
+            //lTipoProducto.Add("mascotas/pajaros/cat20055/c");
+            //lTipoProducto.Add("mascotas/pajaros/pienso-para-pajaros/cat20374/c");
+            //lTipoProducto.Add("/mascotas/peces-y-tortugas/cat20056/c");
+            //lTipoProducto.Add("mascotas/peces-y-tortugas/tortugas/cat80003/c");
+            //lTipoProducto.Add("mascotas/peces-y-tortugas/peces/cat20375/c");
+            //lTipoProducto.Add("parafarmacia/cat20008/c");
+            //lTipoProducto.Add("parafarmacia/bebe/cat20051/c");
+            //lTipoProducto.Add("parafarmacia/bebe/leche-infantil/cat20357/c");
+            //lTipoProducto.Add("parafarmacia/bebe/papillas-y-galletas/cat20359/c");
+            //lTipoProducto.Add("parafarmacia/bebe/complementos-alimenticios-e-infusiones-para-bebe/cat20354/c");
+            //lTipoProducto.Add("parafarmacia/bebe/potitos/cat20360/c");
+            //lTipoProducto.Add("parafarmacia/bebe/embarazo-y-lactancia/cat20355/c");
+            //lTipoProducto.Add("parafarmacia/bebe/anti-irritacion/cat20351/c");
+            //lTipoProducto.Add("parafarmacia/bebe/puericultura/cat20361/c");
+            //lTipoProducto.Add("parafarmacia/bebe/accesorios-bano/cat20350/c");
+            //lTipoProducto.Add("parafarmacia/bebe/champu/cat20353/c");
+            //lTipoProducto.Add("parafarmacia/bebe/hidratantes-y-aceites-corporales/cat20356/c");
+            //lTipoProducto.Add("parafarmacia/bebe/toallitas-bebe/cat20362/c");
+            //lTipoProducto.Add("parafarmacia/bebe/lotes-multiproducto/cat20358/c");
+            //lTipoProducto.Add("parafarmacia/higiene-bucal/cat20064/c");
+            //lTipoProducto.Add("parafarmacia/higiene-bucal/pasta-de-dientes/cat20421/c");
+            //lTipoProducto.Add("parafarmacia/higiene-bucal/colutorio/cat20419/c");
+            //lTipoProducto.Add("parafarmacia/higiene-bucal/frescor-y-aliento/cat20422/c");
+            //lTipoProducto.Add("/parafarmacia/higiene-bucal/cuidado-y-fijacion-protesis-dentales/cat20420/c");
+            //lTipoProducto.Add("/parafarmacia/higiene-bucal/cuidado-y-fijacion-protesis-dentales/cat20420/c");
+            //lTipoProducto.Add("/parafarmacia/higiene-bucal/cuidado-y-fijacion-protesis-dentales/cat20420/c");
+            //lTipoProducto.Add("parafarmacia/botiquin/cat20059/c");
+            //lTipoProducto.Add("parafarmacia/botiquin/mascarillas/cat10650814/c");
+            //lTipoProducto.Add("parafarmacia/botiquin/geles-hidroalcoholicos/cat11089828/c");
+            //lTipoProducto.Add("parafarmacia/botiquin/apositos-y-gasas/cat20390/c");
+            //lTipoProducto.Add("parafarmacia/botiquin/lentillas-y-sueros/cat20391/c");
+            //lTipoProducto.Add("parafarmacia/botiquin/higiene-y-tiras-nasales/cat20394/c");
+            //lTipoProducto.Add("/parafarmacia/botiquin/antisepticos-y-talcos/cat20389/c");
+            //lTipoProducto.Add("parafarmacia/botiquin/tos-y-garganta/cat20395/c");
+            //lTipoProducto.Add("parafarmacia/botiquin/alivio-del-dolor/cat20387/c");
+            //lTipoProducto.Add("parafarmacia/botiquin/oido-y-protectores/cat20392/c");
+            //lTipoProducto.Add("parafarmacia/botiquin/termometro-y-tensiometros/cat20393/c");
+            //lTipoProducto.Add("parafarmacia/botiquin/antimosquitos/cat20388/c");
+            //lTipoProducto.Add("parafarmacia/botiquin/gafas-presbicia/cat240001/c");
+            //lTipoProducto.Add("parafarmacia/cuidado-corporal/cat20061/c");
+            //lTipoProducto.Add("/parafarmacia/cuidado-corporal/cremas-y-lociones/cat20400/c");
+            //lTipoProducto.Add("parafarmacia/cuidado-corporal/jabones-y-geles/cat20403/c");
+            //lTipoProducto.Add("parafarmacia/cuidado-corporal/desodorantes/cat20402/c");
+            //lTipoProducto.Add("parafarmacia/cuidado-corporal/cuidado-intimo/cat20401/c");
+            //lTipoProducto.Add("parafarmacia/cuidado-e-higiene-facial/cat20062/c");
+            //lTipoProducto.Add("parafarmacia/cuidado-e-higiene-facial/cremas-faciales/cat20406/c");
+            //lTipoProducto.Add("parafarmacia/cuidado-e-higiene-facial/desmaquillantes/cat20409/c");
+            //lTipoProducto.Add("parafarmacia/cuidado-e-higiene-facial/cuidado-acne/cat20407/c");
+            //lTipoProducto.Add("parafarmacia/cuidado-e-higiene-facial/cuidado-labial/cat20408/c");
+            //lTipoProducto.Add("parafarmacia/cuidado-e-higiene-facial/exfoliantes-y-mascarillas/cat20410/c");
+            //lTipoProducto.Add("parafarmacia/cuidado-e-higiene-facial/tonicos-y-lociones/cat20412/c");
+            //lTipoProducto.Add("parafarmacia/cuidado-e-higiene-facial/cosmetica-masculina/cat20405/c");
+            //lTipoProducto.Add("parafarmacia/cuidado-e-higiene-facial/maquillaje/cat20411/c");
+            //lTipoProducto.Add("parafarmacia/cabello/cat20060/c");
+            //lTipoProducto.Add("parafarmacia/cabello/champus-anticaida/cat20397/c");
+            //lTipoProducto.Add("parafarmacia/cabello/otros-champus-de-tratamiento/cat20398/c");
+            //lTipoProducto.Add("parafarmacia/cabello/antiparasitarios/cat20396/c");
+            //lTipoProducto.Add("parafarmacia/cabello/tintes/cat20399/c");
+            //lTipoProducto.Add("parafarmacia/cuidado-de-manos-y-pies/cat20063/c");
+            //lTipoProducto.Add("parafarmacia/cuidado-de-manos-y-pies/soluciones-durezas/cat20417/c");
+            //lTipoProducto.Add("parafarmacia/cuidado-de-manos-y-pies/crema-de-manos/cat20414/c");
+            //lTipoProducto.Add("parafarmacia/cuidado-de-manos-y-pies/desodorante-pies/cat20415/c");
+            //lTipoProducto.Add("parafarmacia/cuidado-de-manos-y-pies/apositos-y-plantillas/cat20413/c");
+            //lTipoProducto.Add("parafarmacia/nutricion-y-dietetica/cat20065/c");
+            //lTipoProducto.Add("parafarmacia/nutricion-y-dietetica/complementos-vitaminicos/cat20426/c");
+            //lTipoProducto.Add("parafarmacia/nutricion-y-dietetica/batidos-e-infusiones/cat20425/c");
+            //lTipoProducto.Add("parafarmacia/nutricion-y-dietetica/tratamientos-naturales/cat20428/c");
+            //lTipoProducto.Add("parafarmacia/nutricion-y-dietetica/control-de-peso/cat20427/c");
+       
+            //lTipoProducto.Add("/productos-frescos/cat20002/");
+            //lTipoProducto.Add("/bebidas/cat20003/");
+
+            //lTipoProducto.Add("/bebe/cat20006/");
+            //lTipoProducto.Add("/mascotas/cat20007");
+            //lTipoProducto.Add("/parafarmacia/cat20008/");
+
+            //lTipoProducto.Add("/productos-frescos/carniceria/aves-y-pollo/cat190012/");
+            //lTipoProducto.Add("/productos-frescos/carniceria/vacuno/cat190010/");
+            //lTipoProducto.Add("/productos-frescos/carniceria/cerdo/cat190011/");
+            //lTipoProducto.Add("/productos-frescos/carniceria/cordero/cat440002/");
+            //lTipoProducto.Add("/productos-frescos/carniceria/conejo/cat440001/");
+            //lTipoProducto.Add("/productos-frescos/carniceria/otras-carnes/cat190009/");
+            //lTipoProducto.Add("/productos-frescos/carniceria/carne-picada/cat20147/");
+            //lTipoProducto.Add("/productos-frescos/carniceria/hamburguesas/cat20154/");
+            //lTipoProducto.Add("/productos-frescos/carniceria/embutidos-frescos/cat20152/");
+            //lTipoProducto.Add("/productos-frescos/carniceria/preparados-y-arreglos-de-carne/cat20155/");
+            //lTipoProducto.Add("/productos-frescos/carniceria/empanados/cat20153/");
+            //lTipoProducto.Add("/productos-frescos/carniceria/piezas-enteras-sin-corte/cat660002/");
+            //lTipoProducto.Add("/productos-frescos/carniceria/casqueria/cat710001/");
+            //lTipoProducto.Add("/productos-frescos/pescaderia/pescado-fresco/cat20125/");
+            //lTipoProducto.Add("/productos-frescos/pescaderia/marisco-almejas-y-mejillones/cat20124/");
+            //lTipoProducto.Add("/productos-frescos/pescaderia/pulpo-calamar-y-sepia/cat20127/");
+            //lTipoProducto.Add("/productos-frescos/pescaderia/pescado-y-marisco-congelado/cat210007/");
+            //lTipoProducto.Add("/productos-frescos/pescaderia/ahumados-y-huevas/cat20121/");
+            //lTipoProducto.Add("/productos-frescos/pescaderia/gulas-surimi-elaborados/cat20123/");
+            //lTipoProducto.Add("/productos-frescos/pescaderia/bacalao-y-salazones/cat20122/");
+            //lTipoProducto.Add("/productos-frescos/pescaderia/preparados-y-elaborados-de-pescado-y-marisco/cat20126/");
+
+            //string[] ls;
+            try
+            {
+                ServicePointManager.Expect100Continue = true;
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+                foreach (string sTipo in lTipoProducto) 
+                {
+                    sbLink.Append(LINK);
+                    sbLink.Append(sTipo);
+                    sbLink.Append(PAGINA);
+                    iPagina = 0;
+
+                    for (int i = 0; i < 100;i++) 
+                    {
+                        iPagina = i * 24;
+
+                        if (i > 0) {
+                            sbLink.Append("?offset=");
+                            sbLink.Append(iPagina);
+                        }
+
+                        oDoc = web.Load(sbLink.ToString());
+                        hc = oDoc.DocumentNode.SelectNodes("//script");
+
+                        foreach (HtmlNode h in hc) 
+                        {
+                            if (h.InnerText.Contains("window[\"impressions\"]=")) 
+                            {
+                                sJson = h.InnerText.Replace("window[\"impressions\"]=", string.Empty).Replace("}];", "}]");
+                                break;
+                            }
+                        }
+
+                        if (sJson == string.Empty) {
+                            break;
+                        }
+
+                        lProductTemp = Deserialize<List<CarrefourProduct>>(sJson);
+                        
+                        lProductNoDuplicado = lProduct.Where(t => !lProductTemp.Contains(t)).ToList();
+
+                        if (lProductNoDuplicado.Count > 0 || lProduct.Count == 0) {
+                            lProduct.AddRange(lProductTemp);
+                        }
+
+                        if (lProductTemp.Count < 24) 
+                        {
+                            break;
+                        }
+                    }
+
+
+                    
+                }
+
+
+
+               
+
+
+
+            }
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message);
+            }
+        }
