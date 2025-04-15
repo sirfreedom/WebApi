@@ -19,7 +19,7 @@ namespace WebApi.Data
 
         void Update(Dictionary<string, string> lParam);
 
-        DataTable Fill(string FunctionName, Dictionary<string, string> lParam = null);
+        DataSet Fill(string FunctionName, Dictionary<string, string> lParam = null);
 
         void ExecuteNonQuery(string FunctionName, Dictionary<string, string> lParam = null);
 

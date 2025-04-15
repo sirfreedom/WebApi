@@ -77,7 +77,7 @@ namespace WebApi.Data
             DataTable dt;
             try
             {
-                dt = Fill("List");
+                dt = Fill("List").Tables[0];
             }
             catch (Exception ex)
             {
@@ -94,7 +94,7 @@ namespace WebApi.Data
             lDictionary.Add("Id", Id.ToString());
             try
             {
-                dt = Fill("Get", lDictionary);
+                dt = Fill("Get", lDictionary).Tables[0];
             }
             catch (Exception ex)
             {
@@ -109,7 +109,7 @@ namespace WebApi.Data
             DataTable dt;
             try
             {
-                dt = Fill("Find", lParam);
+                dt = Fill("Find", lParam).Tables[0];
                 if (dt.Rows.Count > 0)
                 {
                     lDynamic = EntityBase.ToDynamic(dt);
@@ -165,10 +165,9 @@ namespace WebApi.Data
 
         #region Store Procedures Common Function
 
-        public DataTable Fill(string FunctionName, Dictionary<string, string> Parameters = null)
+        public DataSet Fill(string FunctionName, Dictionary<string, string> Parameters = null)
         {
             DataSet ds = new DataSet();
-            DataTable dt = new DataTable();
             SqlCommand cmd = new SqlCommand();
             SqlDataAdapter da;
             StringBuilder sbKey = new StringBuilder();
@@ -200,7 +199,6 @@ namespace WebApi.Data
                     cn.InfoMessage += cn_InfoMessage;
                     cn.Open();
                     da.Fill(ds);
-                    dt = ds.Tables[0];
                     cn.Close();
                 }
 
@@ -225,7 +223,7 @@ namespace WebApi.Data
             {
                 cmd.Dispose();
             }
-            return dt;
+            return ds;
         }
 
 

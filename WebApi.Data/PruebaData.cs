@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using WebApi.Entity;
 
@@ -25,9 +24,9 @@ namespace WebApi.Data
             _context.ExecuteNonQuery(FunctionName, lParam);
         }
 
-        public DataTable Fill(string FunctionName, Dictionary<string, string> lParam = null)
+        public DataSet Fill(string FunctionName, Dictionary<string, string> lParam = null)
         {
-            return _context.Find(FunctionName, lParam);
+            return _context.Fill(FunctionName, lParam);
         }
     }
 }
