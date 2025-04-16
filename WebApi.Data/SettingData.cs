@@ -1,25 +1,33 @@
-﻿using WebApi.Entity;
+﻿using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using WebApi.Entity;
 
 namespace WebApi.Data
 {
-    public class SettingData : IGetRepository<Setting>
+    public class SettingData 
     {
-        private readonly IRepository<Setting> _context;
 
-        public SettingData(IRepository<Setting> context)
+        private readonly string _ConnectionString = string.Empty;
+
+        public SettingData(string ConnectionString)
         {
-            _context = context;
+            _ConnectionString = ConnectionString;
         }
 
-        public string EntityName
+        public Setting GetByDependency(int IdDependency)
         {
-            get { return _context.EntityName; }
+            DataSet ds = new DataSet();
+            Setting oSetting = new Setting();
+            Dictionary<string, string> lParam = new Dictionary<string, string>();
+            lParam.Add("IdDependency", IdDependency.ToString());
+            ICommonSQL Serv = new ContextSQL<Setting>(_ConnectionString);
+            ds = Serv.Fill("GetByDependency", lParam);
+            oSetting = Setting.ToList<Setting>(ds.Tables[0]).SingleOrDefault();
+            return oSetting;
         }
 
-        public Setting Get(int IdDependency)
-        {
-            return _context.Get(IdDependency);
-        }
+
 
     }
 }

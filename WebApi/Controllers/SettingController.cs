@@ -43,7 +43,7 @@ namespace WebApi.Controllers
             SettingBiz settingBiz = new SettingBiz(_ConectionString);
             try
             {
-                oSetting = settingBiz.Get(IdDependency);
+                oSetting = settingBiz.GetByDependency(IdDependency);
             }
             catch (WebException ex)
             {

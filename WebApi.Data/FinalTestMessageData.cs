@@ -1,25 +1,27 @@
 ﻿using System.Collections.Generic;
+using System.Data;
 using WebApi.Entity;
 
 namespace WebApi.Data
 {
-    public class FinalTestMessageData : IFindRepository
+    public class FinalTestMessageData 
     {
-        private readonly IRepository<FinalTestMessage> _context;
 
-        public FinalTestMessageData(IRepository<FinalTestMessage> context)
+        private readonly string _ConnectionString = string.Empty;
+
+        public FinalTestMessageData(string ConnectionString)
         {
-            _context = context;
-        }
-        
-        public string EntityName
-        {
-            get { return _context.EntityName; }
+            _ConnectionString = ConnectionString;
         }
 
-        public List<dynamic> Find(Dictionary<string, string> lParam)
+        public List<FinalTestMessage> List(int IdDependency) 
         {
-            return _context.Find(lParam);
+            Dictionary<string,string> lParam = new Dictionary<string, string>();
+            DataSet ds = new DataSet();
+            ICommonSQL Serv = new ContextSQL<FinalTestMessage>(_ConnectionString);
+            lParam.Add("IdDependency",IdDependency.ToString());
+            ds = Serv.Fill("ListByDependency", lParam);
+            return FinalTestMessage.ToList<FinalTestMessage>(ds.Tables[0]);
         }
 
     }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data;
 using WebApi.Data;
 using WebApi.Entity;
 
@@ -14,25 +15,11 @@ namespace WebApi.Biz
             _ConectionString = ConectionString;
         }
 
-        public List<Question> Find(int IdDependency, int CodLevel) 
-        {
-            IFindRepository Serv = new QuestionData(new ContextSQL<Question>(_ConectionString));
-            List<dynamic> lq = new List<dynamic>();
-            List<Question> lQuestion = new List<Question>();
-            Dictionary<string,string> lParam = new Dictionary<string,string>();
-            lParam.Add("IdDependency", IdDependency.ToString());
-            lParam.Add("CodLevel",  CodLevel.ToString());
-            Serv = new QuestionData(new ContextSQL<Question>(_ConectionString));
-            lq = Serv.Find(lParam);
-            lQuestion = Question.ToList<Question>(lq);
-
-            return lQuestion;
+        public List<Question> List(int IdDependency, int CodLevel) 
+        { 
+            QuestionData Serv = new QuestionData(_ConectionString);
+            return Serv.List(IdDependency, CodLevel);
         }
-
-
-
-
-
 
     }
 }

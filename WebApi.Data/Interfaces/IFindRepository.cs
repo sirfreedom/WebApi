@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
-using WebApi.Entity;
-
 namespace WebApi.Data
 {
-    public interface IFindRepository<TEntity> where TEntity : class, new()
-    { 
+    public interface IFindRepository<TEntity> where TEntity : class
+    {
 
         List<dynamic> Find(TEntity oEntity);
 

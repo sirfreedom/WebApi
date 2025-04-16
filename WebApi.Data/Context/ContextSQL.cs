@@ -13,6 +13,7 @@ namespace WebApi.Data
     public sealed class ContextSQL<TEntity> : IListRepository<TEntity>,IGetRepository<TEntity>, ICreateRepository<TEntity>, IFindRepository<TEntity>, IDeleteRespository,  ICommonSQL where TEntity : class, new()
     {
 
+
         public ContextSQL(string ConnectionString)
         {
             _SettingConexion = ConnectionString;

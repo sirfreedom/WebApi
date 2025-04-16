@@ -13,13 +13,12 @@ namespace WebApi.Biz
             _ConnectionString = ConecctionString;
         }
 
-        public Setting Get(int IdDependency) 
+        public Setting GetByDependency(int IdDependency) 
         {
-            IGetRepository<Setting> Serv = new SettingData(new ContextSQL<Setting>(_ConnectionString));
-            Setting setting;
-            setting = Serv.Get(IdDependency);
-            return setting;
+            SettingData Serv = new SettingData(_ConnectionString);
+            return Serv.GetByDependency(IdDependency);
         }
+
 
 
 

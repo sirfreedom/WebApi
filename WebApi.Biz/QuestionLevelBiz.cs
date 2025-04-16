@@ -14,19 +14,11 @@ namespace WebApi.Biz
             _ConectionString = ConectionString;
         }
 
-        public List<QuestionLevel> Find(int IdDpendency)
+        public List<QuestionLevel> List(int IdDependency) 
         {
-            IFindRepository Serv = new QuestionLevelData(new ContextSQL<QuestionLevel>(_ConectionString));
-            List<dynamic> lq = new List<dynamic>();
-            List<QuestionLevel> lQuestionLevel = new List<QuestionLevel>();
-            Dictionary<string, string> lParam = new Dictionary<string, string>();
-            lParam.Add("IdDependency", IdDpendency.ToString());
-            lq = Serv.Find(lParam);
-            lQuestionLevel = Question.ToList<QuestionLevel>(lq);
-            return lQuestionLevel;
+            QuestionLevelData Serv = new QuestionLevelData(_ConectionString);
+            return Serv.List(IdDependency);
         }
-
-
 
     }
 }

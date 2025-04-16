@@ -46,7 +46,7 @@ namespace WebApi.Controllers
             FinalTestMessageBiz finalTestMessageBiz = new FinalTestMessageBiz(_ConectionString);
             try
             {
-                lf = finalTestMessageBiz.Find(IdDependency);
+                lf = finalTestMessageBiz.List(IdDependency);
             }
             catch (WebException ex)
             {

@@ -33,7 +33,7 @@ namespace WebApi.Controllers
         [AllowAnonymous]
         public ActionResult List()
         {
-            FileBiz Serv = new FileBiz(_ConectionString);
+            ImagenBiz Serv = new ImagenBiz(_ConectionString);
             List<ImagenTest> lImageTest = new List<ImagenTest>();
             try
             {
@@ -61,7 +61,7 @@ namespace WebApi.Controllers
         [AllowAnonymous]
         public ActionResult Post([FromBody] FileModel imagentext)
         {
-            FileBiz Serv = new FileBiz(_ConectionString);
+            ImagenBiz Serv = new ImagenBiz(_ConectionString);
             ImagenTest oImagen = new ImagenTest();
             try
             {
@@ -91,7 +91,7 @@ namespace WebApi.Controllers
         [AllowAnonymous]
         public ActionResult Delete(int Id)
         {
-            FileBiz Serv = new FileBiz(_ConectionString);
+            ImagenBiz Serv = new ImagenBiz(_ConectionString);
             ImagenTest oImagen = new ImagenTest();
             try
             {

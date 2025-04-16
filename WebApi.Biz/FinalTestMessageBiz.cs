@@ -13,19 +13,11 @@ namespace WebApi.Biz
             _ConnectionString = ConnectionString;
         }
 
-        public List<FinalTestMessage> Find(int IdDependency)
-        {
-            IFindRepository oServ;
-            List<FinalTestMessage> lFinalTestMessage = new List<FinalTestMessage>();
-            Dictionary<string,string> ld = new Dictionary<string,string>();
-            ld.Add("IdDependency", IdDependency.ToString());
-            oServ = new FinalTestMessageData(new ContextSQL<FinalTestMessage>(_ConnectionString));
-            lFinalTestMessage = FinalTestMessage.ToList<FinalTestMessage>(oServ.Find(ld));
-            return lFinalTestMessage;
+        public List<FinalTestMessage> List(int IdDependency) 
+        { 
+            FinalTestMessageData Serv = new FinalTestMessageData(_ConnectionString);
+            return Serv.List(IdDependency);
         }
-
-
-
 
 
     }

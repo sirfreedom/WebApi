@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Data;
 using WebApi.Entity;
 
 namespace WebApi.Data
 {
-    public class QuestionData : IFindRepository<Question>
+    public class QuestionData 
     {
         private readonly string _ConectionString = string.Empty;
 
@@ -12,10 +13,15 @@ namespace WebApi.Data
             _ConectionString = ConnectionString;
         }
 
-        public List<dynamic> Find(Question oQuestion)
+        public List<Question> List(int IdDependency, int CodLevel = 0) 
         {
-            IFindRepository<Question> Serv = new ContextSQL<Question>(_ConectionString);
-            return Serv.Find(oQuestion);
+            Dictionary<string, string> lParam = new Dictionary<string, string>();
+            DataSet ds = new DataSet();
+            ICommonSQL Serv = new ContextSQL<Question>(_ConectionString);
+            lParam.Add("IdDependency", IdDependency.ToString());
+            lParam.Add("CodLevel",CodLevel.ToString());
+            ds = Serv.Fill("ListByDependency", lParam);
+            return Question.ToList<Question>(ds.Tables[0]);
         }
     
     }

@@ -47,7 +47,7 @@ namespace WebApi.Controllers
             QuestionBiz questionBiz = new QuestionBiz(_ConectionString);
             try
             {
-                lq = questionBiz.Find(IdDependency,CodLevel);
+                lq = questionBiz.List(IdDependency,CodLevel);
             }
             catch (WebException ex)
             {

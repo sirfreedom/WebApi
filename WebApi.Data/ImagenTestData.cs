@@ -3,7 +3,7 @@ using WebApi.Entity;
 
 namespace WebApi.Data
 {
-    public class ImagenTestData 
+    public class ImagenTestData
     {
         private readonly string _ConectionString = string.Empty;
 
