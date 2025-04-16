@@ -1,37 +1,33 @@
 ﻿using System.Collections.Generic;
-using WebApi.Data.Interfaces;
 using WebApi.Entity;
 
 namespace WebApi.Data
 {
-    public class ImagenTestData : ICreateRepository<ImagenTest>, IListRepository<ImagenTest>, IDeleteRespository
+    public class ImagenTestData 
     {
+        private readonly string _ConectionString = string.Empty;
 
-        private readonly IRepository<ImagenTest> _context;
-
-        public ImagenTestData(IRepository<ImagenTest> context)
+        public ImagenTestData(string ConnectionString)
         {
-            _context = context;
-        }
-
-        public string EntityName
-        {
-            get { return _context.EntityName; }
+            _ConectionString = ConnectionString;
         }
 
         public void Delete(int Id)
         {
-            _context.Delete(Id);
+            IDeleteRespository Serv = new ContextSQL<ImagenTest>(_ConectionString);
+            Serv.Delete(Id);
         }
 
         public void Insert(ImagenTest entity)
         {
-            _context.Insert(entity.ToDictionary(false,false));
+            ICreateRepository<ImagenTest> Serv = new ContextSQL<ImagenTest>(_ConectionString);
+            Serv.Insert(entity);
         }
 
         public List<ImagenTest> List()
         {
-            return _context.List();
+            IListRepository<ImagenTest> Serv = new ContextSQL<ImagenTest>(_ConectionString);
+            return Serv.List();
         }
     }
 

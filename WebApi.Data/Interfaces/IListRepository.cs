@@ -2,9 +2,8 @@
 
 namespace WebApi.Data
 {
-    public interface IListRepository<TEntity>
+    public interface IListRepository<TEntity> where TEntity : class, new()
     {
-        string EntityName { get; }
 
         List<TEntity> List();
 

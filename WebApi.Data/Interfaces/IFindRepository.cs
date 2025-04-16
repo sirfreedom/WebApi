@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
+using WebApi.Entity;
 
 namespace WebApi.Data
 {
-    public interface IFindRepository
-    {
-        string EntityName { get; }
+    public interface IFindRepository<TEntity> where TEntity : class, new()
+    { 
 
-        List<dynamic> Find(Dictionary<string, string> lParam);
+        List<dynamic> Find(TEntity oEntity);
 
     }
 }

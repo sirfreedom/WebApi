@@ -3,24 +3,19 @@ using WebApi.Entity;
 
 namespace WebApi.Data
 {
-    public class QuestionLevelData : IFindRepository
+    public class QuestionLevelData : IFindRepository<QuestionLevel>
     {
-        private readonly IRepository<QuestionLevel> _context;
+        private readonly string _ConectionString = string.Empty;
 
-        public QuestionLevelData(IRepository<QuestionLevel> context)
+        public QuestionLevelData(string ConnectionString)
         {
-            _context = context;
+            _ConectionString = ConnectionString;
         }
 
-        public string EntityName
+        public List<dynamic> Find(QuestionLevel oQuestionLevel)
         {
-            get { return _context.EntityName; }
+            IFindRepository<QuestionLevel> Serv = new ContextSQL<QuestionLevel>(_ConectionString);
+            return Serv.Find(oQuestionLevel);
         }
-
-        public List<dynamic> Find(Dictionary<string, string> lParam)
-        {
-            return _context.Find(lParam);
-        }
-       
     }
 }

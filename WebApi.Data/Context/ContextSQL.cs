@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using WebApi.Entity;
 
+
 namespace WebApi.Data
 {
-    public sealed class ContextSQL<TEntity> : IRepository<TEntity> where TEntity : class, new()
+    public sealed class ContextSQL<TEntity> : IListRepository<TEntity>,IGetRepository<TEntity>, ICreateRepository<TEntity>, IFindRepository<TEntity>, IDeleteRespository,  ICommonSQL where TEntity : class, new()
     {
 
         public ContextSQL(string ConnectionString)
@@ -103,12 +105,19 @@ namespace WebApi.Data
             return EntityBase.ToList<TEntity>(dt).SingleOrDefault();
         }
 
-        public List<dynamic> Find(Dictionary<string, string> lParam)
+        public List<dynamic> Find(TEntity oEntity)
         {
             List<dynamic> lDynamic = new List<dynamic>();
+            Dictionary<string, string> lParam = new Dictionary<string, string>();
+            PropertyInfo[] propiedades;
             DataTable dt;
             try
             {
+                propiedades = typeof(TEntity).GetProperties();
+                foreach (PropertyInfo propiedad in propiedades)
+                {
+                    lParam.Add(propiedad.Name, propiedad.GetValue(oEntity).ToString());
+                }
                 dt = Fill("Find", lParam).Tables[0];
                 if (dt.Rows.Count > 0)
                 {
@@ -136,10 +145,17 @@ namespace WebApi.Data
             }
         }
 
-        public void Insert(Dictionary<string, string> lParam)
+        public void Insert(TEntity oEntity)
         {
+            Dictionary<string, string> lParam = new Dictionary<string, string>();
+            PropertyInfo[] propiedades;
             try
             {
+                propiedades = typeof(TEntity).GetProperties();
+                foreach (PropertyInfo propiedad in propiedades)
+                {
+                    lParam.Add(propiedad.Name, propiedad.GetValue(oEntity).ToString());
+                }
                 ExecuteNonQuery("Insert", lParam);
             }
             catch (Exception ex)
@@ -148,10 +164,17 @@ namespace WebApi.Data
             }
         }
 
-        public void Update(Dictionary<string, string> lParam)
+        public void Update(TEntity oEntity)
         {
+            Dictionary<string, string> lParam = new Dictionary<string, string>();
+            PropertyInfo[] propiedades;
             try
             {
+                propiedades = typeof(TEntity).GetProperties();
+                foreach (PropertyInfo propiedad in propiedades)
+                {
+                    lParam.Add(propiedad.Name, propiedad.GetValue(oEntity).ToString());
+                }
                 ExecuteNonQuery("Update", lParam);
             }
             catch (Exception ex)
@@ -159,7 +182,6 @@ namespace WebApi.Data
                 throw new Exception(ex.Message);
             }
         }
-
 
         #endregion
 

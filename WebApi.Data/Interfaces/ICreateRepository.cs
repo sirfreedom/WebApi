@@ -1,12 +1,11 @@
-﻿
+﻿using WebApi.Entity;
+
 namespace WebApi.Data
 {
-    public interface ICreateRepository<TEntity>
+    public interface ICreateRepository<TEntity> where TEntity : class, new()
     {
 
-        string EntityName { get; }
-
-        void Insert(TEntity entity);
+        void Insert(TEntity oEntity);
 
     }
 }

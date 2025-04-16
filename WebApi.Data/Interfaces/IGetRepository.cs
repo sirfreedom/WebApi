@@ -1,10 +1,9 @@
-﻿
+﻿using WebApi.Entity;
+
 namespace WebApi.Data
 {
-    public interface IGetRepository<TEntity>
+    public interface IGetRepository<TEntity> where TEntity : class, new()
     {
-
-        string EntityName { get; }
 
         TEntity Get(int Id);
 

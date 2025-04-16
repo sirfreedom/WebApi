@@ -1,9 +1,7 @@
-﻿
-namespace WebApi.Data.Interfaces
+﻿namespace WebApi.Data
 {
-    public interface IDeleteRespository
+    public interface IDeleteRespository 
     {
-        string EntityName { get; }
 
         void Delete(int Id);
 

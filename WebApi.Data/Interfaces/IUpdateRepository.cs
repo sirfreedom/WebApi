@@ -1,11 +1,11 @@
-﻿
+﻿using WebApi.Entity;
+
 namespace WebApi.Data
 {
-    public interface IUpdateRepository<TEntity>
+    public interface IUpdateRepository<TEntity> where TEntity : class, new()
     {
-        string EntityName { get; }
 
-        void Update(TEntity entity);
+        void Update(TEntity oEntity);
 
     }
 }
