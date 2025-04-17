@@ -18,7 +18,7 @@ namespace WebApi.Data
             Dictionary<string,string> lParam = new Dictionary<string, string>(); 
             DataSet ds = new DataSet();
             lParam.Add("IdDependency",IdDependency.ToString());
-            ICommonSQL Serv = new ContextSQL<QuestionLevel>(_ConectionString);
+            IRepository<QuestionLevel> Serv = new ContextSQL<QuestionLevel>(_ConectionString);
             ds = Serv.Fill("ListByDependency", lParam);
             return QuestionLevel.ToList<QuestionLevel>(ds.Tables[0]); 
         }

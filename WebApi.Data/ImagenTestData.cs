@@ -14,19 +14,19 @@ namespace WebApi.Data
 
         public void Delete(int Id)
         {
-            IDeleteRespository Serv = new ContextSQL<ImagenTest>(_ConectionString);
+            IRepository<ImagenTest> Serv = new ContextSQL<ImagenTest>(_ConectionString);
             Serv.Delete(Id);
         }
 
         public void Insert(ImagenTest entity)
         {
-            ICreateRepository<ImagenTest> Serv = new ContextSQL<ImagenTest>(_ConectionString);
+            IRepository<ImagenTest> Serv = new ContextSQL<ImagenTest>(_ConectionString);
             Serv.Insert(entity);
         }
 
         public List<ImagenTest> List()
         {
-            IListRepository<ImagenTest> Serv = new ContextSQL<ImagenTest>(_ConectionString);
+            IRepository<ImagenTest> Serv = new ContextSQL<ImagenTest>(_ConectionString);
             return Serv.List();
         }
     }

@@ -10,9 +10,9 @@ using WebApi.Entity;
 
 namespace WebApi.Data
 {
-    public sealed class ContextSQL<TEntity> : IListRepository<TEntity>,IGetRepository<TEntity>, ICreateRepository<TEntity>, IFindRepository<TEntity>, IDeleteRespository,  ICommonSQL where TEntity : class, new()
-    {
 
+    public sealed class ContextSQL<TEntity> : IRepository<TEntity> where TEntity : EntityBase, new()
+    {
 
         public ContextSQL(string ConnectionString)
         {

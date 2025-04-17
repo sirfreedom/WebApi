@@ -21,11 +21,13 @@ namespace WebApi.Data
             Setting oSetting = new Setting();
             Dictionary<string, string> lParam = new Dictionary<string, string>();
             lParam.Add("IdDependency", IdDependency.ToString());
-            ICommonSQL Serv = new ContextSQL<Setting>(_ConnectionString);
+            IRepository<Setting> Serv = new ContextSQL<Setting>(_ConnectionString);
             ds = Serv.Fill("GetByDependency", lParam);
             oSetting = Setting.ToList<Setting>(ds.Tables[0]).SingleOrDefault();
             return oSetting;
         }
+
+
 
 
 

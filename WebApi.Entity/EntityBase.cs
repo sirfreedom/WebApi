@@ -482,8 +482,6 @@ namespace WebApi.Entity
 
         #endregion
 
-
-
         #region To Etc
 
         /// <summary>
@@ -958,8 +956,6 @@ namespace WebApi.Entity
         }
 
         #endregion
-
-
 
     }
 }

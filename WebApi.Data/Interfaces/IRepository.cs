@@ -1,23 +1,22 @@
 ﻿using System.Collections.Generic;
 using System.Data;
+using WebApi.Entity;
 
 namespace WebApi.Data
 {
-    public interface IRepository<TEntity>
+    public interface IRepository<TEntity> where TEntity : EntityBase, new ()
     {
-        string EntityName { get; }
-
         List<TEntity> List();
 
         TEntity Get(int Id);
 
-        List<dynamic> Find(Dictionary<string, string> lParam);
+        List<dynamic> Find(TEntity oEntity);
 
         void Delete(int Id);
 
-        void Insert(Dictionary<string, string> lParam);
+        void Insert(TEntity oEntity);
 
-        void Update(Dictionary<string, string> lParam);
+        void Update(TEntity oEntity);
 
         DataSet Fill(string FunctionName, Dictionary<string, string> lParam = null);
 
