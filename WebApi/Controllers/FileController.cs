@@ -7,6 +7,7 @@ using WebApi.Model;
 using WebApi.Entity;
 using System.Collections.Generic;
 using WebApi.Biz;
+using Microsoft.Extensions.Logging;
 
 
 namespace WebApi.Controllers
@@ -15,13 +16,16 @@ namespace WebApi.Controllers
     [Route("api/[controller]")]
     public class FileController : Controller
     {
+
+        private readonly ILogger<FileController> _logger;
         private readonly IConfiguration _configuration;
         private readonly string _ConectionString;
 
-        public FileController(IConfiguration configuration)
+        public FileController(ILogger<FileController> logger, IConfiguration configuration)
         {
             _configuration = configuration;
             _ConectionString = _configuration.GetConnectionString("DefaultConnection");
+            _logger = logger;
         }
 
 
@@ -106,6 +110,36 @@ namespace WebApi.Controllers
                 return ValidationProblem("Error", "Post", 500, ex.Message);
             }
             return Ok(); //OK 200
+        }
+
+
+
+        /// <summary>
+        /// Update 
+        /// </summary>
+        /// <param name="imagentext">
+        /// Base64test
+        /// </param>
+        /// <returns>
+        /// Devuelve una prueba 
+        /// </returns>
+        [HttpPut]
+        [AllowAnonymous]
+        public ActionResult Update([FromBody] FileModel imagentext)
+        {
+            try
+            {
+                //Test
+            }
+            catch (WebException ex)
+            {
+                return ValidationProblem("Error", "Post", 500, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return ValidationProblem("Error", "Post", 500, ex.Message);
+            }
+            return Ok(new { Image = imagentext }); //OK 200
         }
 
 
