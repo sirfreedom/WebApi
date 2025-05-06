@@ -45,10 +45,12 @@ namespace WebApi.Controllers
             }
             catch (WebException ex)
             {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
                 return ValidationProblem("Error", "Get", 500, ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
                 return ValidationProblem("Error", "Get", 500, ex.Message);
             }
             return Ok(new { ImageList = lImageTest }); //OK 200
@@ -74,10 +76,12 @@ namespace WebApi.Controllers
             }
             catch (WebException ex)
             {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
                 return ValidationProblem("Error", "Post", 500, ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
                 return ValidationProblem("Error", "Post", 500, ex.Message);
             }
             return Created(); //OK 201
@@ -103,10 +107,12 @@ namespace WebApi.Controllers
             }
             catch (WebException ex)
             {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
                 return ValidationProblem("Error", "Post", 500, ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
                 return ValidationProblem("Error", "Post", 500, ex.Message);
             }
             return Ok(); //OK 200
@@ -129,14 +135,16 @@ namespace WebApi.Controllers
         {
             try
             {
-                //Test
+                
             }
             catch (WebException ex)
             {
+                _logger.LogError(ex.Message,ex.InnerException,ex.StackTrace);
                 return ValidationProblem("Error", "Post", 500, ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
                 return ValidationProblem("Error", "Post", 500, ex.Message);
             }
             return Ok(new { Image = imagentext }); //OK 200

@@ -51,10 +51,12 @@ namespace WebApi.Controllers
             }
             catch (WebException ex)
             {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
                 return ValidationProblem("Error", "Get", 500, ex.Message);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
                 return ValidationProblem("Error", "Get", 500, ex.Message);
             }
             return Ok(new { questions = lq }); //OK 200
