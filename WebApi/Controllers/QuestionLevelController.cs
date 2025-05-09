@@ -40,7 +40,7 @@ namespace WebApi.Controllers
         [AllowAnonymous]
         public ActionResult List(int IdDependency)
         {
-            List<QuestionLevel> lq = new List<QuestionLevel>();
+            List<QuestionLevel> lq;
             QuestionLevelBiz questionLevelBiz = new QuestionLevelBiz(_ConectionString);
             try
             {

@@ -42,7 +42,7 @@ namespace WebApi.Controllers
         [AllowAnonymous]
         public ActionResult List(int IdDependency)
         {
-            List<FinalTestMessage> lf = new List<FinalTestMessage>();
+            List<FinalTestMessage> lf;
             FinalTestMessageBiz finalTestMessageBiz = new FinalTestMessageBiz(_ConectionString);
             try
             {

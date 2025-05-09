@@ -123,9 +123,7 @@ namespace WebApi.Entity
 
         public static List<T> ToList<T>(List<dynamic> odynamic)
         {
-            List<string> columnNames = new List<string>();
             List<T> lReturn = new List<T>();
-
             PropertyInfo[] TipoConcretoProperties = typeof(T).GetProperties();
 
             string sTempValue;
@@ -223,7 +221,7 @@ namespace WebApi.Entity
         /// <returns></returns>
         public static List<string> ToList(DataTable dt, string column, string Condicion = "")
         {
-            List<string> lReturn = new List<string>();
+            List<string> lReturn = [];
             DataTable dtFiltrada = new DataTable();
             try
             {

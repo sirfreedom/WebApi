@@ -6,10 +6,8 @@ namespace WebApi.Biz
 {
     public class ImagenBiz
     {
-
         private readonly string _ConectionString = string.Empty;
         
-
         public ImagenBiz(string ConnectionString)
         {
             _ConectionString = ConnectionString;

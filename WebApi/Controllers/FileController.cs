@@ -38,7 +38,7 @@ namespace WebApi.Controllers
         public ActionResult List()
         {
             ImagenBiz Serv = new ImagenBiz(_ConectionString);
-            List<ImagenTest> lImageTest = new List<ImagenTest>();
+            List<ImagenTest> lImageTest;
             try
             {
                 lImageTest = lImageTest = Serv.List();
@@ -71,7 +71,7 @@ namespace WebApi.Controllers
             ImagenTest oImagen = new ImagenTest();
             try
             {
-                oImagen.ImageText = imagentext.imagetext;
+                oImagen = ImagenTest.Merge<FileModel, ImagenTest>(imagentext);
                 Serv.Insert(oImagen);
             }
             catch (WebException ex)
@@ -86,8 +86,6 @@ namespace WebApi.Controllers
             }
             return Created(); //OK 201
         }
-
-
 
 
         /// <summary>

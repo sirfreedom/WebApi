@@ -39,7 +39,7 @@ namespace WebApi.Controllers
         [AllowAnonymous]
         public ActionResult Get(int IdDependency)
         {
-            Setting oSetting = new Setting();
+            Setting oSetting;
             SettingBiz settingBiz = new SettingBiz(_ConectionString);
             try
             {
