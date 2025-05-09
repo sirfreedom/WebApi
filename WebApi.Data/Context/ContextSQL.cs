@@ -12,7 +12,7 @@ using WebApi.Entity;
 namespace WebApi.Data
 {
 
-    public sealed class ContextSQL<TEntity> : IRepository<TEntity> where TEntity : EntityBase, new()
+    public class ContextSQL<TEntity> : IRepository<TEntity> where TEntity : EntityBase, new()
     {
 
         public ContextSQL(string ConnectionString)
@@ -43,7 +43,7 @@ namespace WebApi.Data
 
         #region Declaration
 
-        private string _SettingConexion;
+        private readonly string _SettingConexion;
 
         #endregion
 
@@ -76,7 +76,7 @@ namespace WebApi.Data
 
         #region Interface Method
 
-        public List<TEntity> List()
+        public virtual List<TEntity> List()
         {
             DataTable dt;
             try
@@ -90,11 +90,10 @@ namespace WebApi.Data
             return EntityBase.ToList<TEntity>(dt);
         }
 
-        public TEntity Get(int Id)
+        public virtual TEntity Get(int Id)
         {
-            Dictionary<string, string> lDictionary = new Dictionary<string, string>();
-            List<dynamic> lDynamic = new List<dynamic>();
-            DataTable dt = new DataTable();
+            Dictionary<string, string> lDictionary = [];
+            DataTable dt;
             lDictionary.Add("Id", Id.ToString());
             try
             {
@@ -107,9 +106,9 @@ namespace WebApi.Data
             return EntityBase.ToList<TEntity>(dt).SingleOrDefault();
         }
 
-        public List<dynamic> Find(Dictionary<string, string> lParam)
+        public virtual List<dynamic> Find(Dictionary<string, string> lParam)
         {
-            List<dynamic> lDynamic = new List<dynamic>();
+            List<dynamic> lDynamic = [];
             DataTable dt;
             try
             {
@@ -126,10 +125,12 @@ namespace WebApi.Data
             return lDynamic;
         }
 
-        public void Delete(int Id)
+        public virtual void Delete(int Id)
         {
-            Dictionary<string, string> lDictionary = new Dictionary<string, string>();
-            lDictionary.Add("Id", Id.ToString());
+            Dictionary<string, string> lDictionary = new()
+            {
+                { "Id", Id.ToString() }
+            };
             try
             {
                 ExecuteNonQuery("Delete", lDictionary);
@@ -140,9 +141,9 @@ namespace WebApi.Data
             }
         }
 
-        public void Insert(TEntity oEntity)
+        public virtual void Insert(TEntity oEntity)
         {
-            Dictionary<string, string> lParam = new Dictionary<string, string>();
+            Dictionary<string, string> lParam = [];
             PropertyInfo[] propiedades;
             try
             {
@@ -160,9 +161,9 @@ namespace WebApi.Data
             }
         }
 
-        public void Update(TEntity oEntity)
+        public virtual void Update(TEntity oEntity)
         {
-            Dictionary<string, string> lParam = new Dictionary<string, string>();
+            Dictionary<string, string> lParam = [];
             PropertyInfo[] propiedades;
             try
             {
@@ -185,30 +186,30 @@ namespace WebApi.Data
 
         public DataSet Fill(string FunctionName, Dictionary<string, string> Parameters = null)
         {
-            DataSet ds = new DataSet();
-            SqlCommand cmd = new SqlCommand();
+            DataSet ds = new();
+            SqlCommand cmd = new();
             SqlDataAdapter da;
-            StringBuilder sbKey = new StringBuilder();
-            List<dynamic> lDynamic = new List<dynamic>();
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sbKey = new();
+            List<dynamic> lDynamic = [];
+            StringBuilder sb = new();
             sb.Append(EntityName);
-            sb.Append("_");
+            sb.Append('_');
             sb.Append(FunctionName);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.CommandText = sb.ToString();
             try
             {
-                Parameters = Parameters == null ? new Dictionary<string, string>() : Parameters;
+                Parameters = Parameters ?? [];
 
                 foreach (var d in Parameters)
                 {
                     sbKey.Clear();
-                    sbKey.Append("@");
+                    sbKey.Append('@');
                     sbKey.Append(d.Key);
                     cmd.Parameters.Add(new SqlParameter(sbKey.ToString(), d.Value));
                 }
 
-                using (SqlConnection cn = new SqlConnection())
+                using (SqlConnection cn = new())
                 {
                     cn.ConnectionString = _SettingConexion;
                     cmd.Connection = cn;
@@ -247,29 +248,29 @@ namespace WebApi.Data
 
         public void ExecuteNonQuery(string FunctionName, Dictionary<string, string> Parameters = null)
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             sb.Append(EntityName);
-            sb.Append("_");
+            sb.Append('_');
             sb.Append(FunctionName);
-            SqlCommand cmd = new SqlCommand();
+            SqlCommand cmd = new ();
             MessageError = string.Empty;
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.CommandText = sb.ToString();
-            StringBuilder sbKey = new StringBuilder();
+            StringBuilder sbKey = new ();
             cmd.CommandTimeout = 60;
             try
             {
-                Parameters = Parameters == null ? new Dictionary<string, string>() : Parameters;
+                Parameters = Parameters == null ? [] : Parameters;
 
                 foreach (var d in Parameters)
                 {
                     sbKey.Clear();
-                    sbKey.Append("@");
+                    sbKey.Append('@');
                     sbKey.Append(d.Key);
                     cmd.Parameters.Add(new SqlParameter(sbKey.ToString(), d.Value));
                 }
 
-                using (SqlConnection cn = new SqlConnection())
+                using (SqlConnection cn = new())
                 {
                     cn.ConnectionString = _SettingConexion;
                     cn.InfoMessage += cn_InfoMessage;
