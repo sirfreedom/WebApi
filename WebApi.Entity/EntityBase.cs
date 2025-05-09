@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Dynamic;
 using System.Globalization;
@@ -17,7 +18,8 @@ namespace WebApi.Entity
     [Serializable]
     public abstract class EntityBase
     {
-
+        
+        [Key]
         public int Id { get; set; }
 
         #region ToList
@@ -119,7 +121,7 @@ namespace WebApi.Entity
             }
         }
 
-        public static List<T> ToList<T>(List<dynamic> dynamics)
+        public static List<T> ToList<T>(List<dynamic> odynamic)
         {
             List<string> columnNames = new List<string>();
             List<T> lReturn = new List<T>();
@@ -129,7 +131,7 @@ namespace WebApi.Entity
             string sTempValue;
             try
             {
-                foreach (dynamic item in dynamics)
+                foreach (dynamic item in odynamic)
                 {
                     var oEntity = Activator.CreateInstance<T>();
 
@@ -193,6 +195,7 @@ namespace WebApi.Entity
             }
             return lReturn;
         }
+
 
         public static T ToList<T>(string json)
         {
