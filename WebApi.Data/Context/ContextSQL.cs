@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -106,19 +107,12 @@ namespace WebApi.Data
             return EntityBase.ToList<TEntity>(dt).SingleOrDefault();
         }
 
-        public List<dynamic> Find(TEntity oEntity)
+        public List<dynamic> Find(Dictionary<string, string> lParam)
         {
             List<dynamic> lDynamic = new List<dynamic>();
-            Dictionary<string, string> lParam = new Dictionary<string, string>();
-            PropertyInfo[] propiedades;
             DataTable dt;
             try
             {
-                propiedades = typeof(TEntity).GetProperties();
-                foreach (PropertyInfo propiedad in propiedades)
-                {
-                    lParam.Add(propiedad.Name, propiedad.GetValue(oEntity).ToString());
-                }
                 dt = Fill("Find", lParam).Tables[0];
                 if (dt.Rows.Count > 0)
                 {
@@ -155,6 +149,7 @@ namespace WebApi.Data
                 propiedades = typeof(TEntity).GetProperties();
                 foreach (PropertyInfo propiedad in propiedades)
                 {
+                    if (propiedad.IsDefined(typeof(KeyAttribute), inherit: false)) { continue; } //evita enviar el Id como parametro
                     lParam.Add(propiedad.Name, propiedad.GetValue(oEntity).ToString());
                 }
                 ExecuteNonQuery("Insert", lParam);

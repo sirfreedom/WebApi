@@ -27,7 +27,6 @@ namespace WebApi.Controllers
         /// </returns>
         [HttpGet("Get")]
         [AllowAnonymous]
-        //[DisableCors]
         public ActionResult Get(Byte dd, Byte mm, int yyyy)
         {
             Quini oQuini;

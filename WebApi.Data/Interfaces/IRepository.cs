@@ -10,7 +10,7 @@ namespace WebApi.Data
 
         TEntity Get(int Id);
 
-        List<dynamic> Find(TEntity oEntity);
+        List<dynamic> Find(Dictionary<string, string> lParam);
 
         void Delete(int Id);
 

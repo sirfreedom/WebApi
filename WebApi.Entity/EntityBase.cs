@@ -343,7 +343,6 @@ namespace WebApi.Entity
             jsonObject = JObject.Parse(Json);
             try
             {
-
                 foreach (JProperty jTable in jsonObject.Children<JProperty>())
                 {
                     childTokens.Add(jTable.Name);
@@ -377,7 +376,7 @@ namespace WebApi.Entity
             return ds;
         }
 
-        public static DataTable ToDataTable<T>(List<T> lista)
+        public static DataTable ToDatatable<T>(List<T> lista)
         {
             DataTable dataTable = new DataTable();
             try
@@ -409,7 +408,7 @@ namespace WebApi.Entity
             return dataTable;
         }
 
-        public static DataTable ToDataTable(DataTable dt, string Condicion)
+        public static DataTable ToDatatable(DataTable dt, string Condicion)
         {
             DataTable dtReturn = new DataTable();
             try
@@ -483,6 +482,20 @@ namespace WebApi.Entity
         #endregion
 
         #region To Etc
+
+        public static Dictionary<string, string> ToDictionary<T>(T entidad)
+        {
+            Dictionary<string, string> lDictionary = new Dictionary<string, string>();
+            PropertyInfo[] propiedades = entidad.GetType().GetProperties();
+
+            foreach (var prop in propiedades)
+            {
+                var valor = prop.GetValue(entidad);
+                lDictionary[prop.Name] = valor != null ? valor.ToString() : null;
+            }
+
+            return lDictionary;
+        }
 
         /// <summary>
         /// Funcion que cambia los valores de las propiedades por un dictionary con sus valores.
@@ -911,30 +924,6 @@ namespace WebApi.Entity
             });
         }
 
-        /// <summary>
-        /// Es para faciliar el paginado de una grilla jtable, devuelve true si tiene que salir del bucle y no agregar el row.
-        /// se le agrega if (b) { continue;  } en el bucle del for que llena el objeto dinamico.
-        /// </summary>
-        /// <param name="iPageSize"></param>
-        /// <param name="iRowNum"></param>
-        /// <param name="StartIndex"></param>
-        /// <returns></returns>
-        public static bool JTGrid(int iPageSize, int iRowNum, int StartIndex = 0)
-        {
-            bool b = false;
-            try
-            {
-                if (((iRowNum <= StartIndex) || iRowNum > (StartIndex + iPageSize)) && b == false)
-                {
-                    b = true;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-            return b;
-        }
 
         /// <summary>
         /// devuelve el nombre del dia de la semana de una fecha determinada.
