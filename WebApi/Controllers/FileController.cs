@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using WebApi.Biz;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
-using System.Reflection.PortableExecutable;
 using System.Text;
 using iTextSharp.text.pdf;
 using iTextSharp.text.pdf.parser;
@@ -155,67 +154,6 @@ namespace WebApi.Controllers
         }
 
 
-
-
-        /// <summary>
-        /// Leer pdf
-        /// </summary>
-        /// <param name="archivoPdf">
-        /// archivoPdf
-        /// </param>
-        /// <returns>
-        /// retorna el texto del pdf
-        /// </returns>
-        [HttpPost("LeerPdfFromFile")]
-        public IActionResult LeerPdfFromFile([FromForm] IFormFile archivoPdf)
-        {
-            StringBuilder textoExtraido = new StringBuilder();
-
-            if (archivoPdf == null || archivoPdf.Length == 0)
-            {
-                return BadRequest("No se envió ningún archivo PDF.");
-            }
-
-            using (var stream = archivoPdf.OpenReadStream())
-            using (var reader = new PdfReader(stream))
-            {
-                for (int i = 1; i <= reader.NumberOfPages; i++)
-                {
-                    string texto = PdfTextExtractor.GetTextFromPage(reader, i);
-                    textoExtraido.AppendLine(texto);
-                }
-            }
-
-            return Ok(new { texto = textoExtraido.ToString() });
-        }
-
-
-
-        /// <summary>
-        /// LeerPdfArrayBytes
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        [HttpPost("LeerPdfArrayBytes")]
-        public IActionResult LeerPdfArrayBytes([FromBody] PdfByteArrayRequestModel request)
-        {
-            if (request?.PdfBytes == null || request.PdfBytes.Length == 0)
-                return BadRequest("No se recibió el PDF como arreglo de bytes.");
-
-            StringBuilder textoExtraido = new StringBuilder();
-
-            using (var stream = new MemoryStream(request.PdfBytes))
-            using (var reader = new PdfReader(stream))
-            {
-                for (int i = 1; i <= reader.NumberOfPages; i++)
-                {
-                    string texto = PdfTextExtractor.GetTextFromPage(reader, i);
-                    textoExtraido.AppendLine(texto);
-                }
-            }
-
-            return Ok(new { texto = textoExtraido.ToString() });
-        }
 
 
     }
