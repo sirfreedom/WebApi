@@ -8,11 +8,7 @@ using WebApi.Entity;
 using System.Collections.Generic;
 using WebApi.Biz;
 using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Http;
-using System.Text;
-using iTextSharp.text.pdf;
-using iTextSharp.text.pdf.parser;
-using System.IO;
+
 
 
 namespace WebApi.Controllers
