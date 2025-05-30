@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
-
+using WebApi.Model;
 
 namespace WebApi.Controllers
 {
@@ -16,9 +16,14 @@ namespace WebApi.Controllers
     {
         private readonly ILogger<ValuesController> _logger;
         private readonly IConfiguration _configuration;
+        private readonly string _ConectionString = string.Empty;
+        private readonly string _Setting1;
 
         public ValuesController(ILogger<ValuesController> logger, IConfiguration configuration)
         {
+            _configuration = configuration;
+            _ConectionString = _configuration.GetConnectionString("DefaultConnection");
+            _Setting1 = _configuration.GetValue(typeof(string), "AppConfig:Setting1", string.Empty).ToString();
             _logger = logger;
             _configuration = configuration;
         }
@@ -29,11 +34,64 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
-        public IEnumerable<int> Get()
+        public IEnumerable<int> GetTest1()
         {
             var rng = new Random();
             return Enumerable.Range(1, 3).Select(x => rng.Next(0, 100));
         }
+
+
+        /// <summary>
+        /// PostTest1
+        /// </summary>
+        /// <param name="testmodel"></param>
+        /// <returns> devuelve lo mismo que le envias </returns>
+        [HttpPost]
+        [AllowAnonymous]
+        public ActionResult PostTest1([FromBody] TestModel testmodel)
+        {
+            return Ok(new { test = testmodel }); //OK 200
+        }
+
+        
+        /// <summary>
+        /// PutTest1
+        /// </summary>
+        /// <param name="testmodel"></param>
+        /// <returns> devuelve lo mismo que le envias </returns>
+        [HttpPut]
+        [AllowAnonymous]
+        public ActionResult PutTest1([FromBody] TestModel testmodel)
+        {
+            return Ok(new { test = testmodel }); //OK 200
+        }
+
+
+        /// <summary>
+        /// DeleteTest
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns> devuelve lo mismo que le envias </returns>
+        [HttpDelete]
+        [AllowAnonymous]
+        public ActionResult DeleteTest1(int Id)
+        {
+            return Ok(new { test = Id.ToString() }); //OK 200
+        }
+
+
+        /// <summary>
+        /// PatchTest
+        /// </summary>
+        /// <param name="testmodel"></param>
+        /// <returns></returns>
+        [HttpPatch]
+        [AllowAnonymous]
+        public ActionResult PatchTest1([FromBody] TestModel testmodel)
+        {
+            return Ok(new { test = testmodel }); //OK 200
+        }
+
 
         /// <summary>
         /// Metodo de autenticacion por JWT

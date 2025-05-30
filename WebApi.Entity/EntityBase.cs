@@ -488,11 +488,28 @@ namespace WebApi.Entity
         {
             Dictionary<string, string> lDictionary = new Dictionary<string, string>();
             PropertyInfo[] propiedades = entidad.GetType().GetProperties();
+            PropertyInfo[] Subpropiedades; 
 
             foreach (var prop in propiedades)
             {
                 var valor = prop.GetValue(entidad);
-                lDictionary[prop.Name] = valor != null ? valor.ToString() : null;
+
+                if (valor != null)
+                {
+                    lDictionary[prop.Name] = valor != null ? valor.ToString() : null;
+                }
+
+                if (valor == null) 
+                {
+                    Subpropiedades = prop.GetValue(entidad).GetType().GetProperties();
+
+                    foreach (var subprop in propiedades) 
+                    {
+                        var subvalor = prop.GetValue(entidad);
+
+                        lDictionary[prop.Name] = subvalor != null ? subvalor.ToString() : null;
+                    }
+                }
             }
 
             return lDictionary;
@@ -821,6 +838,19 @@ namespace WebApi.Entity
 
         #region Util 
 
+        public static List<string> EntityPropertyToList<T>(T TEntity) 
+        {
+            PropertyInfo[] initProperties = typeof(T).GetProperties();
+            List<string> lPropertyName = new List<string>();
+
+            foreach (PropertyInfo p in initProperties) {
+                lPropertyName.Add(p.Name);
+            }
+
+            return lPropertyName;
+        }
+
+
         public static TFinal Merge<TInit, TFinal>(TInit obj1) where TFinal : new()
         {
             TFinal result = new TFinal();
@@ -850,7 +880,7 @@ namespace WebApi.Entity
                                 }
                                 if (initProperty.PropertyType.Name == "DateTime" && finalProperty.PropertyType.Name == "String")
                                 {
-                                    finalProperty.SetValue(result, ((System.DateTime)value).ToString("yyyy-MM-ddTHH:mm:ss"));
+                                    finalProperty.SetValue(result, ((DateTime)value).ToString("yyyy-MM-ddTHH:mm:ss"));
                                 }
                                 if (initProperty.PropertyType.Name == "DateOnly" && finalProperty.PropertyType.Name == "String")
                                 {
@@ -887,6 +917,7 @@ namespace WebApi.Entity
             }
         }
 
+
         /// <summary>
         /// Devuelve cantidad de dias entre dos fechas, enviandole como parametro el dia que queremos que cuente de la semanas.
         /// </summary>
@@ -916,14 +947,7 @@ namespace WebApi.Entity
             return iCantidad;
         }
 
-        public static string UpperFirst(string s)
-        {
-            return Regex.Replace(s, @"\b[a-z]\w+", delegate (Match match)
-            {
-                string v = match.ToString();
-                return char.ToUpper(v[0]) + v.Substring(1);
-            });
-        }
+
 
 
         /// <summary>

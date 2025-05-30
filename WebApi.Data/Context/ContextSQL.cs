@@ -12,7 +12,15 @@ using WebApi.Entity;
 namespace WebApi.Data
 {
 
-    public class ContextSQL<TEntity> : IRepository<TEntity> where TEntity : EntityBase, new()
+    /// <summary>
+    /// Context es una entidad de uso, no de herencia, la implemetacion tipada IRepository sirve para hacer la abstraccion de sus metodos ya que context puede cambiar en el tiempo
+    /// o puede usarse otro context que respete la firma IRepository
+    /// </summary>
+    /// <typeparam name="TEntity">
+    /// la entidad TEntity es una entidad abstracta hasta que se implementa de forma concreta para poder interactuar con el List o demas metodos
+    /// TEntity solo puede existir SOLO si esta heredada por EntityBase y tiene un constructor sin parametros asi lo exige la implementacion.
+    /// </typeparam>
+    public sealed class ContextSQL<TEntity> : IRepository<TEntity> where TEntity : EntityBase, new()
     {
 
         public ContextSQL(string ConnectionString)
@@ -67,6 +75,12 @@ namespace WebApi.Data
 
         #region Catch Sql Errors
 
+
+        /// <summary>
+        /// Este evento devuelve errores de sql 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void cn_InfoMessage(object sender, SqlInfoMessageEventArgs e)
         {
             MessageError = e.Message;
@@ -76,7 +90,7 @@ namespace WebApi.Data
 
         #region Interface Method
 
-        public virtual List<TEntity> List()
+        public List<TEntity> List()
         {
             DataTable dt;
             try
@@ -90,7 +104,7 @@ namespace WebApi.Data
             return EntityBase.ToList<TEntity>(dt);
         }
 
-        public virtual TEntity Get(int Id)
+        public TEntity Get(int Id)
         {
             Dictionary<string, string> lDictionary = [];
             DataTable dt;
@@ -106,7 +120,7 @@ namespace WebApi.Data
             return EntityBase.ToList<TEntity>(dt).SingleOrDefault();
         }
 
-        public virtual List<dynamic> Find(Dictionary<string, string> lParam)
+        public List<dynamic> Find(Dictionary<string, string> lParam)
         {
             List<dynamic> lDynamic = [];
             DataTable dt;
@@ -125,7 +139,7 @@ namespace WebApi.Data
             return lDynamic;
         }
 
-        public virtual void Delete(int Id)
+        public void Delete(int Id)
         {
             Dictionary<string, string> lDictionary = new()
             {
@@ -141,7 +155,7 @@ namespace WebApi.Data
             }
         }
 
-        public virtual void Insert(TEntity oEntity)
+        public void Insert(TEntity oEntity)
         {
             Dictionary<string, string> lParam = [];
             PropertyInfo[] propiedades;
@@ -153,7 +167,8 @@ namespace WebApi.Data
                     if (propiedad.IsDefined(typeof(KeyAttribute), inherit: false)) { continue; } //evita enviar el Id como parametro
                     lParam.Add(propiedad.Name, propiedad.GetValue(oEntity).ToString());
                 }
-                ExecuteNonQuery("Insert", lParam);
+
+                ExecuteNonQuery("Insert",lParam);
             }
             catch (Exception ex)
             {
@@ -161,7 +176,7 @@ namespace WebApi.Data
             }
         }
 
-        public virtual void Update(TEntity oEntity)
+        public void Update(TEntity oEntity)
         {
             Dictionary<string, string> lParam = [];
             PropertyInfo[] propiedades;
@@ -184,6 +199,23 @@ namespace WebApi.Data
 
         #region Store Procedures Common Function
 
+
+
+        /// <summary>
+        /// Fill funciona como Fill original llena datos y devuelve un dataset
+        /// </summary>
+        /// <param name="FunctionName">
+        /// si la entidad se llama Prueba, y queremos hacer un parametro que inserte Prueba, el store se va a llamar Prueba_Insert 
+        /// el nombre de la funcion no es todo el store, sino solo lo que resta. o sea insert
+        /// </param>
+        /// <param name="Parameters">
+        /// son los parametros en formato Diccionary, el nombre del parametro es la key y el value es el valor, el nombre va sin @ Arroba.
+        /// </param>
+        /// <returns>
+        /// devuelve un dataset
+        /// </returns>
+        /// <exception cref="ContextSQLException"></exception>
+        /// <exception cref="Exception"></exception>
         public DataSet Fill(string FunctionName, Dictionary<string, string> Parameters = null)
         {
             DataSet ds = new();
@@ -219,6 +251,11 @@ namespace WebApi.Data
                     cn.Open();
                     da.Fill(ds);
                     cn.Close();
+                }
+
+                if (ds.Tables.Count == 0) 
+                { 
+                    ds.Tables.Add(new DataTable());
                 }
 
                 if (MessageError.Length > 0)
