@@ -11,7 +11,6 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization.Json;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace WebApi.Entity
 {
@@ -193,7 +192,6 @@ namespace WebApi.Entity
             }
             return lReturn;
         }
-
 
         public static T ToList<T>(string json)
         {
@@ -484,6 +482,21 @@ namespace WebApi.Entity
 
         #region To Etc
 
+        //public static Dictionary<string, string> ToMergeDictionary(Dictionary<string, string> dic1, Dictionary<string, string> dic2) 
+        //{
+        //    //Dictionary<string,string> lReturn = new Dictionary<string,string>();
+
+        //    var lReturn = dic1
+        //        .Concat(dic2)
+        //        .GroupBy(kvp => kvp.Key)
+        //        .ToDictionary(g => g.Key, g => g.Last());
+
+        //    return lReturn;
+
+        //}
+
+
+
         public static Dictionary<string, string> ToDictionary<T>(T entidad, bool MergeKeyValue = false)
         {
             Dictionary<string, string> lDictionary = new Dictionary<string, string>();
@@ -525,12 +538,11 @@ namespace WebApi.Entity
                     //    //Console.WriteLine($"Propiedad: {nombrePropiedad}, Valor: {valorPropiedad}");
                     //}
 
-                    //setMethod.Invoke(instancia, new object[] { valor });
-
                     //foreach (PropertyDescriptor subprop in TypeDescriptor.GetProperties(prop))
                     //{
                     //    object subvalor = prop.GetValue(subprop);
                     //    lDictionary.Add(subprop.Name, subvalor.ToString());
+
                     Subpropiedades = prop.GetValue(entidad).GetType().GetProperties();
 
                     foreach (var subprop in propiedades) 
@@ -539,7 +551,7 @@ namespace WebApi.Entity
 
                         lDictionary[prop.Name] = subvalor != null ? subvalor.ToString() : null;
                     }
-                    //}
+
                 }
             }
 

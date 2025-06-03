@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
 using WebApi.Model;
+using WebApi.Entity;
+using System.Linq.Expressions;
 
 namespace WebApi.Controllers
 {
@@ -50,7 +52,21 @@ namespace WebApi.Controllers
         [AllowAnonymous]
         public ActionResult PostTest1([FromBody] TestModel testmodel)
         {
-            return Ok(new { test = testmodel }); //OK 200
+            TestPropiedades1 t = new TestPropiedades1();
+            TestPropiedadesHija h = new TestPropiedadesHija();
+            Dictionary<string, string> lParam = new Dictionary<string, string>();
+            t.Id = 1;
+            t.Nombre = "pepe";
+            t.Apellido = "Gomez";
+            h.Telefono = "1111111";
+            h.Direccion = "Aguero2219";
+            t.testPropiedadesHija = h;
+
+            lParam = t.ToDictionary(true, true);
+            t.testPropiedadesHija.ToDictionary(true, true);
+
+
+            return Ok(new { test = lParam }); //OK 200
         }
 
         
@@ -134,5 +150,39 @@ namespace WebApi.Controllers
             HttpContext.Response.Headers["WWW-Authenticate"] = "Basic realm=\"My Realm\"";
             return new UnauthorizedResult();
         }
+
+
+
+
+
+        /// <summary>
+        /// Solo pruebas pequenas
+        /// </summary>
+        /// <returns>
+        /// 200
+        /// </returns>
+        //[HttpPost]
+        //[AllowAnonymous]
+        //public ActionResult Test() 
+        //{
+        //    TestPropiedades1 t = new TestPropiedades1();
+        //    TestPropiedadesHija h = new TestPropiedadesHija();
+        //    Dictionary<string, string> lParam = new Dictionary<string, string>();
+        //    t.Id = 1;
+        //    t.Nombre = "pepe";
+        //    t.Apellido = "Gomez";
+        //    h.Telefono = "1111111";
+        //    h.Direccion = "Aguero2219";
+        //    t.testPropiedadesHija = h;
+
+        //    lParam = t.ToDictionary(true, true);
+
+        //    return Ok(new { test = lParam }); //OK 200
+        //}
+
+
+
+
+
     }
 }

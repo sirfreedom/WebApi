@@ -12,7 +12,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using WebApi.Infrastructure.Jwt;
-using Microsoft.AspNetCore.Cors.Infrastructure;
 
 namespace WebApi
 {
@@ -21,9 +20,11 @@ namespace WebApi
 
         #region Declaraciones
 
-        public IConfiguration Configuration { get; }
+        public IConfiguration _Configuration { get; }
 
         private readonly string MyAllowSpecificOrigins = "MyPolicy";
+        private string _CorsPolicy;
+        private string[] _lCorsPolicy;
 
         #endregion
 
@@ -31,9 +32,10 @@ namespace WebApi
 
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            _Configuration = configuration;
+            _CorsPolicy = _Configuration.GetValue(typeof(string), "AppConfig:CorsPolicy", string.Empty).ToString();
+            _lCorsPolicy = _CorsPolicy.Split(",");
         }
-                
 
         #endregion
 
@@ -42,21 +44,20 @@ namespace WebApi
         {
             services.AddCors(options =>
             {
-                options.AddPolicy(name: MyAllowSpecificOrigins,
-                    builder =>
-                    {
-                        builder.AllowAnyHeader()
-                               .SetIsOriginAllowed(origin => true) // Dynamically allow
-                               //.AllowAnyOrigin()
-                               .AllowCredentials()
-                               .AllowAnyMethod();
-                    });
+                options.AddPolicy("MyPolicy", policy =>
+                {
+                    policy
+                    .WithOrigins(_lCorsPolicy) //  Lista de orígenes válidos
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials(); //  ahora es válido
+                });
             });
 
 
             services.AddControllers();
 
-            var token = Configuration.GetSection("tokenManagement").Get<TokenManagement>();
+            var token = _Configuration.GetSection("tokenManagement").Get<TokenManagement>();
             services.AddSingleton(token);
             services.AddAuthentication(x =>
             {
