@@ -484,23 +484,53 @@ namespace WebApi.Entity
 
         #region To Etc
 
-        public static Dictionary<string, string> ToDictionary<T>(T entidad)
+        public static Dictionary<string, string> ToDictionary<T>(T entidad, bool MergeKeyValue = false)
         {
             Dictionary<string, string> lDictionary = new Dictionary<string, string>();
-            PropertyInfo[] propiedades = entidad.GetType().GetProperties();
-            PropertyInfo[] Subpropiedades; 
-
-            foreach (var prop in propiedades)
+            PropertyInfo[] propiedades = entidad.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            PropertyInfo[] Subpropiedades = [];
+            string sPrimitive = string.Empty;
+            
+            foreach (PropertyInfo prop in propiedades)
             {
                 var valor = prop.GetValue(entidad);
 
-                if (valor != null)
+                sPrimitive = prop.PropertyType.Namespace; // obviamente tiene namespace
+
+                if (prop.IsDefined(typeof(KeyAttribute), inherit: false) && MergeKeyValue == false)
+                { continue; } //evita enviar el Key Id
+
+                if (valor != null && sPrimitive == "System")
                 {
-                    lDictionary[prop.Name] = valor != null ? valor.ToString() : null;
+                    var vprop = valor != null ? valor.ToString() : null;
+                    lDictionary.Add(prop.Name, vprop);
+                    continue;
                 }
 
-                if (valor == null) 
+                if (valor == null && sPrimitive == "System")
                 {
+                    lDictionary.Add(prop.Name, "");
+                    continue;
+                }
+
+                if (sPrimitive != "System") 
+                {
+                    //Type tipo = prop.GetType();
+                    //Subpropiedades = tipo.GetProperties();
+
+                    //foreach (PropertyInfo p in Subpropiedades)
+                    //{
+                    //    string nombrePropiedad = p.Name;
+                    //    object valorPropiedad = p.GetValue(prop);
+                    //    //Console.WriteLine($"Propiedad: {nombrePropiedad}, Valor: {valorPropiedad}");
+                    //}
+
+                    //setMethod.Invoke(instancia, new object[] { valor });
+
+                    //foreach (PropertyDescriptor subprop in TypeDescriptor.GetProperties(prop))
+                    //{
+                    //    object subvalor = prop.GetValue(subprop);
+                    //    lDictionary.Add(subprop.Name, subvalor.ToString());
                     Subpropiedades = prop.GetValue(entidad).GetType().GetProperties();
 
                     foreach (var subprop in propiedades) 
@@ -509,6 +539,7 @@ namespace WebApi.Entity
 
                         lDictionary[prop.Name] = subvalor != null ? subvalor.ToString() : null;
                     }
+                    //}
                 }
             }
 
