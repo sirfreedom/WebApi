@@ -16,12 +16,12 @@ namespace WebApi.Data
         public List<Question> List(int IdDependency, int CodLevel = 0) 
         {
             Dictionary<string, string> lParam = new Dictionary<string, string>();
-            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
             IRepository<Question> Serv = new ContextSQL<Question>(_ConectionString);
             lParam.Add("IdDependency", IdDependency.ToString());
             lParam.Add("CodLevel",CodLevel.ToString());
-            ds = Serv.Fill("ListByDependency", lParam);
-            return Question.ToList<Question>(ds.Tables[0]);
+            dt = Serv.Fill("ListByDependency", lParam);
+            return Question.ToList<Question>(dt);
         }
     
     }

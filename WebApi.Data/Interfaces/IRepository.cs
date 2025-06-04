@@ -18,7 +18,7 @@ namespace WebApi.Data
 
         void Update(TEntity oEntity);
 
-        DataSet Fill(string FunctionName, Dictionary<string, string> lParam = null);
+        DataTable Fill(string FunctionName, Dictionary<string, string> lParam = null);
 
         void ExecuteNonQuery(string FunctionName, Dictionary<string, string> lParam = null);
 

@@ -95,7 +95,7 @@ namespace WebApi.Data
             DataTable dt;
             try
             {
-                dt = Fill("List").Tables[0];
+                dt = Fill("List");
             }
             catch (Exception ex)
             {
@@ -111,7 +111,7 @@ namespace WebApi.Data
             lDictionary.Add("Id", Id.ToString());
             try
             {
-                dt = Fill("Get", lDictionary).Tables[0];
+                dt = Fill("Get", lDictionary);
             }
             catch (Exception ex)
             {
@@ -126,7 +126,7 @@ namespace WebApi.Data
             DataTable dt;
             try
             {
-                dt = Fill("Find", lParam).Tables[0];
+                dt = Fill("Find", lParam);
                 if (dt.Rows.Count > 0)
                 {
                     lDynamic = EntityBase.ToDynamic(dt);
@@ -158,16 +158,9 @@ namespace WebApi.Data
         public void Insert(TEntity oEntity)
         {
             Dictionary<string, string> lParam = [];
-            PropertyInfo[] propiedades;
             try
             {
-                propiedades = typeof(TEntity).GetProperties();
-                foreach (PropertyInfo propiedad in propiedades)
-                {
-                    if (propiedad.IsDefined(typeof(KeyAttribute), inherit: false)) { continue; } //evita enviar el Id como parametro
-                    lParam.Add(propiedad.Name, propiedad.GetValue(oEntity).ToString());
-                }
-
+                lParam = EntityBase.ToDictionary(oEntity);
                 ExecuteNonQuery("Insert",lParam);
             }
             catch (Exception ex)
@@ -179,14 +172,9 @@ namespace WebApi.Data
         public void Update(TEntity oEntity)
         {
             Dictionary<string, string> lParam = [];
-            PropertyInfo[] propiedades;
             try
             {
-                propiedades = typeof(TEntity).GetProperties();
-                foreach (PropertyInfo propiedad in propiedades)
-                {
-                    lParam.Add(propiedad.Name, propiedad.GetValue(oEntity).ToString());
-                }
+                lParam = EntityBase.ToDictionary(oEntity,true);
                 ExecuteNonQuery("Update", lParam);
             }
             catch (Exception ex)
@@ -199,26 +187,10 @@ namespace WebApi.Data
 
         #region Store Procedures Common Function
 
-
-
-        /// <summary>
-        /// Fill funciona como Fill original llena datos y devuelve un dataset
-        /// </summary>
-        /// <param name="FunctionName">
-        /// si la entidad se llama Prueba, y queremos hacer un parametro que inserte Prueba, el store se va a llamar Prueba_Insert 
-        /// el nombre de la funcion no es todo el store, sino solo lo que resta. o sea insert
-        /// </param>
-        /// <param name="Parameters">
-        /// son los parametros en formato Diccionary, el nombre del parametro es la key y el value es el valor, el nombre va sin @ Arroba.
-        /// </param>
-        /// <returns>
-        /// devuelve un dataset
-        /// </returns>
-        /// <exception cref="ContextSQLException"></exception>
-        /// <exception cref="Exception"></exception>
-        public DataSet Fill(string FunctionName, Dictionary<string, string> Parameters = null)
+        public DataTable Fill(string FunctionName, Dictionary<string, string> Parameters = null)
         {
             DataSet ds = new();
+            DataTable dt = new DataTable();
             SqlCommand cmd = new();
             SqlDataAdapter da;
             StringBuilder sbKey = new();
@@ -255,7 +227,11 @@ namespace WebApi.Data
 
                 if (ds.Tables.Count == 0) 
                 { 
-                    ds.Tables.Add(new DataTable());
+                    dt = new DataTable();
+                }
+                if (ds.Tables.Count > 0)
+                {
+                    dt = ds.Tables[0];
                 }
 
                 if (MessageError.Length > 0)
@@ -279,7 +255,7 @@ namespace WebApi.Data
             {
                 cmd.Dispose();
             }
-            return ds;
+            return dt;
         }
 
 

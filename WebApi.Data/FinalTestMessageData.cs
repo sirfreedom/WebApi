@@ -17,11 +17,11 @@ namespace WebApi.Data
         public List<FinalTestMessage> List(int IdDependency) 
         {
             Dictionary<string,string> lParam = new Dictionary<string, string>();
-            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
             IRepository<FinalTestMessage> Serv = new ContextSQL<FinalTestMessage>(_ConnectionString);
             lParam.Add("IdDependency",IdDependency.ToString());
-            ds = Serv.Fill("ListByDependency", lParam);
-            return FinalTestMessage.ToList<FinalTestMessage>(ds.Tables[0]);
+            dt = Serv.Fill("ListByDependency", lParam);
+            return FinalTestMessage.ToList<FinalTestMessage>(dt);
         }
 
  

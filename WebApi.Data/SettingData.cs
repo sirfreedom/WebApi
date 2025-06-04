@@ -17,13 +17,13 @@ namespace WebApi.Data
 
         public Setting GetByDependency(int IdDependency)
         {
-            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
             Setting oSetting = new Setting();
             Dictionary<string, string> lParam = new Dictionary<string, string>();
             lParam.Add("IdDependency", IdDependency.ToString());
             IRepository<Setting> Serv = new ContextSQL<Setting>(_ConnectionString);
-            ds = Serv.Fill("GetByDependency", lParam);
-            oSetting = Setting.ToList<Setting>(ds.Tables[0]).SingleOrDefault();
+            dt = Serv.Fill("GetByDependency", lParam);
+            oSetting = Setting.ToList<Setting>(dt).SingleOrDefault();
             return oSetting;
         }
 
