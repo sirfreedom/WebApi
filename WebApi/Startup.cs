@@ -49,6 +49,7 @@ namespace WebApi
                     policy
                     .WithOrigins(_lCorsPolicy) //  Lista de orígenes válidos
                     .AllowAnyHeader()
+                    .SetIsOriginAllowed(origin => true)
                     .AllowAnyMethod()
                     .AllowCredentials(); //  ahora es válido
                 });
