@@ -53,6 +53,18 @@ namespace WebApi
                     });
             });
 
+            //services.AddCors(options =>
+            //{
+            //    options.AddPolicy(name: MyAllowSpecificOrigins,
+            //        builder =>
+            //        {
+            //            builder.AllowAnyHeader()
+            //                   .SetIsOriginAllowed(origin => true) // Dynamically allow
+            //                                                       //.AllowAnyOrigin()
+            //                   .AllowCredentials()
+            //                   .AllowAnyMethod();
+            //        });
+            //});
 
             services.AddControllers();
 
