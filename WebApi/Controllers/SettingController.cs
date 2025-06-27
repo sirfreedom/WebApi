@@ -6,6 +6,7 @@ using System.Net;
 using System;
 using WebApi.Biz;
 using WebApi.Entity;
+using WebApi.Model;
 
 namespace WebApi.Controllers
 {
@@ -57,6 +58,78 @@ namespace WebApi.Controllers
             }
             return Ok(new { setting = oSetting }); //OK 200
         }
+
+
+        [HttpPut]
+        [Authorize]
+        public ActionResult Update([FromBody] SettingModel setttingmodel)
+        {
+            //SettingBiz settingBiz = new SettingBiz(_ConectionString);
+            try
+            {
+                //oSetting = settingBiz.GetByDependency(IdDependency);
+            }
+            catch (WebException ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get", 500, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get", 500, ex.Message);
+            }
+            return Ok(new { setting = setttingmodel }); //OK 200
+        }
+
+
+
+        [HttpPost]
+        [Authorize]
+        public ActionResult Insert([FromBody] SettingModel setttingmodel)
+        {
+            //SettingBiz settingBiz = new SettingBiz(_ConectionString);
+            try
+            {
+                //oSetting = settingBiz.GetByDependency(IdDependency);
+            }
+            catch (WebException ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get", 500, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get", 500, ex.Message);
+            }
+            return Ok(new { setting = setttingmodel }); //OK 200
+        }
+
+
+
+        [HttpDelete]
+        [Authorize]
+        public ActionResult Delete(int Id)
+        {
+            //SettingBiz settingBiz = new SettingBiz(_ConectionString);
+            try
+            {
+                //oSetting = settingBiz.GetByDependency(IdDependency);
+            }
+            catch (WebException ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get", 500, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get", 500, ex.Message);
+            }
+            return Ok(new { Id = Id }); //OK 200
+        }
+
 
 
 

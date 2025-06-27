@@ -31,7 +31,7 @@ namespace WebApi.Controllers
 
 
         /// <summary>
-        /// Lista todas las imagenes
+        /// List 
         /// </summary>
         /// <returns></returns>
         [HttpGet]
@@ -60,7 +60,7 @@ namespace WebApi.Controllers
 
 
         /// <summary>
-        /// Prueba de imagen
+        /// Post
         /// </summary>
         /// <param name="imagentext"></param>
         /// <returns></returns>
@@ -90,7 +90,7 @@ namespace WebApi.Controllers
 
 
         /// <summary>
-        /// Elimina una imagen
+        /// Delete
         /// </summary>
         /// <param name="Id"></param>
         /// <returns></returns>
