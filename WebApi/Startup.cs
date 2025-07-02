@@ -22,7 +22,7 @@ namespace WebApi
 
         public IConfiguration _Configuration { get; }
 
-        private readonly string MyAllowSpecificOrigins = "MyPolicy";
+        private readonly string _MyAllowSpecificOrigins = "MyPolicy";
         private string _CorsPolicy;
         private string[] _lCorsPolicy;
 
@@ -44,29 +44,16 @@ namespace WebApi
         {
             services.AddCors(options =>
             {
-                options.AddPolicy("MyPolicy", policy =>
+                options.AddPolicy(_MyAllowSpecificOrigins, policy =>
                 {
                     policy
                     .WithOrigins(_lCorsPolicy) //  Lista de orígenes válidos
                     .AllowAnyHeader()
-                    .SetIsOriginAllowed(origin => true)
                     .AllowAnyMethod()
-                    .AllowCredentials(); //  ahora es válido
+                    .AllowCredentials();
                 });
             });
 
-            //services.AddCors(options =>
-            //{
-            //    options.AddPolicy(name: MyAllowSpecificOrigins,
-            //        builder =>
-            //        {
-            //            builder.AllowAnyHeader()
-            //                   .SetIsOriginAllowed(origin => true) // Dynamically allow
-            //                                                       //.AllowAnyOrigin()
-            //                   .AllowCredentials()
-            //                   .AllowAnyMethod();
-            //        });
-            //});
 
             services.AddControllers();
 
@@ -162,14 +149,14 @@ namespace WebApi
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
-            app.UseCors(MyAllowSpecificOrigins);
+            //app.UseCors(MyAllowSpecificOrigins);
+            app.UseCors("MyPolicy");
 
-            //Configuro los paths scripts e images
             app.UseDefaultFiles();
             app.UseStaticFiles();
             app.UseHttpsRedirection();
 
-            app.UseSwagger();
+            app.UseSwagger(options => options.OpenApiVersion = Microsoft.OpenApi.OpenApiSpecVersion.OpenApi2_0);
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");

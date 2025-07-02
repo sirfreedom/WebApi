@@ -99,7 +99,6 @@ namespace WebApi.Model
 
         public DateTime DatetimeConvert(string Fecha) 
         {
-            string s;
             DateTime d;
             int iDay = 0;
             int iMonth = 0;
