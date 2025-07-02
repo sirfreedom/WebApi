@@ -56,6 +56,7 @@ namespace WebApi
 
 
             services.AddControllers();
+            services.AddEndpointsApiExplorer();
 
             var token = _Configuration.GetSection("tokenManagement").Get<TokenManagement>();
             services.AddSingleton(token);
@@ -148,9 +149,7 @@ namespace WebApi
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseRouting();
-            //app.UseCors(MyAllowSpecificOrigins);
-            app.UseCors("MyPolicy");
+            app.UseCors(_MyAllowSpecificOrigins);
 
             app.UseDefaultFiles();
             app.UseStaticFiles();
@@ -164,16 +163,21 @@ namespace WebApi
                 c.DefaultModelsExpandDepth(0);
                 c.RoutePrefix = string.Empty;
             });
+            app.UseForwardedHeaders();
+            app.UseHttpMethodOverride();
+
+            # region Uso correcto del orden 
 
             app.UseRouting();
             app.UseAuthentication();
-            app.UseForwardedHeaders();
-            app.UseHttpMethodOverride();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
+
+            #endregion
         }
 
 
