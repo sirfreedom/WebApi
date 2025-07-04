@@ -15,13 +15,13 @@ namespace WebApi.Controllers
     {
         private readonly ILogger<ValuesController> _logger;
         private readonly IConfiguration _configuration;
-        private readonly string _ConectionString = string.Empty;
+        private readonly string _ConnectionString = string.Empty;
         private readonly string _Setting1;
 
         public ValuesController(ILogger<ValuesController> logger, IConfiguration configuration)
         {
             _configuration = configuration;
-            _ConectionString = _configuration.GetConnectionString("DefaultConnection");
+            _ConnectionString = _configuration.GetConnectionString("DefaultConnection");
             _Setting1 = _configuration.GetValue(typeof(string), "AppConfig:Setting1", string.Empty).ToString();
             _logger = logger;
             _configuration = configuration;

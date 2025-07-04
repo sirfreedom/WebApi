@@ -8,28 +8,28 @@ namespace WebApi.Biz
 {
     public class ImagenBiz
     {
-        private readonly string _ConectionString = string.Empty;
+        private readonly string _ConnectionString = string.Empty;
         
         public ImagenBiz(string ConnectionString)
         {
-            _ConectionString = ConnectionString;
+            _ConnectionString = ConnectionString;
         }
 
         public List<ImagenTest> List() 
         {
-            ImagenTestData Serv = new ImagenTestData(_ConectionString);
+            ImagenTestData Serv = new ImagenTestData(_ConnectionString);
             return Serv.List();
         }
 
         public void Insert(ImagenTest imagenTest) 
         {
-            ImagenTestData Serv = new ImagenTestData(_ConectionString);
+            ImagenTestData Serv = new ImagenTestData(_ConnectionString);
             Serv.Insert(imagenTest);
         }
 
         public void Delete(int Id) 
         {
-            ImagenTestData Serv = new ImagenTestData(_ConectionString);
+            ImagenTestData Serv = new ImagenTestData(_ConnectionString);
             Serv.Delete(Id);
         }
 

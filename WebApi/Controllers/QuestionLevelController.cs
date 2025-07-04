@@ -2,11 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Net;
-using System;
 using WebApi.Biz;
 using WebApi.Entity;
+using WebApi.Model;
 
 namespace WebApi.Controllers
 {
@@ -17,13 +18,13 @@ namespace WebApi.Controllers
     {
         private readonly ILogger<ValuesController> _logger;
         private readonly IConfiguration _configuration;
-        private readonly string _ConectionString;
+        private readonly string _ConnectionString;
 
         public QuestionLevelController(ILogger<ValuesController> logger, IConfiguration configuration)
         {
             _logger = logger;
             _configuration = configuration;
-            _ConectionString = _configuration.GetConnectionString("DefaultConnection");
+            _ConnectionString = _configuration.GetConnectionString("DefaultConnection");
         }
 
 
@@ -41,7 +42,7 @@ namespace WebApi.Controllers
         public ActionResult List(int IdDependency)
         {
             List<QuestionLevel> lq;
-            QuestionLevelBiz questionLevelBiz = new QuestionLevelBiz(_ConectionString);
+            QuestionLevelBiz questionLevelBiz = new QuestionLevelBiz(_ConnectionString);
             try
             {
                 lq = questionLevelBiz.List(IdDependency);
@@ -58,6 +59,138 @@ namespace WebApi.Controllers
             }
             return Ok(new { questionlevels = lq }); //OK 200
         }
+
+
+        /// <summary>
+        /// Devuelve un QuestionLevel
+        /// </summary>
+        /// <param name="Id">
+        /// El Id es la clave unica PK de la entidad QuestionLevel.
+        /// </param>
+        /// <returns>
+        /// devuelve un objeto unico del tipo QuestionLevel .
+        /// </returns>
+        [HttpGet("Get")]
+        [AllowAnonymous]
+        public ActionResult Get(int Id)
+        {
+            QuestionLevelBiz oQuestionLevelBiz = new QuestionLevelBiz(_ConnectionString);
+            QuestionLevel oQuestionLevel = new QuestionLevel();
+            try
+            {
+                oQuestionLevel = oQuestionLevelBiz.Get(Id);
+            }
+            catch (WebException ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get", 500, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get ", 500, ex.Message);
+            }
+            return Ok(new { questionlevel = oQuestionLevel }); //OK 200);
+        }
+
+
+        /// <summary>
+        /// Actualiza QuestionLevel
+        /// </summary>
+        /// <param name="questionlevel">
+        /// Esta entidad permite actualizar todos los valores de la tabla QuestionLevel.
+        /// </param>
+        /// <returns>
+        /// devuelve Status: 200 en caso de haber actualizado correctamente 
+        /// </returns>
+        [HttpPut("Update")]
+        [Authorize]
+        public ActionResult Update([FromBody] QuestionLevel questionlevel)
+        {
+            QuestionLevelBiz oQuestionLevelBiz = new QuestionLevelBiz(_ConnectionString);
+            try
+            {
+                oQuestionLevelBiz.Update(questionlevel);
+            }
+            catch (WebException ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get", 500, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get ", 500, ex.Message);
+            }
+            return Ok(); //OK 200
+        }
+
+
+        /// <summary>
+        /// Inserta QuestionLevel
+        /// </summary>
+        /// <param name="questionlevelModel">
+        /// Inserta todos los campos de la entidad QuestionLevel.
+        /// </param>
+        /// <returns>
+        /// devuelve un status: 201/204 si inserto correctamente 
+        /// </returns>
+        [HttpPost("Insert")]
+        [Authorize]
+        public ActionResult Insert([FromBody] QuestionLevelModel questionlevelModel)
+        {
+            QuestionLevelBiz oQuestionLevelBiz = new QuestionLevelBiz(_ConnectionString);
+            QuestionLevel questionlevel = new QuestionLevel();
+            try
+            {
+                questionlevel = QuestionLevel.Merge<QuestionLevelModel, QuestionLevel>(questionlevelModel);
+                oQuestionLevelBiz.Insert(questionlevel);
+            }
+            catch (WebException ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get", 500, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get ", 500, ex.Message);
+            }
+            return Created(); //OK 201/204
+        }
+
+
+        /// <summary>
+        /// Elimina un registro de  QuestionLevel
+        /// </summary>
+        /// <param name="Id">
+        /// El Id es la clave unica PK de la entidad QuestionLevel.
+        /// </param>
+        /// <returns>
+        /// devuelve Status: 200 en caso de haber eliminado correctamente 
+        /// </returns>
+        [HttpDelete("Delete")]
+        [Authorize]
+        public ActionResult Delete(int Id)
+        {
+            QuestionLevelBiz oQuestionLevelBiz = new QuestionLevelBiz(_ConnectionString);
+            try
+            {
+                oQuestionLevelBiz.Delete(Id);
+            }
+            catch (WebException ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get", 500, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get ", 500, ex.Message);
+            }
+            return Ok(); //OK 200
+        }
+
 
 
     }

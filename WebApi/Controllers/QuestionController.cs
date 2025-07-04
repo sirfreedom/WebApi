@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Net;
-using System;
-using WebApi.Biz;
-using WebApi.Entity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Net;
+using WebApi.Biz;
+using WebApi.Entity;
+using WebApi.Model;
 
 namespace WebApi.Controllers
 {
@@ -17,13 +18,13 @@ namespace WebApi.Controllers
     {
         private readonly ILogger<ValuesController> _logger;
         private readonly IConfiguration _configuration;
-        private readonly string _ConectionString;
+        private readonly string _ConnectionString;
 
         public QuestionController(ILogger<ValuesController> logger, IConfiguration configuration)
         {
             _logger = logger;
             _configuration = configuration;
-            _ConectionString = _configuration.GetConnectionString("DefaultConnection");
+            _ConnectionString = _configuration.GetConnectionString("DefaultConnection");
         }
 
 
@@ -44,7 +45,7 @@ namespace WebApi.Controllers
         public ActionResult List(int IdDependency, int CodLevel=0)
         {
             List<Question> lq = new List<Question>();
-            QuestionBiz questionBiz = new QuestionBiz(_ConectionString);
+            QuestionBiz questionBiz = new QuestionBiz(_ConnectionString);
             try
             {
                 lq = questionBiz.List(IdDependency,CodLevel);
@@ -62,6 +63,136 @@ namespace WebApi.Controllers
             return Ok(new { questions = lq }); //OK 200
         }
 
+
+        /// <summary>
+        /// Devuelve un Question
+        /// </summary>
+        /// <param name="Id">
+        /// El Id es la clave unica PK de la entidad Question.
+        /// </param>
+        /// <returns>
+        /// devuelve un objeto unico del tipo Question .
+        /// </returns>
+        [HttpGet("Get")]
+        [AllowAnonymous]
+        public ActionResult Get(int Id)
+        {
+            QuestionBiz oQuestionBiz = new QuestionBiz(_ConnectionString);
+            Question oQuestion = new Question();
+            try
+            {
+                oQuestion = oQuestionBiz.Get(Id);
+            }
+            catch (WebException ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get", 500, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get ", 500, ex.Message);
+            }
+            return Ok(new { question = oQuestion }); //OK 200);
+        }
+
+
+        /// <summary>
+        /// Actualiza Question
+        /// </summary>
+        /// <param name="question">
+        /// Esta entidad permite actualizar todos los valores de la tabla Question.
+        /// </param>
+        /// <returns>
+        /// devuelve Status: 200 en caso de haber actualizado correctamente 
+        /// </returns>
+        [HttpPut("Update")]
+        [Authorize]
+        public ActionResult Update([FromBody] Question question)
+        {
+            QuestionBiz oQuestionBiz = new QuestionBiz(_ConnectionString);
+            try
+            {
+                oQuestionBiz.Update(question);
+            }
+            catch (WebException ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get", 500, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get ", 500, ex.Message);
+            }
+            return Ok(); //OK 200
+        }
+
+
+        /// <summary>
+        /// Inserta Question
+        /// </summary>
+        /// <param name="questionModel">
+        /// Inserta todos los campos de la entidad Question.
+        /// </param>
+        /// <returns>
+        /// devuelve un status: 201/204 si inserto correctamente 
+        /// </returns>
+        [HttpPost("Insert")]
+        [Authorize]
+        public ActionResult Insert([FromBody] QuestionModel questionModel)
+        {
+            QuestionBiz oQuestionBiz = new QuestionBiz(_ConnectionString);
+            Question question = new Question();
+            try
+            {
+                question = Question.Merge<QuestionModel, Question>(questionModel);
+                oQuestionBiz.Insert(question);
+            }
+            catch (WebException ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get", 500, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get ", 500, ex.Message);
+            }
+            return Created(); //OK 201/204
+        }
+
+
+        /// <summary>
+        /// Elimina un registro de  Question
+        /// </summary>
+        /// <param name="Id">
+        /// El Id es la clave unica PK de la entidad Question.
+        /// </param>
+        /// <returns>
+        /// devuelve Status: 200 en caso de haber eliminado correctamente 
+        /// </returns>
+        [HttpDelete("Delete")]
+        [Authorize]
+        public ActionResult Delete(int Id)
+        {
+            QuestionBiz oQuestionBiz = new QuestionBiz(_ConnectionString);
+            try
+            {
+                oQuestionBiz.Delete(Id);
+            }
+            catch (WebException ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get", 500, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get ", 500, ex.Message);
+            }
+            return Ok(); //OK 200
+        }
 
 
 

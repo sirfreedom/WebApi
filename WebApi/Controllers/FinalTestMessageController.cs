@@ -2,11 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Net;
-using System;
 using WebApi.Biz;
 using WebApi.Entity;
+using WebApi.Model;
 
 namespace WebApi.Controllers
 {
@@ -17,13 +18,13 @@ namespace WebApi.Controllers
     {
         private readonly ILogger<ValuesController> _logger;
         private readonly IConfiguration _configuration;
-        private readonly string _ConectionString;
+        private readonly string _ConnectionString;
 
         public FinalTestMessageController(ILogger<ValuesController> logger, IConfiguration configuration)
         {
             _logger = logger;
             _configuration = configuration;
-            _ConectionString = _configuration.GetConnectionString("DefaultConnection");
+            _ConnectionString = _configuration.GetConnectionString("DefaultConnection");
         }
 
 
@@ -43,7 +44,7 @@ namespace WebApi.Controllers
         public ActionResult List(int IdDependency)
         {
             List<FinalTestMessage> lf;
-            FinalTestMessageBiz finalTestMessageBiz = new FinalTestMessageBiz(_ConectionString);
+            FinalTestMessageBiz finalTestMessageBiz = new FinalTestMessageBiz(_ConnectionString);
             try
             {
                 lf = finalTestMessageBiz.List(IdDependency);
@@ -59,6 +60,137 @@ namespace WebApi.Controllers
                 return ValidationProblem("Error", "Get", 500, ex.Message);
             }
             return Ok(new { finaltestmessage = lf }); //OK 200
+        }
+
+
+        /// <summary>
+        /// Devuelve un FinalTestMessage
+        /// </summary>
+        /// <param name="Id">
+        /// El Id es la clave unica PK de la entidad FinalTestMessage.
+        /// </param>
+        /// <returns>
+        /// devuelve un objeto unico del tipo FinalTestMessage .
+        /// </returns>
+        [HttpGet("Get")]
+        [AllowAnonymous]
+        public ActionResult Get(int Id)
+        {
+            FinalTestMessageBiz oFinalTestMessageBiz = new FinalTestMessageBiz(_ConnectionString);
+            FinalTestMessage oFinalTestMessage = new FinalTestMessage();
+            try
+            {
+                oFinalTestMessage = oFinalTestMessageBiz.Get(Id);
+            }
+            catch (WebException ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get", 500, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get ", 500, ex.Message);
+            }
+            return Ok(new { finaltestmessage = oFinalTestMessage }); //OK 200);
+        }
+
+
+        /// <summary>
+        /// Actualiza FinalTestMessage
+        /// </summary>
+        /// <param name="finaltestmessage">
+        /// Esta entidad permite actualizar todos los valores de la tabla FinalTestMessage.
+        /// </param>
+        /// <returns>
+        /// devuelve Status: 200 en caso de haber actualizado correctamente 
+        /// </returns>
+        [HttpPut("Update")]
+        [Authorize]
+        public ActionResult Update([FromBody] FinalTestMessage finaltestmessage)
+        {
+            FinalTestMessageBiz oFinalTestMessageBiz = new FinalTestMessageBiz(_ConnectionString);
+            try
+            {
+                oFinalTestMessageBiz.Update(finaltestmessage);
+            }
+            catch (WebException ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get", 500, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get ", 500, ex.Message);
+            }
+            return Ok(); //OK 200
+        }
+
+
+        /// <summary>
+        /// Inserta FinalTestMessage
+        /// </summary>
+        /// <param name="finaltestmessageModel">
+        /// Inserta todos los campos de la entidad FinalTestMessage.
+        /// </param>
+        /// <returns>
+        /// devuelve un status: 201/204 si inserto correctamente 
+        /// </returns>
+        [HttpPost("Insert")]
+        [Authorize]
+        public ActionResult Insert([FromBody] FinalTestMessageModel finaltestmessageModel)
+        {
+            FinalTestMessageBiz oFinalTestMessageBiz = new FinalTestMessageBiz(_ConnectionString);
+            FinalTestMessage finaltestmessage = new FinalTestMessage();
+            try
+            {
+                finaltestmessage = FinalTestMessage.Merge<FinalTestMessageModel, FinalTestMessage>(finaltestmessageModel);
+                oFinalTestMessageBiz.Insert(finaltestmessage);
+            }
+            catch (WebException ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get", 500, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get ", 500, ex.Message);
+            }
+            return Created(); //OK 201/204
+        }
+
+
+        /// <summary>
+        /// Elimina un registro de  FinalTestMessage
+        /// </summary>
+        /// <param name="Id">
+        /// El Id es la clave unica PK de la entidad FinalTestMessage.
+        /// </param>
+        /// <returns>
+        /// devuelve Status: 200 en caso de haber eliminado correctamente 
+        /// </returns>
+        [HttpDelete("Delete")]
+        [Authorize]
+        public ActionResult Delete(int Id)
+        {
+            FinalTestMessageBiz oFinalTestMessageBiz = new FinalTestMessageBiz(_ConnectionString);
+            try
+            {
+                oFinalTestMessageBiz.Delete(Id);
+            }
+            catch (WebException ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get", 500, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get ", 500, ex.Message);
+            }
+            return Ok(); //OK 200
         }
 
 

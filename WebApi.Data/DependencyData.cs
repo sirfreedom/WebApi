@@ -1,0 +1,95 @@
+﻿using System.Collections.Generic;
+using System;
+using WebApi.Entity;
+
+namespace WebApi.Data
+{
+
+	public class DependencyData
+	{
+
+		private readonly string _ConnectionString = string.Empty;
+
+
+		public DependencyData (string ConnectionString)
+		{
+			_ConnectionString = ConnectionString;
+		}
+
+		public List<Dependency> List() 
+		{
+		IRepository<Dependency> DependencyRepository = new ContextSQL<Dependency>(_ConnectionString);
+		List<Dependency> lDependency;
+		try 
+		{
+			lDependency = DependencyRepository.List(); 
+		}
+		catch (Exception) 
+		{
+			throw;
+		}
+		return lDependency;
+		}
+
+
+		public Dependency Get(int Id) 
+		{
+		IRepository<Dependency> DependencyRepository = new ContextSQL<Dependency>(_ConnectionString);
+		Dependency oDependency;
+		try
+		{
+			oDependency = DependencyRepository.Get(Id);
+		}
+		catch (Exception) 
+		{
+			throw;
+		}
+		return oDependency;
+		}
+
+
+		public void Update(Dependency dependency)
+		{
+		IRepository<Dependency> DependencyRepository = new ContextSQL<Dependency>(_ConnectionString);
+		try
+		{
+			DependencyRepository.Update(dependency); 
+		}
+		catch (Exception) 
+		{
+			throw;
+		}
+		}
+
+
+		public void Insert(Dependency dependency)
+		{
+		IRepository<Dependency> DependencyRepository = new ContextSQL<Dependency>(_ConnectionString);
+		try
+		{
+			DependencyRepository.Insert(dependency);
+		}
+		catch (Exception) 
+		{
+			throw;
+		}
+		}
+
+
+		public void Delete(int Id)
+		{
+		IRepository<Dependency> DependencyRepository = new ContextSQL<Dependency>(_ConnectionString);
+		try
+		{
+			DependencyRepository.Delete(Id);
+		}
+		catch (Exception) 
+		{
+			throw;
+		}
+		}
+
+
+	}
+
+}

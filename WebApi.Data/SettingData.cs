@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using WebApi.Entity;
@@ -26,6 +27,85 @@ namespace WebApi.Data
             oSetting = Setting.ToList<Setting>(dt).SingleOrDefault();
             return oSetting;
         }
+
+        public List<Setting> List()
+        {
+            IRepository<Setting> SettingRepository = new ContextSQL<Setting>(_ConnectionString);
+            List<Setting> lSetting;
+            try
+            {
+                lSetting = SettingRepository.List();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return lSetting;
+        }
+
+        public Setting Get(int Id)
+        {
+            IRepository<Setting> SettingRepository = new ContextSQL<Setting>(_ConnectionString);
+            Setting oSetting;
+            try
+            {
+                oSetting = SettingRepository.Get(Id);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return oSetting;
+        }
+
+
+        public void Update(Setting setting)
+        {
+            IRepository<Setting> SettingRepository = new ContextSQL<Setting>(_ConnectionString);
+            try
+            {
+                SettingRepository.Update(setting);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+
+        public void Insert(Setting setting)
+        {
+            IRepository<Setting> SettingRepository = new ContextSQL<Setting>(_ConnectionString);
+            try
+            {
+                SettingRepository.Insert(setting);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+
+        public void Delete(int Id)
+        {
+            IRepository<Setting> SettingRepository = new ContextSQL<Setting>(_ConnectionString);
+            try
+            {
+                SettingRepository.Delete(Id);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+
+
+
+
+
+
 
 
 

@@ -20,12 +20,12 @@ namespace WebApi.Controllers
 
         private readonly ILogger<FileController> _logger;
         private readonly IConfiguration _configuration;
-        private readonly string _ConectionString;
+        private readonly string _ConnectionString;
 
         public FileController(ILogger<FileController> logger, IConfiguration configuration)
         {
             _configuration = configuration;
-            _ConectionString = _configuration.GetConnectionString("DefaultConnection");
+            _ConnectionString = _configuration.GetConnectionString("DefaultConnection");
             _logger = logger;
         }
 
@@ -38,7 +38,7 @@ namespace WebApi.Controllers
         [AllowAnonymous]
         public ActionResult List()
         {
-            ImagenBiz Serv = new ImagenBiz(_ConectionString);
+            ImagenBiz Serv = new ImagenBiz(_ConnectionString);
             List<ImagenTest> lImageTest;
             try
             {
@@ -68,7 +68,7 @@ namespace WebApi.Controllers
         [AllowAnonymous]
         public ActionResult Post([FromBody] FileModel imagentext)
         {
-            ImagenBiz Serv = new ImagenBiz(_ConectionString);
+            ImagenBiz Serv = new ImagenBiz(_ConnectionString);
             ImagenTest oImagen = new ImagenTest();
             try
             {
@@ -98,7 +98,7 @@ namespace WebApi.Controllers
         [AllowAnonymous]
         public ActionResult Delete(int Id)
         {
-            ImagenBiz Serv = new ImagenBiz(_ConectionString);
+            ImagenBiz Serv = new ImagenBiz(_ConnectionString);
             ImagenTest oImagen = new ImagenTest();
             try
             {

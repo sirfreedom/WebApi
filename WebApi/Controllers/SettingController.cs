@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -18,13 +17,13 @@ namespace WebApi.Controllers
     {
         private readonly ILogger<ValuesController> _logger;
         private readonly IConfiguration _configuration;
-        private readonly string _ConectionString;
+        private readonly string _ConnectionString;
 
         public SettingController(ILogger<ValuesController> logger, IConfiguration configuration)
         {
             _logger = logger;
             _configuration = configuration;
-            _ConectionString = _configuration.GetConnectionString("DefaultConnection");
+            _ConnectionString = _configuration.GetConnectionString("DefaultConnection");
         }
 
 
@@ -37,15 +36,17 @@ namespace WebApi.Controllers
         /// <returns>
         /// siempre retornara un solo registro en formato entidad para configurar la aplicacion.
         /// </returns>
-        [HttpGet]
+        [HttpGet("Get")]
         [AllowAnonymous]
         public ActionResult Get(int IdDependency)
         {
             Setting oSetting;
-            SettingBiz settingBiz = new SettingBiz(_ConectionString);
+            SettingModel oSettingModel;
+            SettingBiz settingBiz = new SettingBiz(_ConnectionString);
             try
             {
                 oSetting = settingBiz.GetByDependency(IdDependency);
+                oSettingModel = Setting.Merge<Setting,SettingModel>(oSetting);
             }
             catch (WebException ex)
             {
@@ -57,18 +58,26 @@ namespace WebApi.Controllers
                 _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
                 return ValidationProblem("Error", "Get", 500, ex.Message);
             }
-            return Ok(new { setting = oSetting }); //OK 200
+            return Ok(new { setting = oSettingModel }); //OK 200
         }
 
 
-        [HttpPut]
+
+        /// <summary>
+        /// Update : Actualizacion de setting 
+        /// </summary>
+        /// <param name="settting"></param>
+        /// <returns>
+        /// retorna ok
+        /// </returns>
+        [HttpPut("Update")]
         [Authorize]
-        public ActionResult Update([FromBody] SettingModel setttingmodel)
+        public ActionResult Update([FromBody] Setting settting)
         {
-            //SettingBiz settingBiz = new SettingBiz(_ConectionString);
+            SettingBiz settingBiz = new SettingBiz(_ConnectionString);
             try
             {
-                //oSetting = settingBiz.GetByDependency(IdDependency);
+                settingBiz.Update(settting);
             }
             catch (WebException ex)
             {
@@ -80,19 +89,28 @@ namespace WebApi.Controllers
                 _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
                 return ValidationProblem("Error", "Get", 500, ex.Message);
             }
-            return Ok(new { setting = setttingmodel }); //OK 200
+            return Ok(new { setting = settting }); //OK 200
         }
 
 
 
-        [HttpPost]
+        /// <summary>
+        /// Insert : Inserta un setting
+        /// </summary>
+        /// <param name="settting"></param>
+        /// <returns>
+        /// ok 201/204 
+        /// </returns>
+        [HttpPost("Insert")]
         [Authorize]
-        public ActionResult Insert([FromBody] SettingModel setttingmodel)
+        public ActionResult Insert([FromBody] SettingModel settting)
         {
-            //SettingBiz settingBiz = new SettingBiz(_ConectionString);
+            SettingBiz settingBiz = new SettingBiz(_ConnectionString);
+            Setting oSetting;
             try
             {
-                //oSetting = settingBiz.GetByDependency(IdDependency);
+                oSetting = Setting.Merge<SettingModel,Setting>(settting);
+                settingBiz.Insert(oSetting);
             }
             catch (WebException ex)
             {
@@ -104,19 +122,25 @@ namespace WebApi.Controllers
                 _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
                 return ValidationProblem("Error", "Get", 500, ex.Message);
             }
-            return Ok(new { setting = setttingmodel }); //OK 200
+            return Created(); //OK 201 / 204
         }
 
 
-
-        [HttpDelete]
+        /// <summary>
+        /// Delete : Elimina un setting y todas las referencias disponibles
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns>
+        /// ok 200
+        /// </returns>
+        [HttpDelete("Delete")]
         [Authorize]
         public ActionResult Delete(int Id)
         {
-            //SettingBiz settingBiz = new SettingBiz(_ConectionString);
+            SettingBiz settingBiz = new SettingBiz(_ConnectionString);
             try
             {
-                //oSetting = settingBiz.GetByDependency(IdDependency);
+                settingBiz.Delete(Id);
             }
             catch (WebException ex)
             {
@@ -128,7 +152,7 @@ namespace WebApi.Controllers
                 _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
                 return ValidationProblem("Error", "Get", 500, ex.Message);
             }
-            return Ok(new { Id = Id }); //OK 200
+            return Ok(); //OK 200
         }
 
 
