@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using WebApi.Biz;
 using WebApi.Entity;
@@ -26,11 +27,41 @@ namespace WebApi.Controllers
             _ConnectionString = _configuration.GetConnectionString("DefaultConnection");
         }
 
+        /// <summary>
+        /// Busca un Setting
+        /// </summary>
+        /// <returns>
+        /// devuelve una lista dinamica de los valores obtenidos en la base de datos, puede alterar los valores sin problemas
+        /// Esta lista dinamica, es convertible tranquilamente a un Model
+        /// </returns>
+        [HttpGet("Find")]
+        [AllowAnonymous]
+        public ActionResult Find()
+        {
+            SettingBiz oSettingBiz = new SettingBiz(_ConnectionString);
+            List<dynamic> ldynamic;
+            try
+            {
+                ldynamic = oSettingBiz.Find(new Dictionary<string, string>());
+            }
+            catch (WebException ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get", 500, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get ", 500, ex.Message);
+            }
+            return Ok(new { listsetting = ldynamic }); //OK 200);
+        }
+
 
         /// <summary>
-        /// La configuracion va directamente por la depencia, eso determina el titulo del cuestionario, la cantidad de preguntas por hoja, valor de aprobacion del cuestionario, si tiene algun archivo para descargar informacion, etc.
+        /// GetByDependency :  La configuracion va directamente por la depencia, eso determina el titulo del cuestionario, la cantidad de preguntas por hoja, valor de aprobacion del cuestionario, si tiene algun archivo para descargar informacion, etc.
         /// </summary>
-        /// <param name="IdDependency">
+        /// <param name="Id">
         /// la dependencia es el identificador y agrupamiento de las preguntas, y sirve para todo lo que tenga que ver con ellas.
         /// </param>
         /// <returns>
@@ -38,15 +69,13 @@ namespace WebApi.Controllers
         /// </returns>
         [HttpGet("Get")]
         [AllowAnonymous]
-        public ActionResult Get(int IdDependency)
+        public ActionResult Get(int Id)
         {
             Setting oSetting;
-            SettingModel oSettingModel;
             SettingBiz settingBiz = new SettingBiz(_ConnectionString);
             try
             {
-                oSetting = settingBiz.GetByDependency(IdDependency);
-                oSettingModel = Setting.Merge<Setting,SettingModel>(oSetting);
+                oSetting = settingBiz.Get(Id);
             }
             catch (WebException ex)
             {
@@ -58,7 +87,41 @@ namespace WebApi.Controllers
                 _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
                 return ValidationProblem("Error", "Get", 500, ex.Message);
             }
-            return Ok(new { setting = oSettingModel }); //OK 200
+            return Ok(new { setting = oSetting }); //OK 200
+        }
+
+
+
+        /// <summary>
+        /// GetByDependency :  La configuracion va directamente por la depencia, eso determina el titulo del cuestionario, la cantidad de preguntas por hoja, valor de aprobacion del cuestionario, si tiene algun archivo para descargar informacion, etc.
+        /// </summary>
+        /// <param name="IdDependency">
+        /// la dependencia es el identificador y agrupamiento de las preguntas, y sirve para todo lo que tenga que ver con ellas.
+        /// </param>
+        /// <returns>
+        /// siempre retornara un solo registro en formato entidad para configurar la aplicacion.
+        /// </returns>
+        [HttpGet("GetByDependency")]
+        [AllowAnonymous]
+        public ActionResult GetByDependency(int IdDependency)
+        {
+            Setting oSetting;
+            SettingBiz settingBiz = new SettingBiz(_ConnectionString);
+            try
+            {
+                oSetting = settingBiz.GetByDependency(IdDependency);
+            }
+            catch (WebException ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get", 500, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get", 500, ex.Message);
+            }
+            return Ok(new { setting = oSetting }); //OK 200
         }
 
 

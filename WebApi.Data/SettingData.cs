@@ -16,6 +16,24 @@ namespace WebApi.Data
             _ConnectionString = ConnectionString;
         }
 
+
+
+        public List<dynamic> Find(Dictionary<string, string> lParam)
+        {
+            IRepository<Setting> SettingRepository = new ContextSQL<Setting>(_ConnectionString);
+            List<dynamic> ldynamic;
+            try
+            {
+                ldynamic = SettingRepository.Find(lParam);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return ldynamic;
+        }
+
+
         public Setting GetByDependency(int IdDependency)
         {
             DataTable dt = new DataTable();
@@ -28,20 +46,6 @@ namespace WebApi.Data
             return oSetting;
         }
 
-        public List<Setting> List()
-        {
-            IRepository<Setting> SettingRepository = new ContextSQL<Setting>(_ConnectionString);
-            List<Setting> lSetting;
-            try
-            {
-                lSetting = SettingRepository.List();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            return lSetting;
-        }
 
         public Setting Get(int Id)
         {

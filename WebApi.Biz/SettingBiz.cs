@@ -21,19 +21,19 @@ namespace WebApi.Biz
             return Serv.GetByDependency(IdDependency);
         }
 
-        public List<Setting> List()
+        public List<dynamic> Find(Dictionary<string, string> lParam)
         {
             SettingData oSettingData = new SettingData(_ConnectionString);
-            List<Setting> lSetting;
+            List<dynamic> ldynamic;
             try
             {
-                lSetting = oSettingData.List();
+                ldynamic = oSettingData.Find(lParam);
             }
             catch (Exception)
             {
                 throw;
             }
-            return lSetting;
+            return ldynamic;
         }
 
 
