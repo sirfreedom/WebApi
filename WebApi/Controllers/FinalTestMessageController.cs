@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -194,5 +195,35 @@ namespace WebApi.Controllers
         }
 
 
+
+        /// <summary>
+        /// Disabled : deshabilita un FinalTestMessage para que no sea visible
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <param name="Disabled"></param>
+        /// <returns>
+        /// retorna un 200 ok.
+        /// </returns>
+        [HttpPatch("Disabled")]
+        [Authorize]
+        public ActionResult Disabled(int Id, bool Disabled)
+        {
+            FinalTestMessageBiz oFinalTestMessageBiz = new FinalTestMessageBiz(_ConnectionString);
+            try
+            {
+                oFinalTestMessageBiz.Disabled(Id,Disabled);
+            }
+            catch (WebException ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get", 500, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get ", 500, ex.Message);
+            }
+            return Ok(); //OK 200
+        }
     }
 }

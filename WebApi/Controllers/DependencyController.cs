@@ -8,6 +8,7 @@ using System;
 using WebApi.Entity;
 using WebApi.Biz;
 using WebApi.Model;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace WebApi.Controllers
 {
@@ -188,6 +189,34 @@ namespace WebApi.Controllers
 		}
 
 
-	}
+		/// <summary>
+		/// Disabled : deshabilita un Dependency para que no sea visible
+		/// </summary>
+		/// <param name="Id"></param>
+		/// <param name="Disabled"></param>
+		/// <returns></returns>
+        [HttpPatch("Disabled")]
+        [Authorize]
+        public ActionResult Disabled(int Id, bool Disabled)
+        {
+            DependencyBiz oDependencyBiz = new DependencyBiz(_ConnectionString);
+            try
+            {
+                oDependencyBiz.Disabled(Id, Disabled);
+            }
+            catch (WebException ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get", 500, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get ", 500, ex.Message);
+            }
+            return Ok(); //OK 200
+        }
+
+    }
 
 }

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using Microsoft.Extensions.Configuration;
@@ -159,6 +158,36 @@ namespace WebApi.Controllers
 		}
 
 
-	}
+		/// <summary>
+		/// Disabled : deshabilita un Answer para que no pueda ser visible
+		/// </summary>
+		/// <param name="Id"></param>
+		/// <param name="Disabled"></param>
+		/// <returns>
+		/// devuelve un 200 ok
+		/// </returns>
+        [HttpPatch("Disabled")]
+        [AllowAnonymous]
+        public ActionResult Disabled(int Id, bool Disabled)
+        {
+            AnswerBiz oAnswerBiz = new AnswerBiz(_ConectionString);
+            try
+            {
+                oAnswerBiz.Disabled(Id, Disabled);
+            }
+            catch (WebException ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get", 500, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get ", 500, ex.Message);
+            }
+            return Ok(); //OK 200
+        }
+
+    }
 
 }

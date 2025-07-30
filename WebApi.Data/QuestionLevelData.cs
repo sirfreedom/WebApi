@@ -21,7 +21,6 @@ namespace WebApi.Data
             List<QuestionLevel> lQuestionLevel;
             try
             {
-
                 lParam.Add("IdDependency", IdDependency.ToString());
                 IRepository<QuestionLevel> Serv = new ContextSQL<QuestionLevel>(_ConnectionString);
                 dt = Serv.Fill("ListByDependency", lParam);
@@ -85,6 +84,22 @@ namespace WebApi.Data
             try
             {
                 QuestionLevelRepository.Delete(Id);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public void Disabled(int Id, bool Disabled)
+        {
+            IRepository<QuestionLevel> SettingRepository = new ContextSQL<QuestionLevel>(_ConnectionString);
+            Dictionary<string, string> lParam = new Dictionary<string, string>();
+            try
+            {
+                lParam.Add("Id", Id.ToString());
+                lParam.Add("Disabled", Disabled.ToString());
+                SettingRepository.ExecuteNonQuery("Disabled", lParam);
             }
             catch (Exception)
             {

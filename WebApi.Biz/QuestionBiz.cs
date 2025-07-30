@@ -88,7 +88,18 @@ namespace WebApi.Biz
             }
         }
 
-
+        public void Disabled(int Id, bool Disabled)
+        {
+            QuestionData oQuestionData = new QuestionData(_ConnectionString);
+            try
+            {
+                oQuestionData.Disabled(Id, Disabled);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
 
     }

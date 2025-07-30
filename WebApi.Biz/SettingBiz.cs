@@ -94,6 +94,19 @@ namespace WebApi.Biz
             }
         }
 
+        public void Disabled(int Id,bool Disabled)
+        {
+            SettingData oSettingData = new SettingData(_ConnectionString);
+            try
+            {
+                oSettingData.Disabled(Id,Disabled);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
 
     }
 }

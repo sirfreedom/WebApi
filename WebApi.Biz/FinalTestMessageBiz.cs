@@ -86,6 +86,18 @@ namespace WebApi.Biz
             }
         }
 
+        public void Disabled(int Id, bool Disabled)
+        {
+            FinalTestMessageData oFinalTestMessageData = new FinalTestMessageData(_ConnectionString);
+            try
+            {
+                oFinalTestMessageData.Disabled(Id, Disabled);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
 
 

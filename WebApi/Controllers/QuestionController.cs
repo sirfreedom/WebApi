@@ -195,7 +195,35 @@ namespace WebApi.Controllers
         }
 
 
-
+        /// <summary>
+        /// Disabled : deshabilita un Question para que no sea visiable
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <param name="Disabled"></param>
+        /// <returns>
+        /// devuelve un 200 ok
+        /// </returns>
+        [HttpPatch("Disabled")]
+        [Authorize]
+        public ActionResult Disabled(int Id, bool Disabled)
+        {
+            QuestionLevelBiz oQuestionLevelBiz = new QuestionLevelBiz(_ConnectionString);
+            try
+            {
+                oQuestionLevelBiz.Disabled(Id, Disabled);
+            }
+            catch (WebException ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get", 500, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get ", 500, ex.Message);
+            }
+            return Ok(); //OK 200
+        }
 
 
     }

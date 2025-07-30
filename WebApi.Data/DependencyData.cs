@@ -89,7 +89,23 @@ namespace WebApi.Data
 		}
 		}
 
+        public void Disabled(int Id, bool Disabled)
+        {
+            IRepository<Dependency> SettingRepository = new ContextSQL<Dependency>(_ConnectionString);
+            Dictionary<string, string> lParam = new Dictionary<string, string>();
+            try
+            {
+                lParam.Add("Id", Id.ToString());
+                lParam.Add("Disabled", Disabled.ToString());
+                SettingRepository.ExecuteNonQuery("Disabled", lParam);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
-	}
+
+    }
 
 }

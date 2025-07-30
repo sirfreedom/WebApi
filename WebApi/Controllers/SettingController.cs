@@ -219,6 +219,36 @@ namespace WebApi.Controllers
         }
 
 
+        /// <summary>
+        /// Disabled : deshabilita un setting para que no sea visible
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <param name="Disabled"></param>
+        /// <returns>
+        /// Devuelve un 200
+        /// </returns>
+        [HttpPatch("Disabled")]
+        [Authorize]
+        public ActionResult Disabled(int Id, bool Disabled)
+        {
+            SettingBiz settingBiz = new SettingBiz(_ConnectionString);
+            try
+            {
+                settingBiz.Disabled(Id,Disabled);
+            }
+            catch (WebException ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get", 500, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get", 500, ex.Message);
+            }
+            return Ok(); //OK 200
+        }
+
 
 
     }

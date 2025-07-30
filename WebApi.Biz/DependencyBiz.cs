@@ -90,7 +90,19 @@ namespace WebApi.Biz
 		}
 		}
 
+        public void Disabled(int Id, bool Disabled)
+        {
+            DependencyData oDependencyData = new DependencyData(_ConnectionString);
+            try
+            {
+                oDependencyData.Disabled(Id, Disabled);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
-	}
+    }
 
 }
