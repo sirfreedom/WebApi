@@ -1,4 +1,6 @@
-﻿namespace WebApi.Model
+﻿using System;
+
+namespace WebApi.Model
 {
     public class LoginResult
     {
@@ -8,7 +10,8 @@
         /// </summary>
         /// <example>admin</example>
         public string UserName { get; set; }
-        public string JwtToken { get; set; }
+        public string Token { get; set; }
+        public DateTime Expiration { get; set; }
 
     }
 }

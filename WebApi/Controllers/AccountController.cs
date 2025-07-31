@@ -46,9 +46,9 @@ namespace WebApi.Controllers
             SymmetricSecurityKey key;
             Claim[] claims;
             string token;
+            DateTime ExpirationDate = DateTime.Now.AddMinutes(_tokenManagement.AccessExpiration);
             try
             {
-
                 if (!ModelState.IsValid || !_userService.IsValidUser(request.user, request.pass))
                 {
                     return BadRequest("Invalid Request");
@@ -79,7 +79,7 @@ namespace WebApi.Controllers
                 _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
                 return ValidationProblem("Error", "Get", 500, ex.Message);
             }
-            return Ok(new LoginResult { UserName = request.user, JwtToken = token });
+            return Ok(new LoginResult { UserName = request.user, Token = token, Expiration = ExpirationDate });
         }
     }
 
