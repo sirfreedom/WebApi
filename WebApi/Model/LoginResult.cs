@@ -11,7 +11,20 @@ namespace WebApi.Model
         /// <example>admin</example>
         public string UserName { get; set; }
         public string Token { get; set; }
-        public DateTime Expiration { get; set; }
+        public int ExpirationYear { get; set; }
+        public int ExpirationMonth { get; set; }
+        public int ExpirationDay { get; set; }
+        public int ExpirationHour { get; set; }
+        public int ExpirationMinute { get; set; }
+        public int UniversalCentralTime { get; set; }
+        public string TimeSetUTC
+        {
+            get 
+            {
+                DateTime d = DateTime.UtcNow.AddHours(UniversalCentralTime);
+                return d.ToString();
+            }
+        }
 
     }
 }

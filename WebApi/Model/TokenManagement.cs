@@ -20,6 +20,9 @@ namespace WebApi.Infrastructure.Jwt
 
         [JsonPropertyName("refreshExpiration")]
         public int RefreshExpiration { get; set; }
+
+        [JsonPropertyName("UniversalTimeZone")]
+        public int UniversalTimeZone { get; set; }
     }
 }
 

@@ -47,6 +47,8 @@ namespace WebApi.Controllers
             Claim[] claims;
             string token;
             DateTime ExpirationDate = DateTime.Now.AddMinutes(_tokenManagement.AccessExpiration);
+            DateTimeOffset ExpirationDateUTC = new DateTimeOffset(ExpirationDate, TimeSpan.FromHours(_tokenManagement.UniversalTimeZone));
+            LoginResult loginResult = new LoginResult();
             try
             {
                 if (!ModelState.IsValid || !_userService.IsValidUser(request.user, request.pass))
@@ -68,6 +70,7 @@ namespace WebApi.Controllers
                     expires: DateTime.Now.AddMinutes(_tokenManagement.AccessExpiration),
                     signingCredentials: credentials);
                 token = new JwtSecurityTokenHandler().WriteToken(jwtToken);
+                loginResult = new LoginResult { UserName = request.user, Token = token, ExpirationYear = ExpirationDateUTC.Year, ExpirationMonth = ExpirationDateUTC.Month, ExpirationDay = ExpirationDateUTC.Day, ExpirationHour = ExpirationDateUTC.Hour, ExpirationMinute = ExpirationDateUTC.Minute, UniversalCentralTime = _tokenManagement.UniversalTimeZone };
             }
             catch (WebException ex)
             {
@@ -79,7 +82,7 @@ namespace WebApi.Controllers
                 _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
                 return ValidationProblem("Error", "Get", 500, ex.Message);
             }
-            return Ok(new LoginResult { UserName = request.user, Token = token, Expiration = ExpirationDate });
+            return Ok(loginResult);
         }
     }
 
