@@ -46,8 +46,7 @@ namespace WebApi.Controllers
             SymmetricSecurityKey key;
             Claim[] claims;
             string token;
-            DateTime ExpirationDate = DateTime.Now.AddMinutes(_tokenManagement.AccessExpiration);
-            DateTimeOffset ExpirationDateUTC = new DateTimeOffset(ExpirationDate, TimeSpan.FromHours(_tokenManagement.UniversalTimeZone));
+            DateTime ExpirationDateUTC = DateTime.UtcNow.AddMinutes(_tokenManagement.AccessExpiration).AddHours(_tokenManagement.UniversalTimeZone);
             LoginResult loginResult = new LoginResult();
             try
             {
@@ -69,8 +68,21 @@ namespace WebApi.Controllers
                     claims,
                     expires: DateTime.Now.AddMinutes(_tokenManagement.AccessExpiration),
                     signingCredentials: credentials);
+
                 token = new JwtSecurityTokenHandler().WriteToken(jwtToken);
-                loginResult = new LoginResult { UserName = request.user, Token = token, ExpirationYear = ExpirationDateUTC.Year, ExpirationMonth = ExpirationDateUTC.Month, ExpirationDay = ExpirationDateUTC.Day, ExpirationHour = ExpirationDateUTC.Hour, ExpirationMinute = ExpirationDateUTC.Minute, UniversalCentralTime = _tokenManagement.UniversalTimeZone };
+
+                loginResult.UserName = request.user;
+                loginResult.Token = token;
+                loginResult.ExpirationYear = ExpirationDateUTC.Year;
+                loginResult.ExpirationMonth = ExpirationDateUTC.Month;
+                loginResult.ExpirationDay = ExpirationDateUTC.Day;
+                loginResult.ExpirationHour = ExpirationDateUTC.Hour;
+                loginResult.ExpirationMinute = ExpirationDateUTC.Minute;
+                loginResult.UniversalCentralTime = _tokenManagement.UniversalTimeZone;
+                loginResult.TimeNow = DateTime.UtcNow.AddHours(_tokenManagement.UniversalTimeZone).ToString(_tokenManagement.FormatTime);
+                loginResult.TimeOfServer = DateTime.Now.ToString(_tokenManagement.FormatTime);
+                loginResult.FormatTime = _tokenManagement.FormatTime;
+
             }
             catch (WebException ex)
             {

@@ -17,14 +17,9 @@ namespace WebApi.Model
         public int ExpirationHour { get; set; }
         public int ExpirationMinute { get; set; }
         public int UniversalCentralTime { get; set; }
-        public string TimeSetUTC
-        {
-            get 
-            {
-                DateTime d = DateTime.UtcNow.AddHours(UniversalCentralTime);
-                return d.ToString();
-            }
-        }
+        public string TimeNow { get; set; }
+        public string TimeOfServer { get; set; }
+        public string FormatTime { get; set; }
 
     }
 }

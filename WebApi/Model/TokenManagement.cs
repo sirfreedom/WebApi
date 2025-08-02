@@ -23,6 +23,10 @@ namespace WebApi.Infrastructure.Jwt
 
         [JsonPropertyName("UniversalTimeZone")]
         public int UniversalTimeZone { get; set; }
+
+        [JsonPropertyName("FormatTime")]
+        public string FormatTime { get; set; }
+
     }
 }
 
