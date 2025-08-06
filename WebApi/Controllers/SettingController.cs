@@ -129,18 +129,17 @@ namespace WebApi.Controllers
         /// <summary>
         /// Update : Actualizacion de setting 
         /// </summary>
-        /// <param name="settting"></param>
         /// <returns>
         /// retorna ok
         /// </returns>
         [HttpPut("Update")]
         [Authorize]
-        public ActionResult Update([FromBody] Setting settting)
+        public ActionResult Update([FromBody] Setting setting)
         {
             SettingBiz settingBiz = new SettingBiz(_ConnectionString);
             try
             {
-                settingBiz.Update(settting);
+                settingBiz.Update(setting);
             }
             catch (WebException ex)
             {
@@ -152,7 +151,7 @@ namespace WebApi.Controllers
                 _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
                 return ValidationProblem("Error", "Get", 500, ex.Message);
             }
-            return Ok(new { setting = settting }); //OK 200
+            return Ok(); //OK 200
         }
 
 
