@@ -21,10 +21,15 @@ namespace WebApi.Biz
             return Serv.List();
         }
 
-        public void Insert(ImagenTest imagenTest) 
+        public ImagenTest Insert(ImagenTest imagenTest) 
         {
             ImagenTestData Serv = new ImagenTestData(_ConnectionString);
-            Serv.Insert(imagenTest);
+            ImagenTest oImagenTest;
+
+            oImagenTest = Serv.Insert(imagenTest);
+
+
+            return oImagenTest;
         }
 
         public void Delete(int Id) 

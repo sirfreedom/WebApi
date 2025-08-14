@@ -151,7 +151,7 @@ namespace WebApi.Controllers
                 _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
                 return ValidationProblem("Error", "Get", 500, ex.Message);
             }
-            return Ok(); //OK 200
+            return Ok(setting); //OK 200
         }
 
 
@@ -159,20 +159,25 @@ namespace WebApi.Controllers
         /// <summary>
         /// Insert : Inserta un setting
         /// </summary>
-        /// <param name="settting"></param>
+        /// <param name="setting"></param>
         /// <returns>
         /// ok 201/204 
         /// </returns>
         [HttpPost("Insert")]
         [Authorize]
-        public ActionResult Insert([FromBody] SettingModel settting)
+        public ActionResult Insert([FromBody] SettingModel setting)
         {
             SettingBiz settingBiz = new SettingBiz(_ConnectionString);
             Setting oSetting;
             try
             {
-                oSetting = Setting.Merge<SettingModel,Setting>(settting);
-                settingBiz.Insert(oSetting);
+                if (setting.iddependency == 0 || setting.correctanswers == 0 || setting.questionperpage == 0 || setting.title.Length == 0 || setting.subtitle.Length == 0)
+                {
+                    return ValidationProblem("Validacion", "verifique los parametros", 400, "Validacion");
+                }
+
+                oSetting = Setting.Merge<SettingModel,Setting>(setting);
+                oSetting = settingBiz.Insert(oSetting);
             }
             catch (WebException ex)
             {
@@ -184,7 +189,7 @@ namespace WebApi.Controllers
                 _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
                 return ValidationProblem("Error", "Get", 500, ex.Message);
             }
-            return Created(); //OK 201 / 204
+            return Created("setting",oSetting); //OK 201 / 204
         }
 
 

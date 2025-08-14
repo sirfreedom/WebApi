@@ -55,17 +55,19 @@ namespace WebApi.Data
         }
 
 
-        public void Insert(FinalTestMessage finaltestmessage)
+        public FinalTestMessage Insert(FinalTestMessage finaltestmessage)
         {
             IRepository<FinalTestMessage> FinalTestMessageRepository = new ContextSQL<FinalTestMessage>(_ConnectionString);
+            FinalTestMessage oFinalTestMessage;
             try
             {
-                FinalTestMessageRepository.Insert(finaltestmessage);
+                oFinalTestMessage = FinalTestMessageRepository.Insert(finaltestmessage);
             }
             catch (Exception)
             {
                 throw;
             }
+            return oFinalTestMessage;   
         }
 
 

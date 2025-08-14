@@ -1,17 +1,25 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace WebApi.Entity
 {
 	public class FinalTestMessage : EntityBase
 	{
 
+        [Required]
         public string Cod { get; set; }
-		public string AnswersRangeMin { get; set; }
-		public string AnswersRangeMax { get; set; }
+
+        [Required]
+        public string AnswersRangeMin { get; set; }
+
+        [Required]
+        public string AnswersRangeMax { get; set; }
+
+        [Required]
         public string FinalTestMessageDescription { get; set; }
-		
-		public string LevelDescription {  get; set; }
+
+        [Required]
+        public string LevelDescription {  get; set; }
 
         public List<QuestionLevel> levels 
 		{

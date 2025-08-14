@@ -143,11 +143,11 @@ namespace WebApi.Controllers
         public ActionResult Insert([FromBody] QuestionModel questionModel)
         {
             QuestionBiz oQuestionBiz = new QuestionBiz(_ConnectionString);
-            Question question = new Question();
+            Question oQuestion;
             try
             {
-                question = Question.Merge<QuestionModel, Question>(questionModel);
-                oQuestionBiz.Insert(question);
+                oQuestion = Question.Merge<QuestionModel, Question>(questionModel);
+                oQuestion = oQuestionBiz.Insert(oQuestion);
             }
             catch (WebException ex)
             {
@@ -159,7 +159,7 @@ namespace WebApi.Controllers
                 _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
                 return ValidationProblem("Error", "Get ", 500, ex.Message);
             }
-            return Created(); //OK 201/204
+            return Created("question",oQuestion); //OK 201/204
         }
 
 

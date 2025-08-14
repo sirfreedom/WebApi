@@ -1,18 +1,24 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 
 namespace WebApi.Entity
 {
 	public class Question : EntityBase
 	{
-        private string _AnswerDescription = string.Empty;
 
-
+        [Required]
         public string Cod { get; set; }
+
+        [Required]
         public string QuestionDescription { get; set; }
-		public string AnswerDescription { get; set; }
+
+        [Required]
+        public string AnswerDescription { get; set; }
+
+        [Required]
         public string CodLevel { get; set; }
+
         public List<Answer> Answers 
         {
             get { 

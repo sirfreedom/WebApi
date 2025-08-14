@@ -77,17 +77,19 @@ namespace WebApi.Data
         }
 
 
-        public void Insert(Setting setting)
+        public Setting Insert(Setting setting)
         {
             IRepository<Setting> SettingRepository = new ContextSQL<Setting>(_ConnectionString);
+            Setting oSetting;
             try
             {
-                SettingRepository.Insert(setting);
+                oSetting = SettingRepository.Insert(setting);
             }
             catch (Exception)
             {
                 throw;
             }
+            return oSetting;
         }
 
 

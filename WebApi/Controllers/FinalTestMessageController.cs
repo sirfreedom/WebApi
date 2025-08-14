@@ -143,11 +143,11 @@ namespace WebApi.Controllers
         public ActionResult Insert([FromBody] FinalTestMessageModel finaltestmessageModel)
         {
             FinalTestMessageBiz oFinalTestMessageBiz = new FinalTestMessageBiz(_ConnectionString);
-            FinalTestMessage finaltestmessage = new FinalTestMessage();
+            FinalTestMessage oFinalTestMessage;
             try
             {
-                finaltestmessage = FinalTestMessage.Merge<FinalTestMessageModel, FinalTestMessage>(finaltestmessageModel);
-                oFinalTestMessageBiz.Insert(finaltestmessage);
+                oFinalTestMessage = FinalTestMessage.Merge<FinalTestMessageModel, FinalTestMessage>(finaltestmessageModel);
+                oFinalTestMessage = oFinalTestMessageBiz.Insert(oFinalTestMessage);
             }
             catch (WebException ex)
             {
@@ -159,7 +159,7 @@ namespace WebApi.Controllers
                 _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
                 return ValidationProblem("Error", "Get ", 500, ex.Message);
             }
-            return Created(); //OK 201/204
+            return Created("finaltestmessage",oFinalTestMessage); //OK 201/204
         }
 
 

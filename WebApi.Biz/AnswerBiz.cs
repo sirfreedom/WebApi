@@ -47,17 +47,19 @@ namespace WebApi.Biz
 		}
 
 
-		public void Insert(Answer answer)
+		public Answer Insert(Answer answer)
 		{
-		AnswerData oAnswerData = new AnswerData(_ConnectionString); 
-		try
-		{
-			oAnswerData.Insert(answer);
-		}
-		catch (Exception) 
-		{
-			throw;
-		}
+			AnswerData oAnswerData = new AnswerData(_ConnectionString);
+			Answer oAnswer;
+			try
+			{
+			 	oAnswer = oAnswerData.Insert(answer);
+			}
+			catch (Exception)
+			{
+				throw;
+			}
+			return oAnswer;
 		}
 
 

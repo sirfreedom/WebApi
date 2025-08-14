@@ -1,12 +1,21 @@
 ﻿
+using System.ComponentModel.DataAnnotations;
+
 namespace WebApi.Model
 {
 	public class QuestionModel
 	{
-		public string Cod { get; set; }
-		public int IdDependency { get; set; }
-		public int IdQuestionLevel { get; set; }
-		public string QuestionDescription { get; set; }
+        [Required]
+        public string Cod { get; set; }
+
+        [Required]
+        public int IdDependency { get; set; }
+
+        [Required]
+        public int IdQuestionLevel { get; set; }
+
+        [Required]
+        public string QuestionDescription { get; set; }
 	}
 
 }

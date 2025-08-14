@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿
 namespace WebApi.Model
 {
     public class LoginResult

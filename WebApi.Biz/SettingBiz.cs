@@ -67,17 +67,19 @@ namespace WebApi.Biz
         }
 
 
-        public void Insert(Setting setting)
+        public Setting Insert(Setting setting)
         {
             SettingData oSettingData = new SettingData(_ConnectionString);
+            Setting oSetting;
             try
             {
-                oSettingData.Insert(setting);
+                oSetting = oSettingData.Insert(setting);
             }
             catch (Exception)
             {
                 throw;
             }
+            return oSetting;
         }
 
 

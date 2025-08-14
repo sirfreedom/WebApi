@@ -46,17 +46,19 @@ namespace WebApi.Data
 		}
 
 
-		public void Insert(Answer answer)
+		public Answer Insert(Answer answer)
 		{
-		IRepository<Answer> AnswerRepository = new ContextSQL<Answer>(_ConnectionString);
-		try
-		{
-			AnswerRepository.Insert(answer);
-		}
-		catch (Exception) 
-		{
-			throw;
-		}
+			IRepository<Answer> AnswerRepository = new ContextSQL<Answer>(_ConnectionString);
+			Answer oAnswer;
+			try
+			{
+				oAnswer = AnswerRepository.Insert(answer);
+			}
+			catch (Exception)
+			{
+				throw;
+			}
+			return oAnswer;
 		}
 
 

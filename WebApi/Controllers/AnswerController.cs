@@ -105,24 +105,24 @@ namespace WebApi.Controllers
 		[AllowAnonymous]
 		public ActionResult Insert([FromBody] AnswerModel answerModel)
 		{
-		AnswerBiz oAnswerBiz = new AnswerBiz(_ConectionString); 
-		Answer answer = new Answer();
-		try
-		{
-			answer = Answer.Merge<AnswerModel, Answer>(answerModel);
-			oAnswerBiz.Insert(answer);
-		}
-		catch (WebException ex) 
-		{
-			_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
-			return ValidationProblem("Error", "Get", 500, ex.Message);
-		}
-		catch (Exception ex)
-		{
-			_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
-			return ValidationProblem("Error", "Get ", 500, ex.Message);
-		}
-		return Created(); //OK 201/204
+			AnswerBiz oAnswerBiz = new AnswerBiz(_ConectionString);
+			Answer oAnswer;
+			try
+			{
+				oAnswer = Answer.Merge<AnswerModel, Answer>(answerModel);
+				oAnswer = oAnswerBiz.Insert(oAnswer);
+			}
+			catch (WebException ex)
+			{
+				_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+				return ValidationProblem("Error", "Get", 500, ex.Message);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+				return ValidationProblem("Error", "Get ", 500, ex.Message);
+			}
+			return Created("answer", oAnswer); //OK 201/204
 		}
 
 

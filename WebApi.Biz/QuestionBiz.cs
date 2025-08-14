@@ -61,17 +61,19 @@ namespace WebApi.Biz
         }
 
 
-        public void Insert(Question question)
+        public Question Insert(Question question)
         {
             QuestionData oQuestionData = new QuestionData(_ConnectionString);
+            Question oQuestion;
             try
             {
-                oQuestionData.Insert(question);
+                 oQuestion = oQuestionData.Insert(question);
             }
             catch (Exception)
             {
                 throw;
             }
+            return oQuestion;
         }
 
 

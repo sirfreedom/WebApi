@@ -63,17 +63,19 @@ namespace WebApi.Biz
 		}
 
 
-		public void Insert(Dependency dependency)
+		public Dependency Insert(Dependency dependency)
 		{
-		DependencyData oDependencyData = new DependencyData(_ConnectionString); 
-		try
-		{
-			oDependencyData.Insert(dependency);
-		}
-		catch (Exception) 
-		{
-			throw;
-		}
+			DependencyData oDependencyData = new DependencyData(_ConnectionString);
+			Dependency oDependency;
+			try
+			{
+				oDependency = oDependencyData.Insert(dependency);
+			}
+			catch (Exception)
+			{
+				throw;
+			}
+			return oDependency;
 		}
 
 

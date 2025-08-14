@@ -50,29 +50,31 @@ namespace WebApi.Data
 
 		public void Update(Dependency dependency)
 		{
-		IRepository<Dependency> DependencyRepository = new ContextSQL<Dependency>(_ConnectionString);
-		try
-		{
-			DependencyRepository.Update(dependency); 
-		}
-		catch (Exception) 
-		{
-			throw;
-		}
+			IRepository<Dependency> DependencyRepository = new ContextSQL<Dependency>(_ConnectionString);
+			try
+			{
+				DependencyRepository.Update(dependency);
+			}
+			catch (Exception)
+			{
+				throw;
+			}
 		}
 
 
-		public void Insert(Dependency dependency)
+		public Dependency Insert(Dependency dependency)
 		{
-		IRepository<Dependency> DependencyRepository = new ContextSQL<Dependency>(_ConnectionString);
-		try
-		{
-			DependencyRepository.Insert(dependency);
-		}
-		catch (Exception) 
-		{
-			throw;
-		}
+			IRepository<Dependency> DependencyRepository = new ContextSQL<Dependency>(_ConnectionString);
+			Dependency oDependency;
+			try
+			{
+				oDependency = DependencyRepository.Insert(dependency);
+			}
+			catch (Exception)
+			{
+				throw;
+			}
+			return oDependency;
 		}
 
 

@@ -18,10 +18,13 @@ namespace WebApi.Data
             Serv.Delete(Id);
         }
 
-        public void Insert(ImagenTest entity)
+        public ImagenTest Insert(ImagenTest entity)
         {
             IRepository<ImagenTest> Serv = new ContextSQL<ImagenTest>(_ConnectionString);
-            Serv.Insert(entity);
+            ImagenTest oImagenTest;
+            oImagenTest = Serv.Insert(entity);
+
+            return oImagenTest;
         }
 
         public List<ImagenTest> List()

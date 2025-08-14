@@ -64,17 +64,19 @@ namespace WebApi.Data
         }
 
 
-        public void Insert(QuestionLevel questionlevel)
+        public QuestionLevel Insert(QuestionLevel questionlevel)
         {
             IRepository<QuestionLevel> QuestionLevelRepository = new ContextSQL<QuestionLevel>(_ConnectionString);
+            QuestionLevel oQuestionLevel;
             try
             {
-                QuestionLevelRepository.Insert(questionlevel);
+                oQuestionLevel = QuestionLevelRepository.Insert(questionlevel);
             }
             catch (Exception)
             {
                 throw;
             }
+            return oQuestionLevel;
         }
 
 

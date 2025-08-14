@@ -140,11 +140,11 @@ namespace WebApi.Controllers
         public ActionResult Insert([FromBody] QuestionLevelModel questionlevelModel)
         {
             QuestionLevelBiz oQuestionLevelBiz = new QuestionLevelBiz(_ConnectionString);
-            QuestionLevel questionlevel = new QuestionLevel();
+            QuestionLevel oQuestionLevel;
             try
             {
-                questionlevel = QuestionLevel.Merge<QuestionLevelModel, QuestionLevel>(questionlevelModel);
-                oQuestionLevelBiz.Insert(questionlevel);
+                oQuestionLevel = QuestionLevel.Merge<QuestionLevelModel, QuestionLevel>(questionlevelModel);
+                oQuestionLevel = oQuestionLevelBiz.Insert(oQuestionLevel);
             }
             catch (WebException ex)
             {
@@ -156,7 +156,7 @@ namespace WebApi.Controllers
                 _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
                 return ValidationProblem("Error", "Get ", 500, ex.Message);
             }
-            return Created(); //OK 201/204
+            return Created("questionlevel",oQuestionLevel); //OK 201/204
         }
 
 

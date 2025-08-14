@@ -59,17 +59,19 @@ namespace WebApi.Biz
         }
 
 
-        public void Insert(FinalTestMessage finaltestmessage)
+        public FinalTestMessage Insert(FinalTestMessage finaltestmessage)
         {
             FinalTestMessageData oFinalTestMessageData = new FinalTestMessageData(_ConnectionString);
+            FinalTestMessage oFinalTestMessage;
             try
             {
-                oFinalTestMessageData.Insert(finaltestmessage);
+                oFinalTestMessage = oFinalTestMessageData.Insert(finaltestmessage);
             }
             catch (Exception)
             {
                 throw;
             }
+            return oFinalTestMessage;
         }
 
 

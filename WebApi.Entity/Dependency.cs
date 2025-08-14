@@ -1,9 +1,11 @@
-﻿
+﻿using System.ComponentModel.DataAnnotations;
+
 namespace WebApi.Entity
 {
 	public class Dependency : EntityBase
 	{
-		public string Descripcion { get; set; }
+        [Required]
+        public string Descripcion { get; set; }
 	}
 
 }

@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using WebApi.Entity;
 
@@ -155,18 +153,20 @@ namespace WebApi.Data
             }
         }
 
-        public void Insert(TEntity oEntity)
+        public TEntity Insert(TEntity oEntity)
         {
             Dictionary<string, string> lParam = [];
+            DataTable dt;
             try
             {
                 lParam = EntityBase.ToDictionary(oEntity);
-                ExecuteNonQuery("Insert",lParam);
+                dt = Fill("Insert", lParam);
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
+            return EntityBase.ToList<TEntity>(dt).SingleOrDefault();
         }
 
         public void Update(TEntity oEntity)

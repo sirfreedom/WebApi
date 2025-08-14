@@ -8,7 +8,7 @@ using System;
 using WebApi.Entity;
 using WebApi.Biz;
 using WebApi.Model;
-using Microsoft.AspNetCore.Components.Web;
+
 
 namespace WebApi.Controllers
 {
@@ -54,7 +54,7 @@ namespace WebApi.Controllers
 			_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
 			return ValidationProblem("Error", "Get ", 500, ex.Message);
 		}
-		return Ok(new {  listdependency = lDependency }); //OK 200);
+		return Ok(new {  dependencies = lDependency }); //OK 200);
 		}
 
 
@@ -136,12 +136,12 @@ namespace WebApi.Controllers
         [Authorize]
         public ActionResult Insert([FromBody] DependencyModel dependencyModel)
 		{
-		DependencyBiz oDependencyBiz = new DependencyBiz(_ConnectionString); 
-		Dependency dependency = new Dependency();
+		DependencyBiz oDependencyBiz = new DependencyBiz(_ConnectionString);
+			Dependency oDependency;
 		try
 		{
-			dependency = Dependency.Merge<DependencyModel, Dependency>(dependencyModel);
-			oDependencyBiz.Insert(dependency);
+			oDependency = Dependency.Merge<DependencyModel, Dependency>(dependencyModel);
+			oDependency = oDependencyBiz.Insert(oDependency);
 		}
 		catch (WebException ex) 
 		{
@@ -153,7 +153,7 @@ namespace WebApi.Controllers
 			_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
 			return ValidationProblem("Error", "Get ", 500, ex.Message);
 		}
-		return Created(); //OK 201/204
+		return Created("dependency",oDependency); //OK 201/204
 		}
 
 

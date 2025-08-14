@@ -14,7 +14,7 @@ namespace WebApi.Data
 
         void Delete(int Id);
 
-        void Insert(TEntity oEntity);
+        TEntity Insert(TEntity oEntity);
 
         void Update(TEntity oEntity);
 
