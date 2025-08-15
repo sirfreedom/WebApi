@@ -1,11 +1,13 @@
-﻿namespace WebApi.Services
+﻿using WebApi.Model;
+
+namespace WebApi.Services
 {
 
     public interface IUserService
     {
 
 
-        bool IsValidUser(string userName, string password);
+        LoginResult IsValidUser(string userName, string password);
 
 
     }

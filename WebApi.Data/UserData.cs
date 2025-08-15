@@ -15,10 +15,10 @@ namespace WebApi.Data
             UserApp oUser;
             try
             {
-                lUser.Add(new UserApp(1, "admin", "1234", 1));
-                lUser.Add(new UserApp(1, "ale", "ale", 2));
-                lUser.Add(new UserApp(1, "pepe", "pepe", 2));
-                lUser.Add(new UserApp(1, "rodrigo", "rodrigo", 2));
+                lUser.Add(new UserApp(1, "admin", "1234", "2"));
+                lUser.Add(new UserApp(2, "ale", "ale", "1"));
+                lUser.Add(new UserApp(3, "pepe", "pepe", "2"));
+                lUser.Add(new UserApp(4, "rodrigo", "rodrigo", "2"));
                 oUser = lUser.FirstOrDefault(x => x.Name == Name && x.Pass == Pass);
             }
             catch (Exception)

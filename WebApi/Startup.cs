@@ -60,6 +60,13 @@ namespace WebApi
 
             var token = _Configuration.GetSection("tokenManagement").Get<TokenManagement>();
             services.AddSingleton(token);
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("SuperAdmin", policy => policy.RequireClaim("AdminType", "1"));
+                
+            });
+
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

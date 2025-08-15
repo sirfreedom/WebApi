@@ -1,11 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using WebApi.Infrastructure.BasicAuth;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Security.Claims;
+using WebApi.Infrastructure.BasicAuth;
+
 
 namespace WebApi.Controllers
 {
@@ -33,13 +37,12 @@ namespace WebApi.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("jwt")]
-        [Authorize]
-        public IEnumerable<int> JwtAuth()
+        [Authorize(Policy = "SuperAdmin")]
+        public ActionResult JwtAuth()
         {
             var username = User.Identity.Name;
-            _logger.LogInformation($"User [{username}] is visiting jwt auth with token {1}");
             var rng = new Random();
-            return Enumerable.Range(1, 10).Select(x => rng.Next(0, 100));
+            return Ok(new { user = User.Identity.Name, randome = Enumerable.Range(1, 10).Select(x => rng.Next(0, 100)) });
         }
 
         /// <summary>
@@ -52,7 +55,6 @@ namespace WebApi.Controllers
         [BasicAuth] // You can optionally provide a specific realm --> [BasicAuth("my-realm")]
         public IEnumerable<int> BasicAuth()
         {
-            _logger.LogInformation("basic auth");
             var rng = new Random();
             return Enumerable.Range(1, 10).Select(x => rng.Next(0, 100));
         }
@@ -67,7 +69,6 @@ namespace WebApi.Controllers
         [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult BasicAuthLogout()
         {
-            _logger.LogInformation("basic auth logout");
             HttpContext.Response.Headers["WWW-Authenticate"] = "Basic realm=\"My Realm\"";
             return new UnauthorizedResult();
         }

@@ -9,16 +9,16 @@ namespace WebApi.Entity
 
         public UserApp() { }
 
-        public UserApp(int Id, string name, string pass, int level) 
+        public UserApp(int Id, string name, string pass, string rolecode) 
         {
             Name = name;
             Pass = pass;
-            Level = level;
+            RoleCode = rolecode;
         }
 
         public string Name { get; set; }
         public string Pass { get; set; }
-        public int Level { get; set; }
+        public string RoleCode { get; set; }
 
     }
 }

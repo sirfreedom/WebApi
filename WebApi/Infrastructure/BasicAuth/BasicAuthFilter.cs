@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
+using WebApi.Model;
 using WebApi.Services;
 
 namespace WebApi.Infrastructure.BasicAuth
@@ -31,12 +32,10 @@ namespace WebApi.Infrastructure.BasicAuth
                     var authHeaderValue = AuthenticationHeaderValue.Parse(authHeader);
                     if (authHeaderValue.Scheme.Equals(AuthenticationSchemes.Basic.ToString(), StringComparison.OrdinalIgnoreCase))
                     {
-                        var credentials = Encoding.UTF8
-                                            .GetString(Convert.FromBase64String(authHeaderValue.Parameter ?? string.Empty))
-                                            .Split(':', 2);
+                        var credentials = Encoding.UTF8.GetString(Convert.FromBase64String(authHeaderValue.Parameter ?? string.Empty)).Split(':', 2);
                         if (credentials.Length == 2)
                         {
-                            if (IsAuthorized(context, credentials[0], credentials[1]))
+                            if (IsAuthorized(context, credentials[0], credentials[1]).UserName == string.Empty)
                             {
                                 return;
                             }
@@ -52,7 +51,7 @@ namespace WebApi.Infrastructure.BasicAuth
             }
         }
 
-        public bool IsAuthorized(AuthorizationFilterContext context, string username, string password)
+        public LoginResult IsAuthorized(AuthorizationFilterContext context, string username, string password)
         {
             var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
             return userService.IsValidUser(username, password);

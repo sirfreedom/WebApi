@@ -50,14 +50,28 @@ namespace WebApi.Controllers
             LoginResult loginResult = new LoginResult();
             try
             {
-                if (!ModelState.IsValid || !_userService.IsValidUser(request.user, request.pass))
+                loginResult = _userService.IsValidUser(request.user, request.pass);
+
+                if (!ModelState.IsValid || loginResult.UserName.Length == 0 )
                 {
                     return BadRequest("Invalid Request");
                 }
+                
+                loginResult.UserName = request.user;
+                loginResult.ExpirationYear = ExpirationDateUTC.Year;
+                loginResult.ExpirationMonth = ExpirationDateUTC.Month;
+                loginResult.ExpirationDay = ExpirationDateUTC.Day;
+                loginResult.ExpirationHour = ExpirationDateUTC.Hour;
+                loginResult.ExpirationMinute = ExpirationDateUTC.Minute;
+                loginResult.UniversalCentralTime = _tokenManagement.UniversalTimeZone;
+                loginResult.TimeNow = DateTime.UtcNow.AddHours(_tokenManagement.UniversalTimeZone).ToString(_tokenManagement.FormatTime);
+                loginResult.TimeOfServer = DateTime.Now.ToString(_tokenManagement.FormatTime);
+                loginResult.FormatTime = _tokenManagement.FormatTime;
 
                 claims = new[]
-                {
-                new Claim(ClaimTypes.Name,request.user)
+{
+                    new Claim(ClaimTypes.Name,request.user),
+                    new Claim("AdminType",loginResult.RoleCode)
                 };
 
                 key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_tokenManagement.Secret));
@@ -70,19 +84,7 @@ namespace WebApi.Controllers
                     signingCredentials: credentials);
 
                 token = new JwtSecurityTokenHandler().WriteToken(jwtToken);
-
-                loginResult.UserName = request.user;
                 loginResult.Token = token;
-                loginResult.ExpirationYear = ExpirationDateUTC.Year;
-                loginResult.ExpirationMonth = ExpirationDateUTC.Month;
-                loginResult.ExpirationDay = ExpirationDateUTC.Day;
-                loginResult.ExpirationHour = ExpirationDateUTC.Hour;
-                loginResult.ExpirationMinute = ExpirationDateUTC.Minute;
-                loginResult.UniversalCentralTime = _tokenManagement.UniversalTimeZone;
-                loginResult.TimeNow = DateTime.UtcNow.AddHours(_tokenManagement.UniversalTimeZone).ToString(_tokenManagement.FormatTime);
-                loginResult.TimeOfServer = DateTime.Now.ToString(_tokenManagement.FormatTime);
-                loginResult.FormatTime = _tokenManagement.FormatTime;
-
             }
             catch (WebException ex)
             {
