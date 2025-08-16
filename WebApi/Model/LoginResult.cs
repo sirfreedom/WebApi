@@ -16,7 +16,7 @@ namespace WebApi.Model
         public int ExpirationHour { get; set; }
         public int ExpirationMinute { get; set; }
         public int UniversalCentralTime { get; set; }
-        public string RoleCode { get; set; }
+        public string AdminType { get; set; }
         public string TimeNow { get; set; }
         public string TimeOfServer { get; set; }
         public string FormatTime { get; set; }

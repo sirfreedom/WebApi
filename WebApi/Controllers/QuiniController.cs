@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Net;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Biz;
 using WebApi.Entity;
@@ -10,7 +9,6 @@ using WebApi.Entity;
 namespace WebApi.Controllers
 {
 
-    //[EnableCors("MyPolicy")]
     [ApiController]
     [Route("api/[controller]")]
     public class QuiniController : Controller
@@ -26,7 +24,7 @@ namespace WebApi.Controllers
         /// devuelve n1 n2 n3 n4 n5 n6 en secuencia de los numeros ganadores de la fecha o periodo solicitado
         /// </returns>
         [HttpGet("Get")]
-        [AllowAnonymous]
+        [Authorize]
         public ActionResult Get(Byte dd, Byte mm, int yyyy)
         {
             Quini oQuini;

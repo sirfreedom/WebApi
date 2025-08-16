@@ -1,9 +1,5 @@
-using System;
-using System.IO;
-using System.Reflection;
-using System.Text;
-using WebApi.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -11,7 +7,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System;
+using System.IO;
+using System.Reflection;
+using System.Text;
 using WebApi.Infrastructure.Jwt;
+using WebApi.Services;
 
 namespace WebApi
 {
@@ -64,8 +65,10 @@ namespace WebApi
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("SuperAdmin", policy => policy.RequireClaim("AdminType", "1"));
-                
+                options.AddPolicy("Admin", policy => policy.RequireClaim("AdminType", "2", "1"));
+                options.AddPolicy("User", policy => policy.RequireClaim("AdminType",  "3", "2","1" ));
             });
+
 
             services.AddAuthentication(x =>
             {

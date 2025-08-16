@@ -35,7 +35,7 @@ namespace WebApi.Controllers
         /// Esta lista dinamica, es convertible tranquilamente a un Model
         /// </returns>
         [HttpGet("Find")]
-        [Authorize]
+        [AllowAnonymous]
         public ActionResult Find()
         {
             SettingBiz oSettingBiz = new SettingBiz(_ConnectionString);
@@ -133,7 +133,7 @@ namespace WebApi.Controllers
         /// retorna ok
         /// </returns>
         [HttpPut("Update")]
-        [Authorize]
+        [Authorize(Policy = "Admin")]
         public ActionResult Update([FromBody] Setting setting)
         {
             SettingBiz settingBiz = new SettingBiz(_ConnectionString);
@@ -164,7 +164,7 @@ namespace WebApi.Controllers
         /// ok 201/204 
         /// </returns>
         [HttpPost("Insert")]
-        [Authorize]
+        [Authorize(Policy = "Admin")]
         public ActionResult Insert([FromBody] SettingModel setting)
         {
             SettingBiz settingBiz = new SettingBiz(_ConnectionString);
@@ -201,7 +201,7 @@ namespace WebApi.Controllers
         /// ok 200
         /// </returns>
         [HttpDelete("Delete")]
-        [Authorize (Policy ="SuperAdmin")]
+        [Authorize(Policy = "SuperAdmin")]
         public ActionResult Delete(int Id)
         {
             SettingBiz settingBiz = new SettingBiz(_ConnectionString);
@@ -232,7 +232,7 @@ namespace WebApi.Controllers
         /// Devuelve un 200
         /// </returns>
         [HttpPatch("Disabled")]
-        [Authorize(Policy = "SuperAdmin")]
+        [Authorize(Policy = "Admin")]
         public ActionResult Disabled(int Id, bool Disabled)
         {
             SettingBiz settingBiz = new SettingBiz(_ConnectionString);

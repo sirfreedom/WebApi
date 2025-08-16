@@ -25,7 +25,7 @@ namespace WebApi.Services
             {
                 oUser = u.Get(userName, password);
                 oLoginResult.UserName = oUser.Name;
-                oLoginResult.RoleCode = oUser.RoleCode;
+                oLoginResult.AdminType = oUser.RoleCode;
             }
             catch (Exception) 
             {

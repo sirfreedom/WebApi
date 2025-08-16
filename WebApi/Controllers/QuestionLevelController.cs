@@ -104,7 +104,7 @@ namespace WebApi.Controllers
         /// devuelve Status: 200 en caso de haber actualizado correctamente 
         /// </returns>
         [HttpPut("Update")]
-        [Authorize]
+        [Authorize(Policy = "Admin")]
         public ActionResult Update([FromBody] QuestionLevel questionlevel)
         {
             QuestionLevelBiz oQuestionLevelBiz = new QuestionLevelBiz(_ConnectionString);
@@ -136,7 +136,7 @@ namespace WebApi.Controllers
         /// devuelve un status: 201/204 si inserto correctamente 
         /// </returns>
         [HttpPost("Insert")]
-        [Authorize]
+        [Authorize(Policy = "Admin")]
         public ActionResult Insert([FromBody] QuestionLevelModel questionlevelModel)
         {
             QuestionLevelBiz oQuestionLevelBiz = new QuestionLevelBiz(_ConnectionString);
@@ -170,7 +170,7 @@ namespace WebApi.Controllers
         /// devuelve Status: 200 en caso de haber eliminado correctamente 
         /// </returns>
         [HttpDelete("Delete")]
-        [Authorize]
+        [Authorize(Policy = "SuperAdmin")]
         public ActionResult Delete(int Id)
         {
             QuestionLevelBiz oQuestionLevelBiz = new QuestionLevelBiz(_ConnectionString);
@@ -201,7 +201,7 @@ namespace WebApi.Controllers
         /// devuelve un 200 ok
         /// </returns>
         [HttpPatch("Disabled")]
-        [Authorize]
+        [Authorize(Policy = "Admin")]
         public ActionResult Disabled(int Id, bool Disabled)
         {
             QuestionLevelBiz oQuestionLevelBiz = new QuestionLevelBiz(_ConnectionString);

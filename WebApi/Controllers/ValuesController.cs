@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Security.Claims;
 using WebApi.Infrastructure.BasicAuth;
 
 
@@ -37,7 +36,7 @@ namespace WebApi.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("jwt")]
-        [Authorize(Policy = "SuperAdmin")]
+        [Authorize]
         public ActionResult JwtAuth()
         {
             var username = User.Identity.Name;

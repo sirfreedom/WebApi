@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -107,7 +106,7 @@ namespace WebApi.Controllers
         /// devuelve Status: 200 en caso de haber actualizado correctamente 
         /// </returns>
         [HttpPut("Update")]
-        [Authorize]
+        [Authorize(Policy = "Admin")]
         public ActionResult Update([FromBody] FinalTestMessage finaltestmessage)
         {
             FinalTestMessageBiz oFinalTestMessageBiz = new FinalTestMessageBiz(_ConnectionString);
@@ -139,7 +138,7 @@ namespace WebApi.Controllers
         /// devuelve un status: 201/204 si inserto correctamente 
         /// </returns>
         [HttpPost("Insert")]
-        [Authorize]
+        [Authorize(Policy = "Admin")]
         public ActionResult Insert([FromBody] FinalTestMessageModel finaltestmessageModel)
         {
             FinalTestMessageBiz oFinalTestMessageBiz = new FinalTestMessageBiz(_ConnectionString);
@@ -173,7 +172,7 @@ namespace WebApi.Controllers
         /// devuelve Status: 200 en caso de haber eliminado correctamente 
         /// </returns>
         [HttpDelete("Delete")]
-        [Authorize]
+        [Authorize(Policy = "SuperAdmin")]
         public ActionResult Delete(int Id)
         {
             FinalTestMessageBiz oFinalTestMessageBiz = new FinalTestMessageBiz(_ConnectionString);
@@ -205,7 +204,7 @@ namespace WebApi.Controllers
         /// retorna un 200 ok.
         /// </returns>
         [HttpPatch("Disabled")]
-        [Authorize]
+        [Authorize(Policy = "Admin")]
         public ActionResult Disabled(int Id, bool Disabled)
         {
             FinalTestMessageBiz oFinalTestMessageBiz = new FinalTestMessageBiz(_ConnectionString);

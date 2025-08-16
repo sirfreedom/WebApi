@@ -70,8 +70,8 @@ namespace WebApi.Controllers
 		/// devuelve Status: 200 en caso de haber actualizado correctamente 
 		/// </returns>
 		[HttpPut("Update")]
-		[AllowAnonymous]
-		public ActionResult Update([FromBody] Answer answer)
+        [Authorize(Policy = "Admin")]
+        public ActionResult Update([FromBody] Answer answer)
 		{
 		AnswerBiz oAnswerBiz = new AnswerBiz(_ConectionString); 
 		try
@@ -102,8 +102,8 @@ namespace WebApi.Controllers
 		/// devuelve un status: 201/204 si inserto correctamente 
 		/// </returns>
 		[HttpPost("Insert")]
-		[AllowAnonymous]
-		public ActionResult Insert([FromBody] AnswerModel answerModel)
+        [Authorize(Policy = "Admin")]
+        public ActionResult Insert([FromBody] AnswerModel answerModel)
 		{
 			AnswerBiz oAnswerBiz = new AnswerBiz(_ConectionString);
 			Answer oAnswer;
@@ -136,8 +136,8 @@ namespace WebApi.Controllers
 		/// devuelve Status: 200 en caso de haber eliminado correctamente 
 		/// </returns>
 		[HttpDelete("Delete")]
-		[AllowAnonymous]
-		public ActionResult Delete(int Id)
+        [Authorize(Policy = "Admin")]
+        public ActionResult Delete(int Id)
 		{
 		AnswerBiz oAnswerBiz = new AnswerBiz(_ConectionString); 
 		try
@@ -167,7 +167,7 @@ namespace WebApi.Controllers
 		/// devuelve un 200 ok
 		/// </returns>
         [HttpPatch("Disabled")]
-        [AllowAnonymous]
+        [Authorize(Policy = "Admin")]
         public ActionResult Disabled(int Id, bool Disabled)
         {
             AnswerBiz oAnswerBiz = new AnswerBiz(_ConectionString);

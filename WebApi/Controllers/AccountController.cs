@@ -71,7 +71,7 @@ namespace WebApi.Controllers
                 claims = new[]
 {
                     new Claim(ClaimTypes.Name,request.user),
-                    new Claim("AdminType",loginResult.RoleCode)
+                    new Claim("AdminType",loginResult.AdminType)
                 };
 
                 key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_tokenManagement.Secret));

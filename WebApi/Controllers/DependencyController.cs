@@ -101,7 +101,7 @@ namespace WebApi.Controllers
 		/// devuelve Status: 200 en caso de haber actualizado correctamente 
 		/// </returns>
 		[HttpPut("Update")]
-        [Authorize]
+        [Authorize(Policy = "Admin")]
         public ActionResult Update([FromBody] Dependency dependency)
 		{
 		DependencyBiz oDependencyBiz = new DependencyBiz(_ConnectionString); 
@@ -133,7 +133,7 @@ namespace WebApi.Controllers
 		/// devuelve un status: 201/204 si inserto correctamente 
 		/// </returns>
 		[HttpPost("Insert")]
-        [Authorize]
+        [Authorize(Policy = "Admin")]
         public ActionResult Insert([FromBody] DependencyModel dependencyModel)
 		{
 		DependencyBiz oDependencyBiz = new DependencyBiz(_ConnectionString);
@@ -167,7 +167,7 @@ namespace WebApi.Controllers
 		/// devuelve Status: 200 en caso de haber eliminado correctamente 
 		/// </returns>
 		[HttpDelete("Delete")]
-        [Authorize]
+        [Authorize(Policy = "SuperAdmin")]
         public ActionResult Delete(int Id)
 		{
 		DependencyBiz oDependencyBiz = new DependencyBiz(_ConnectionString); 
@@ -196,7 +196,7 @@ namespace WebApi.Controllers
 		/// <param name="Disabled"></param>
 		/// <returns></returns>
         [HttpPatch("Disabled")]
-        [Authorize]
+        [Authorize(Policy = "Admin")]
         public ActionResult Disabled(int Id, bool Disabled)
         {
             DependencyBiz oDependencyBiz = new DependencyBiz(_ConnectionString);
