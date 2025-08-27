@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using WebApi.Entity;
 
-
 namespace WebApi.Data
 {
 
@@ -21,9 +20,15 @@ namespace WebApi.Data
     public sealed class ContextSQL<TEntity> : IRepository<TEntity> where TEntity : EntityBase, new()
     {
 
+        #region Declaration
+
+        private readonly ConnectionCommandPool _connectionCommandPool; // ObjectPooling maneja las conexiones
+
+        #endregion
+
         public ContextSQL(string ConnectionString)
         {
-            _SettingConexion = ConnectionString;
+            _connectionCommandPool = new ConnectionCommandPool(ConnectionString,10); // Initialize the pool
         }
 
         public class ContextSQLException : Exception 
@@ -46,12 +51,6 @@ namespace WebApi.Data
             }
         }
 
-
-        #region Declaration
-
-        private readonly string _SettingConexion;
-
-        #endregion
 
         #region Properties
 
@@ -145,6 +144,10 @@ namespace WebApi.Data
             };
             try
             {
+                if (Id == 0) 
+                {
+                    throw new Exception("This Id not be zero");
+                }
                 ExecuteNonQuery("Delete", lDictionary);
             }
             catch (Exception ex)
@@ -191,7 +194,7 @@ namespace WebApi.Data
         {
             DataSet ds = new();
             DataTable dt = new DataTable();
-            SqlCommand cmd = new();
+            SqlCommand cmd;
             SqlDataAdapter da;
             StringBuilder sbKey = new();
             List<dynamic> lDynamic = [];
@@ -199,11 +202,14 @@ namespace WebApi.Data
             sb.Append(EntityName);
             sb.Append('_');
             sb.Append(FunctionName);
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = sb.ToString();
             try
             {
                 Parameters = Parameters ?? [];
+                cmd = _connectionCommandPool.GetCommand();   // Get command from pool
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = sb.ToString();
+                MessageError = string.Empty;
+                da = new SqlDataAdapter(cmd);
 
                 foreach (var d in Parameters)
                 {
@@ -213,16 +219,11 @@ namespace WebApi.Data
                     cmd.Parameters.Add(new SqlParameter(sbKey.ToString(), d.Value));
                 }
 
-                using (SqlConnection cn = new())
+                using (SqlConnection cn = _connectionCommandPool.GetConnection())
                 {
-                    cn.ConnectionString = _SettingConexion;
                     cmd.Connection = cn;
-                    MessageError = string.Empty;
-                    da = new SqlDataAdapter(cmd);
                     cn.InfoMessage += cn_InfoMessage;
-                    cn.Open();
                     da.Fill(ds);
-                    cn.Close();
                 }
 
                 if (ds.Tables.Count == 0) 
@@ -233,7 +234,6 @@ namespace WebApi.Data
                 {
                     dt = ds.Tables[0];
                 }
-
                 if (MessageError.Length > 0)
                 {
                     throw new ContextSQLException(MessageError);
@@ -251,13 +251,8 @@ namespace WebApi.Data
             {
                 throw new Exception(ex.Message);
             }
-            finally
-            {
-                cmd.Dispose();
-            }
             return dt;
         }
-
 
         public void ExecuteNonQuery(string FunctionName, Dictionary<string, string> Parameters = null)
         {
@@ -265,14 +260,16 @@ namespace WebApi.Data
             sb.Append(EntityName);
             sb.Append('_');
             sb.Append(FunctionName);
-            SqlCommand cmd = new ();
+            SqlCommand cmd;
             MessageError = string.Empty;
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = sb.ToString();
             StringBuilder sbKey = new ();
-            cmd.CommandTimeout = 60;
             try
             {
+                cmd = _connectionCommandPool.GetCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = sb.ToString();
+                cmd.CommandTimeout = 60;
+
                 Parameters = Parameters == null ? [] : Parameters;
 
                 foreach (var d in Parameters)
@@ -283,14 +280,11 @@ namespace WebApi.Data
                     cmd.Parameters.Add(new SqlParameter(sbKey.ToString(), d.Value));
                 }
 
-                using (SqlConnection cn = new())
+                using (SqlConnection cn = _connectionCommandPool.GetConnection())
                 {
-                    cn.ConnectionString = _SettingConexion;
                     cn.InfoMessage += cn_InfoMessage;
                     cmd.Connection = cn;
-                    cn.Open();
                     cmd.ExecuteNonQuery();
-                    cn.Close();
                 }
 
                 if (MessageError.Length > 0)

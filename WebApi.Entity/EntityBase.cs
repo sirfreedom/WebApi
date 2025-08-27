@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 using System.Dynamic;
 using System.Globalization;
@@ -31,7 +32,7 @@ namespace WebApi.Entity
             {
                 if (dt == null)
                 {
-                    return new List<T>();
+                    return []; //new List<T>();
                 }
 
                 columnNames = dt.Columns.Cast<DataColumn>().Select(c => c.ColumnName).ToList();
@@ -482,21 +483,6 @@ namespace WebApi.Entity
 
         #region To Etc
 
-        //public static Dictionary<string, string> ToMergeDictionary(Dictionary<string, string> dic1, Dictionary<string, string> dic2) 
-        //{
-        //    //Dictionary<string,string> lReturn = new Dictionary<string,string>();
-
-        //    var lReturn = dic1
-        //        .Concat(dic2)
-        //        .GroupBy(kvp => kvp.Key)
-        //        .ToDictionary(g => g.Key, g => g.Last());
-
-        //    return lReturn;
-
-        //}
-
-
-
         public static Dictionary<string, string> ToDictionary<T>(T entidad, bool MergeKeyValue = false)
         {
             Dictionary<string, string> lDictionary = new Dictionary<string, string>();
@@ -506,12 +492,24 @@ namespace WebApi.Entity
             
             foreach (PropertyInfo prop in propiedades)
             {
-                var valor = prop.GetValue(entidad);
+                object valor = null;
+                try
+                {
+                    valor = prop.GetValue(entidad);
+                }
+                catch {
+                    continue;
+                }
 
                 sPrimitive = prop.PropertyType.Namespace; // obviamente tiene namespace
 
                 if (prop.IsDefined(typeof(KeyAttribute), inherit: false) && MergeKeyValue == false)
                 { continue; } //evita enviar el Key Id
+
+                if (prop.IsDefined(typeof(NotMappedAttribute), inherit: false))
+                { 
+                    continue; 
+                } //evita enviar atributos con notmapper
 
                 if (valor != null && sPrimitive == "System")
                 {
@@ -904,7 +902,6 @@ namespace WebApi.Entity
             PropertyInfo[] finalProperties = typeof(TFinal).GetProperties();
             try
             {
-
                 foreach (PropertyInfo initProperty in initProperties)
                 {
                     if (initProperty.CanRead)
@@ -914,6 +911,12 @@ namespace WebApi.Entity
                         // Buscar una propiedad correspondiente en la clase final
                         foreach (PropertyInfo finalProperty in finalProperties)
                         {
+
+                            if (finalProperty.GetCustomAttribute<NotMappedAttribute>() != null)
+                            {
+                                continue; // Omitir esta propiedad
+                            }
+
                             if (finalProperty.Name == initProperty.Name && finalProperty.CanWrite)
                             {
                                 // Asignar el valor si no es null
@@ -933,6 +936,11 @@ namespace WebApi.Entity
                                     sb.Append((((DateOnly)value).Day.ToString()));
                                     finalProperty.SetValue(result, sb.ToString());
                                 }
+                                if (value != null && initProperty.PropertyType.Name == "Nullable`1" && finalProperty.PropertyType.Name == "String") 
+                                {
+                                    finalProperty.SetValue(result, ((DateTime)value).ToString("yyyy-MM-dd"));
+                                }
+
                                 break; // Salimos del bucle interno una vez que encontramos la propiedad correspondiente
                             }
                         }
@@ -964,10 +972,16 @@ namespace WebApi.Entity
         /// <summary>
         /// Devuelve cantidad de dias entre dos fechas, enviandole como parametro el dia que queremos que cuente de la semanas.
         /// </summary>
-        /// <param name="dInicio"></param>
-        /// <param name="dFinal"></param>
+        /// <param name="dInicio">
+        /// Fecha inicio
+        /// </param>
+        /// <param name="dFinal">
+        /// Fecha Fin
+        /// </param>
         /// <param name="DayofWeek"></param>
-        /// <returns></returns>
+        /// <returns>
+        /// Dias de diferencia
+        /// </returns>
         public static int DayOfWeekBetweenDates(DateTime dInicio, DateTime dFinal, DayOfWeek DayofWeek)
         {
             int iCantidad = 0;
