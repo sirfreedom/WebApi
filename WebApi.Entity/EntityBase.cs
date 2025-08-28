@@ -483,6 +483,14 @@ namespace WebApi.Entity
 
         #region To Etc
 
+
+        /// <summary>
+        /// ToDictionary : funcion que convierte los valores de una entidad aun no instanciada a un dictionary.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entidad"></param>
+        /// <param name="MergeKeyValue"></param>
+        /// <returns></returns>
         public static Dictionary<string, string> ToDictionary<T>(T entidad, bool MergeKeyValue = false)
         {
             Dictionary<string, string> lDictionary = new Dictionary<string, string>();
@@ -497,7 +505,8 @@ namespace WebApi.Entity
                 {
                     valor = prop.GetValue(entidad);
                 }
-                catch {
+                catch 
+                {
                     continue;
                 }
 
@@ -557,7 +566,7 @@ namespace WebApi.Entity
         }
 
         /// <summary>
-        /// Funcion que cambia los valores de las propiedades por un dictionary con sus valores.
+        /// ToDiccionary funcion que pasa todos los valores de una clase INSTANCIADA a un dictionary
         /// </summary>
         /// <param name="IncludeBlankSpace">
         /// Este parametro agrega valores vacios como valor, si hago una busqueda y en mi propiedad tengo valores vacios los incluira en la busqueda, 
@@ -569,7 +578,9 @@ namespace WebApi.Entity
         /// en cambio si tengo un insert seria bueno que los incluya.
         /// si existe un campo que tiene que puede estar vacio o no, debemos poner la propiedad en true para que lo agregue como parametro
         /// </param>
-        /// <returns></returns>
+        /// <returns>
+        /// Devuelve un array de propiedades con sus valores
+        /// </returns>
         public Dictionary<string, string> ToDictionary(bool IncludeBlankSpace = false, bool IncludeZero = false)
         {
             Dictionary<string, string> lProperty = new Dictionary<string, string>();
@@ -579,21 +590,24 @@ namespace WebApi.Entity
             {
                 foreach (PropertyInfo p in properties)
                 {
+                    StringBuilder sb = new StringBuilder();
                     object PropertyValue = p.GetValue(this, null);
                     string typeName = p.PropertyType.Name;
-                    StringBuilder sb = new StringBuilder();
+                    bool isPropertyNotMapped = Attribute.IsDefined(p, typeof(NotMappedAttribute));
+
+                    if (isPropertyNotMapped || PropertyValue == null) 
+                    {
+                        continue;
+                    }
+
+                    if (PropertyValue.ToString() == "" && IncludeBlankSpace == false)
+                    {
+                        continue;
+                    }
 
                     switch (typeName)
                     {
                         case "String":
-                            if (PropertyValue == null)
-                            {
-                                continue;
-                            }
-                            if (PropertyValue.ToString() == "" && IncludeBlankSpace == false)
-                            {
-                                continue;
-                            }
                             sb.Append(PropertyValue);
                             break;
                         case "Double":
@@ -648,6 +662,18 @@ namespace WebApi.Entity
                             sb.Append(((Decimal)PropertyValue).ToString());
                             break;
                         default:
+                            Type targetType = Type.GetType(p.PropertyType.FullName);
+                            object convertedValue = Convert.ChangeType(PropertyValue, targetType);
+                            PropertyInfo[] subproperties = targetType.GetProperties();
+                            foreach (PropertyInfo sp in subproperties)
+                            {
+                                bool isSubPropertyNotMapped = Attribute.IsDefined(sp, typeof(NotMappedAttribute));
+                                if (isSubPropertyNotMapped) {
+                                    continue;
+                                }
+                                object subvalue = sp.GetValue(convertedValue);
+                                lProperty.Add(sp.Name, subvalue.ToString());
+                            }
                             continue;
                     }
                     lProperty.Add(p.Name, sb.ToString());
@@ -879,6 +905,18 @@ namespace WebApi.Entity
 
         #region Util 
 
+        /// <summary>
+        /// EntityPropertyToList
+        /// </summary>
+        /// <typeparam name="T">
+        /// Tipo de dato de la clase
+        /// </typeparam>
+        /// <param name="TEntity">
+        /// la clase propiamente declarada
+        /// </param>
+        /// <returns>
+        /// Devuelve todas las propiedades de una clase en una lista de string
+        /// </returns>
         public static List<string> EntityPropertyToList<T>(T TEntity) 
         {
             PropertyInfo[] initProperties = typeof(T).GetProperties();
@@ -891,7 +929,24 @@ namespace WebApi.Entity
             return lPropertyName;
         }
 
-
+        /// <summary>
+        /// Merge
+        /// </summary>
+        /// <typeparam name="TInit">
+        /// Tipo de dato de la clase origen
+        /// </typeparam>
+        /// <typeparam name="TFinal">
+        /// Tipo de dato de la clase destino
+        /// </typeparam>
+        /// <param name="obj1">
+        /// clase origen
+        /// </param>
+        /// <returns>
+        /// devuelve la clase destino, llena con los valores de la clase origen
+        /// </returns>
+        /// <exception cref="Exception">
+        /// si ocurre un error, devuelve un exception
+        /// </exception>
         public static TFinal Merge<TInit, TFinal>(TInit obj1) where TFinal : new()
         {
             TFinal result = new TFinal();

@@ -9,8 +9,6 @@ using System.Collections.Generic;
 using WebApi.Biz;
 using Microsoft.Extensions.Logging;
 
-
-
 namespace WebApi.Controllers
 {
     [ApiController]
@@ -29,7 +27,6 @@ namespace WebApi.Controllers
             _logger = logger;
         }
 
-
         /// <summary>
         /// List 
         /// </summary>
@@ -40,6 +37,7 @@ namespace WebApi.Controllers
         {
             ImagenBiz Serv = new ImagenBiz(_ConnectionString);
             List<ImagenTest> lImageTest;
+            Dictionary<string,string> lParam = new Dictionary<string,string>();
             try
             {
                 lImageTest = lImageTest = Serv.List();

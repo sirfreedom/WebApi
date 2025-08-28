@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebApi.Entity
 {
@@ -20,8 +20,13 @@ namespace WebApi.Entity
 
         public string Fecha { get; set; } = string.Empty;
 
-        public Byte DD { get; set; } = 0;
-        public Byte MM { get; set; } = 0;
+        [NotMapped]
+        public int DD { get; set; } = 0;
+
+        [NotMapped]
+        public int MM { get; set; } = 0;
+
+        [NotMapped]
         public int YYYY { get; set; } = 0;
 
 
