@@ -42,46 +42,44 @@ namespace WebApi.Entity
 
                     foreach (var p in properties)
                     {
-                        if (columnNames.Contains(p.Name))
+                        if (columnNames.Contains(p.Name) && (dr[p.Name] != DBNull.Value && p.PropertyType.Name != "Nullable"))
                         {
-                            if (dr[p.Name] != DBNull.Value && p.PropertyType.Name != "Nullable")
+
+                            switch (p.PropertyType.Name)
                             {
-                                switch (p.PropertyType.Name)
-                                {
-                                    case "Decimal":
-                                        p.SetValue(objT, decimal.Parse(dr[p.Name].ToString()), null);
-                                        break;
-                                    case "String":
-                                        p.SetValue(objT, dr[p.Name].ToString(), null);
-                                        break;
-                                    case "Int64":
-                                        p.SetValue(objT, long.Parse(dr[p.Name].ToString()), null);
-                                        break;
-                                    case "Int16":
-                                        p.SetValue(objT, short.Parse(dr[p.Name].ToString()), null);
-                                        break;
-                                    case "Int32":
-                                        p.SetValue(objT, int.Parse(dr[p.Name].ToString()), null);
-                                        break;
-                                    case "Byte":
-                                        p.SetValue(objT, byte.Parse(dr[p.Name].ToString()), null);
-                                        break;
-                                    case "Short":
-                                        p.SetValue(objT, short.Parse(dr[p.Name].ToString()), null);
-                                        break;
-                                    case "Boolean":
-                                        p.SetValue(objT, bool.Parse(dr[p.Name].ToString()), null);
-                                        break;
-                                    case "Single":
-                                        p.SetValue(objT, Single.Parse(dr[p.Name].ToString()), null);
-                                        break;
-                                    case "DateTime":
-                                        p.SetValue(objT, DateTime.Parse(dr[p.Name].ToString()), null);
-                                        break;
-                                    default:
-                                        p.SetValue(objT, dr[p.Name], null);
-                                        break;
-                                }
+                                case "Decimal":
+                                    p.SetValue(objT, decimal.Parse(dr[p.Name].ToString()), null);
+                                    break;
+                                case "String":
+                                    p.SetValue(objT, dr[p.Name].ToString(), null);
+                                    break;
+                                case "Int64":
+                                    p.SetValue(objT, long.Parse(dr[p.Name].ToString()), null);
+                                    break;
+                                case "Int16":
+                                    p.SetValue(objT, short.Parse(dr[p.Name].ToString()), null);
+                                    break;
+                                case "Int32":
+                                    p.SetValue(objT, int.Parse(dr[p.Name].ToString()), null);
+                                    break;
+                                case "Byte":
+                                    p.SetValue(objT, byte.Parse(dr[p.Name].ToString()), null);
+                                    break;
+                                case "Short":
+                                    p.SetValue(objT, short.Parse(dr[p.Name].ToString()), null);
+                                    break;
+                                case "Boolean":
+                                    p.SetValue(objT, bool.Parse(dr[p.Name].ToString()), null);
+                                    break;
+                                case "Single":
+                                    p.SetValue(objT, Single.Parse(dr[p.Name].ToString()), null);
+                                    break;
+                                case "DateTime":
+                                    p.SetValue(objT, DateTime.Parse(dr[p.Name].ToString()), null);
+                                    break;
+                                default:
+                                    p.SetValue(objT, dr[p.Name], null);
+                                    break;
                             }
                             if (dr[p.Name] == DBNull.Value)
                             {
@@ -125,7 +123,6 @@ namespace WebApi.Entity
         {
             List<T> lReturn = new List<T>();
             PropertyInfo[] TipoConcretoProperties = typeof(T).GetProperties();
-
             string sTempValue;
             try
             {
@@ -481,16 +478,19 @@ namespace WebApi.Entity
 
         #endregion
 
-        #region To Etc
-
+        #region To Dictionary
 
         /// <summary>
         /// ToDictionary : funcion que convierte los valores de una entidad aun no instanciada a un dictionary.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="T">
+        /// Tipo de dato original de la entidad a convertir
+        /// </typeparam>
         /// <param name="entidad"></param>
         /// <param name="MergeKeyValue"></param>
-        /// <returns></returns>
+        /// <returns>
+        /// un dictionary con la lista de propiedades y valores 
+        /// </returns>
         public static Dictionary<string, string> ToDictionary<T>(T entidad, bool MergeKeyValue = false)
         {
             Dictionary<string, string> lDictionary = new Dictionary<string, string>();
@@ -535,30 +535,20 @@ namespace WebApi.Entity
 
                 if (sPrimitive != "System") 
                 {
-                    //Type tipo = prop.GetType();
-                    //Subpropiedades = tipo.GetProperties();
-
-                    //foreach (PropertyInfo p in Subpropiedades)
-                    //{
-                    //    string nombrePropiedad = p.Name;
-                    //    object valorPropiedad = p.GetValue(prop);
-                    //    //Console.WriteLine($"Propiedad: {nombrePropiedad}, Valor: {valorPropiedad}");
-                    //}
-
-                    //foreach (PropertyDescriptor subprop in TypeDescriptor.GetProperties(prop))
-                    //{
-                    //    object subvalor = prop.GetValue(subprop);
-                    //    lDictionary.Add(subprop.Name, subvalor.ToString());
-
-                    Subpropiedades = prop.GetValue(entidad).GetType().GetProperties();
-
-                    foreach (var subprop in propiedades) 
+                    Type targetType = Type.GetType(p.PropertyType.FullName);
+                    object convertedValue = Convert.ChangeType(prop, targetType);
+                    PropertyInfo[] subproperties = targetType.GetProperties();
+                    foreach (PropertyInfo sp in subproperties)
                     {
-                        var subvalor = prop.GetValue(entidad);
-
-                        lDictionary[prop.Name] = subvalor != null ? subvalor.ToString() : null;
+                        bool isSubPropertyNotMapped = Attribute.IsDefined(sp, typeof(NotMappedAttribute));
+                        if (isSubPropertyNotMapped)
+                        {
+                            continue;
+                        }
+                        object subvalue = sp.GetValue(convertedValue);
+                        lDictionary.Add(sp.Name, subvalue.ToString());
                     }
-
+                    continue;
                 }
             }
 

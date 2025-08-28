@@ -6,7 +6,6 @@ using System.Data.SqlClient;
 /*
     Esta es la implementacion pura del patron Object Pooling orientado a limitar la cantidad de conexiones abiertas 
 */
-
 namespace WebApi.Data
 {
 
