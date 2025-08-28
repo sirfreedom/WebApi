@@ -535,7 +535,7 @@ namespace WebApi.Entity
 
                 if (sPrimitive != "System") 
                 {
-                    Type targetType = Type.GetType(p.PropertyType.FullName);
+                    Type targetType = Type.GetType(prop.PropertyType.FullName);
                     object convertedValue = Convert.ChangeType(prop, targetType);
                     PropertyInfo[] subproperties = targetType.GetProperties();
                     foreach (PropertyInfo sp in subproperties)
