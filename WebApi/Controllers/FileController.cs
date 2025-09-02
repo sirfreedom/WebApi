@@ -36,11 +36,20 @@ namespace WebApi.Controllers
         public ActionResult List()
         {
             ImagenBiz Serv = new ImagenBiz(_ConnectionString);
-            List<ImagenTest> lImageTest;
+            List<ImagenTest> lImageTest1;
+            List<ImagenTest> lImageTest2;
+            List<ImagenTest> lImageTest3;
+
             Dictionary<string,string> lParam = new Dictionary<string,string>();
             try
             {
-                lImageTest = lImageTest = Serv.List();
+                lImageTest1 = Serv.Test1();
+
+
+
+
+
+
             }
             catch (WebException ex)
             {
@@ -52,7 +61,7 @@ namespace WebApi.Controllers
                 _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
                 return ValidationProblem("Error", "Get", 500, ex.Message);
             }
-            return Ok(new { ImageList = lImageTest }); //OK 200
+            return Ok(new { ImageList = lImageTest1 }); //OK 200
         }
 
 

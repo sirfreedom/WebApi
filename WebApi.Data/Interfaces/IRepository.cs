@@ -4,7 +4,13 @@ using WebApi.Entity;
 
 namespace WebApi.Data
 {
-    public interface IRepository<TEntity> where TEntity : EntityBase, new ()
+
+
+    /// <summary>
+    /// La interface solo se va a utilizar dentro del ensamblado DATA, asi que es internal
+    /// </summary>
+    /// <typeparam name="TEntity"></typeparam>
+    internal interface IRepository<TEntity> where TEntity : EntityBase, new()
     {
         List<TEntity> List();
 

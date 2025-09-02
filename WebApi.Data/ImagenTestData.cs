@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Data;
+using System.Threading.Tasks;
 using WebApi.Entity;
 
 namespace WebApi.Data
@@ -32,6 +34,33 @@ namespace WebApi.Data
             IRepository<ImagenTest> Serv = new ContextSQL<ImagenTest>(_ConnectionString);
             return Serv.List();
         }
+
+
+
+        public List<ImagenTest> Test1()
+        {
+            IRepositoryAsync<ImagenTest> Serv = new ContextSQLAsync<ImagenTest>(_ConnectionString);
+            List<ImagenTest> lImagenTest = new List<ImagenTest>();
+
+            var tareas = new List<Task>();
+
+            for (int i = 0; i < 3; i++)
+            {
+                tareas.Add(Serv.Fill("Test3"));
+            }
+            
+            Task.WhenAll(tareas);
+            //Task.WaitAll(tareas);
+
+            
+            return lImagenTest;
+        }
+
+     
+
+
+
+
     }
 
 }

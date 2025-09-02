@@ -38,8 +38,11 @@ namespace WebApi.Biz
             Serv.Delete(Id);
         }
 
-   
-
+        public List<ImagenTest> Test1() 
+        {
+            ImagenTestData Serv = new ImagenTestData(_ConnectionString);
+            return Serv.Test1();
+        }
 
     }
 }
