@@ -22,7 +22,7 @@ namespace WebApi.Data
 
         Task<DataTable> Fill(string FunctionName, Dictionary<string, string> lParam = null);
 
-        Task ExecuteNonQuery(string FunctionName, Dictionary<string, string> lParam = null);
+        Task<int> ExecuteNonQuery(string FunctionName, Dictionary<string, string> lParam = null);
 
     }
 }

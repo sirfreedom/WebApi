@@ -96,6 +96,10 @@ namespace WebApi.Data
             {
                 dt = await Fill("List"); // Cambiar .Result por await
             }
+            catch (ContextSQLException ex)
+            {
+                throw new ContextSQLException(ex.Message);
+            }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
@@ -111,6 +115,10 @@ namespace WebApi.Data
             try
             {
                 dt = Fill("Get", lDictionary).Result;
+            }
+            catch (ContextSQLException ex)
+            {
+                throw new ContextSQLException(ex.Message);
             }
             catch (Exception ex)
             {
@@ -130,6 +138,10 @@ namespace WebApi.Data
                 {
                     lDynamic = EntityBase.ToDynamic(dt);
                 }
+            }
+            catch (ContextSQLException ex)
+            {
+                throw new ContextSQLException(ex.Message);
             }
             catch (Exception ex)
             {
@@ -152,6 +164,10 @@ namespace WebApi.Data
                 }
                 await ExecuteNonQuery("Delete", lDictionary); // Await the async call
             }
+            catch (ContextSQLException ex)
+            {
+                throw new ContextSQLException(ex.Message);
+            }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
@@ -166,6 +182,10 @@ namespace WebApi.Data
             {
                 lParam = EntityBase.ToDictionary(oEntity);
                 dt = Fill("Insert", lParam).Result;
+            }
+            catch (ContextSQLException ex)
+            {
+                throw new ContextSQLException(ex.Message);
             }
             catch (Exception ex)
             {
@@ -182,6 +202,10 @@ namespace WebApi.Data
                 lParam = EntityBase.ToDictionary(oEntity, true);
                 ExecuteNonQuery("Update", lParam);
             }
+            catch (ContextSQLException ex)
+            {
+                throw new ContextSQLException(ex.Message);
+            }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
@@ -193,14 +217,33 @@ namespace WebApi.Data
 
         #region Store Procedures Common Function
 
-        public async Task<DataTable> Fill(string FunctionName, Dictionary<string, string> Parameters = null)
+
+        /// <summary>
+        /// Fill : devuelve un datatable lleno con datos asincronicamente
+        /// </summary>
+        /// <param name="FunctionName">
+        /// Nombre de la funcion a ejecutar
+        /// </param>
+        /// <param name="Parameters">
+        /// parametros del store procedure 
+        /// </param>
+        /// <returns>
+        /// devueve una tarea asincronica con un datatable dentro.
+        /// </returns>
+        /// <exception cref="ContextSQLException">
+        /// puede llegar a tener exepciones de sql controladas
+        /// </exception>
+        /// <exception cref="Exception">
+        /// puede llegar a tener excepciones no controladas de codigo.
+        /// </exception>
+        public Task<DataTable> Fill(string FunctionName, Dictionary<string, string> Parameters = null)
         {
             DataSet ds = new();
             StringBuilder sbKey = new();
             StringBuilder sbFunctionName = new();
             DataTable dt = new DataTable();
             SqlCommand cmd = null; 
-            SqlConnection cn = null; 
+            SqlDataAdapter da;
             try
             {
                 sbFunctionName.Append(EntityName);
@@ -212,6 +255,7 @@ namespace WebApi.Data
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.CommandText = sbFunctionName.ToString();
                 MessageError = string.Empty;
+                da = new SqlDataAdapter(cmd);
 
                 foreach (var d in Parameters)
                 {
@@ -221,13 +265,11 @@ namespace WebApi.Data
                     cmd.Parameters.Add(new SqlParameter(sbKey.ToString(), d.Value));
                 }
 
-                cn = _connectionCommandPool.GetConnection();
-                cmd.Connection = cn;
-                cn.InfoMessage += cn_InfoMessage;
-
-                using (var reader = await cmd.ExecuteReaderAsync()) // Use async version
+                using (SqlConnection cn = _connectionCommandPool.GetConnection())
                 {
-                    dt.Load(reader); // Load data from reader into DataTable
+                    cmd.Connection = cn;
+                    cn.InfoMessage += cn_InfoMessage;
+                    da.Fill(ds);
                 }
 
                 if (MessageError.Length > 0)
@@ -247,15 +289,21 @@ namespace WebApi.Data
             {
                 throw new Exception(ex.Message);
             }
-            finally
-            {
-                if (cmd != null) _connectionCommandPool.ReturnCommand(cmd);
-                if (cn != null) _connectionCommandPool.ReturnConnection(cn);
-            }
-            return dt;
+            return Task.FromResult(dt);
         }
 
-        public Task ExecuteNonQuery(string FunctionName, Dictionary<string, string> Parameters = null)
+
+        /// <summary>
+        /// ExecuteNonQuery : Ejecuta y devuelve cantidad de registros modificados
+        /// </summary>
+        /// <param name="FunctionName"></param>
+        /// <param name="Parameters"></param>
+        /// <returns>
+        /// Cantidad de filas afectadas
+        /// </returns>
+        /// <exception cref="ContextSQLException"></exception>
+        /// <exception cref="Exception"></exception>
+        public Task<int> ExecuteNonQuery(string FunctionName, Dictionary<string, string> Parameters = null)
         {
             StringBuilder sb = new();
             sb.Append(EntityName);
@@ -264,6 +312,7 @@ namespace WebApi.Data
             SqlCommand cmd;
             MessageError = string.Empty;
             StringBuilder sbKey = new();
+            Task<int> iRowAffected;
             try
             {
                 cmd = _connectionCommandPool.GetCommand();
@@ -285,7 +334,7 @@ namespace WebApi.Data
                 {
                     cn.InfoMessage += cn_InfoMessage;
                     cmd.Connection = cn;
-                    cmd.ExecuteNonQueryAsync();
+                    iRowAffected = cmd.ExecuteNonQueryAsync();
                 }
 
                 if (MessageError.Length > 0)
@@ -293,6 +342,10 @@ namespace WebApi.Data
                     throw new ContextSQLException(MessageError);
                 }
 
+                if (iRowAffected.Result == 0) 
+                {
+                    throw new ContextSQLException("No row affected");
+                }
             }
             catch (ContextSQLException ex)
             {
@@ -306,7 +359,7 @@ namespace WebApi.Data
             {
                 throw new Exception(ex.Message);
             }
-            return Task.FromResult(Task.CompletedTask);
+            return iRowAffected;
         }
 
         #endregion

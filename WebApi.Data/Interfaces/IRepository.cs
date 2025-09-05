@@ -26,7 +26,7 @@ namespace WebApi.Data
 
         DataTable Fill(string FunctionName, Dictionary<string, string> lParam = null);
 
-        void ExecuteNonQuery(string FunctionName, Dictionary<string, string> lParam = null);
+        int ExecuteNonQuery(string FunctionName, Dictionary<string, string> lParam = null);
 
     }
 }

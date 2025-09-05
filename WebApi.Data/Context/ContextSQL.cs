@@ -94,6 +94,10 @@ namespace WebApi.Data
             {
                 dt = Fill("List");
             }
+            catch (ContextSQLException ex)
+            {
+                throw new ContextSQLException(ex.Message);
+            }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
@@ -109,6 +113,10 @@ namespace WebApi.Data
             try
             {
                 dt = Fill("Get", lDictionary);
+            }
+            catch (ContextSQLException ex)
+            {
+                throw new ContextSQLException(ex.Message);
             }
             catch (Exception ex)
             {
@@ -128,6 +136,10 @@ namespace WebApi.Data
                 {
                     lDynamic = EntityBase.ToDynamic(dt);
                 }
+            }
+            catch (ContextSQLException ex)
+            {
+                throw new ContextSQLException(ex.Message);
             }
             catch (Exception ex)
             {
@@ -150,6 +162,10 @@ namespace WebApi.Data
                 }
                 ExecuteNonQuery("Delete", lDictionary);
             }
+            catch (ContextSQLException ex)
+            {
+                throw new ContextSQLException(ex.Message);
+            }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
@@ -164,6 +180,10 @@ namespace WebApi.Data
             {
                 lParam = EntityBase.ToDictionary(oEntity);
                 dt = Fill("Insert", lParam);
+            }
+            catch (ContextSQLException ex)
+            {
+                throw new ContextSQLException(ex.Message);
             }
             catch (Exception ex)
             {
@@ -180,6 +200,10 @@ namespace WebApi.Data
                 lParam = EntityBase.ToDictionary(oEntity,true);
                 ExecuteNonQuery("Update", lParam);
             }
+            catch (ContextSQLException ex)
+            {
+                throw new ContextSQLException(ex.Message);
+            }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
@@ -190,6 +214,25 @@ namespace WebApi.Data
 
         #region Store Procedures Common Function
 
+
+        /// <summary>
+        /// Fill 
+        /// </summary>
+        /// <param name="FunctionName">
+        /// Nombre del store luego del nombre de la entidad
+        /// </param>
+        /// <param name="Parameters">
+        /// parametros del store procedure en formato dictionarary
+        /// </param>
+        /// <returns>
+        /// devuelve una tabla con los datos solicitados
+        /// </returns>
+        /// <exception cref="ContextSQLException">
+        /// puede devolver un error contemplado de la base de datos o errores ocurridos mientras se solicitaban los datos.
+        /// </exception>
+        /// <exception cref="Exception">
+        /// puede devolver un error no contemplado de la operacion solicitada
+        /// </exception>
         public DataTable Fill(string FunctionName, Dictionary<string, string> Parameters = null)
         {
             DataSet ds = new();
@@ -210,7 +253,7 @@ namespace WebApi.Data
                 cmd.CommandText = sb.ToString();
                 MessageError = string.Empty;
                 da = new SqlDataAdapter(cmd);
-
+                
                 foreach (var d in Parameters)
                 {
                     sbKey.Clear();
@@ -254,7 +297,22 @@ namespace WebApi.Data
             return dt;
         }
 
-        public void ExecuteNonQuery(string FunctionName, Dictionary<string, string> Parameters = null)
+
+        /// <summary>
+        /// ExecuteNonQuery ejecuta un store procedure con o sin parametros
+        /// </summary>
+        /// <param name="FunctionName">
+        /// nombre del store a continuacion del nombre de la entidad
+        /// </param>
+        /// <param name="Parameters">
+        /// parametros si los tuviera.
+        /// </param>
+        /// <returns>
+        /// retorna los registros modificados o alterados, en el caso de que sea cero, retorna un error de "NoRowAffected"
+        /// </returns>
+        /// <exception cref="ContextSQLException"></exception>
+        /// <exception cref="Exception"></exception>
+        public int ExecuteNonQuery(string FunctionName, Dictionary<string, string> Parameters = null)
         {
             StringBuilder sb = new();
             sb.Append(EntityName);
@@ -263,6 +321,7 @@ namespace WebApi.Data
             SqlCommand cmd;
             MessageError = string.Empty;
             StringBuilder sbKey = new ();
+            int iRowAffected = 0;
             try
             {
                 cmd = _connectionCommandPool.GetCommand();
@@ -284,7 +343,7 @@ namespace WebApi.Data
                 {
                     cn.InfoMessage += cn_InfoMessage;
                     cmd.Connection = cn;
-                    cmd.ExecuteNonQuery();
+                    iRowAffected = cmd.ExecuteNonQuery();
                 }
 
                 if (MessageError.Length > 0)
@@ -292,6 +351,10 @@ namespace WebApi.Data
                     throw new ContextSQLException(MessageError);
                 }
 
+                if (iRowAffected == 0) 
+                {
+                    throw new ContextSQLException("No row Affected");
+                }
             }
             catch (ContextSQLException ex)
             {
@@ -305,6 +368,7 @@ namespace WebApi.Data
             {
                 throw new Exception(ex.Message);
             }
+            return iRowAffected;
         }
 
         #endregion

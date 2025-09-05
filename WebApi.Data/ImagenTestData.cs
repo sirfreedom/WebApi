@@ -47,11 +47,11 @@ namespace WebApi.Data
             for (int i = 0; i < 3; i++)
             {
                 tareas.Add(Serv.Fill("Test3"));
+                tareas.Add(Serv.ExecuteNonQuery("Test3"));
             }
             
             Task.WhenAll(tareas);
             //Task.WaitAll(tareas);
-
             
             return lImagenTest;
         }
