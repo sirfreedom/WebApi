@@ -17,11 +17,10 @@ namespace WebApi.Data
             _ConnectionString = ConnectionString;
         }
 
-
         public Task<List<dynamic>> Find(Dictionary<string, string> lParam)
         {
-            IRepository<Setting> SettingRepository = new ContextSQL<Setting>(_ConnectionString);
-            List<dynamic> ldynamic;
+            IRepositoryAsync<Setting> SettingRepository = new ContextSQLAsync<Setting>(_ConnectionString);
+            Task<List<dynamic>> ldynamic;
             try
             {
                 ldynamic = SettingRepository.Find(lParam);
@@ -30,34 +29,34 @@ namespace WebApi.Data
             {
                 throw;
             }
-            return Task.FromResult(ldynamic);
+            return ldynamic;
         }
 
 
         public Task<Setting> GetByDependency(int IdDependency)
         {
-            DataTable dt;
-            Setting oSetting;
+            Task<DataTable> dt;
+            Task<Setting> oSetting;
             Dictionary<string, string> lParam = new Dictionary<string, string>();
+            IRepositoryAsync<Setting> Serv = new ContextSQLAsync<Setting>(_ConnectionString);
             try
             {
                 lParam.Add("IdDependency", IdDependency.ToString());
-                IRepository<Setting> Serv = new ContextSQL<Setting>(_ConnectionString);
                 dt = Serv.Fill("GetByDependency", lParam);
-                oSetting = Setting.ToList<Setting>(dt).SingleOrDefault();
+                oSetting = Task.FromResult(Setting.ToList<Setting>(dt.Result).SingleOrDefault());
             }
             catch (Exception) 
             {
                 throw;
             }
-            return Task.FromResult(oSetting);
+            return oSetting;
         }
 
 
         public Task<Setting> Get(int Id)
         {
-            IRepository<Setting> SettingRepository = new ContextSQL<Setting>(_ConnectionString);
-            Setting oSetting;
+            IRepositoryAsync<Setting> SettingRepository = new ContextSQLAsync<Setting>(_ConnectionString);
+            Task<Setting> oSetting;
             try
             {
                 oSetting = SettingRepository.Get(Id);
@@ -66,29 +65,30 @@ namespace WebApi.Data
             {
                 throw;
             }
-            return Task.FromResult(oSetting);
+            return oSetting;
         }
 
 
         public Task Update(Setting setting)
         {
-            IRepository<Setting> SettingRepository = new ContextSQL<Setting>(_ConnectionString);
+            IRepositoryAsync<Setting> SettingRepository = new ContextSQLAsync<Setting>(_ConnectionString);
+            Task task;
             try
             {
-                SettingRepository.Update(setting);
+                 task = SettingRepository.Update(setting);
             }
             catch (Exception)
             {
                 throw;
             }
-            return Task.CompletedTask;
+            return task;
         }
 
 
         public Task<Setting> Insert(Setting setting)
         {
-            IRepository<Setting> SettingRepository = new ContextSQL<Setting>(_ConnectionString);
-            Setting oSetting;
+            IRepositoryAsync<Setting> SettingRepository = new ContextSQLAsync<Setting>(_ConnectionString);
+            Task<Setting> oSetting;
             try
             {
                 oSetting = SettingRepository.Insert(setting);
@@ -97,39 +97,41 @@ namespace WebApi.Data
             {
                 throw;
             }
-            return Task.FromResult(oSetting);
+            return oSetting;
         }
 
 
         public Task Delete(int Id)
         {
-            IRepository<Setting> SettingRepository = new ContextSQL<Setting>(_ConnectionString);
+            IRepositoryAsync<Setting> SettingRepository = new ContextSQLAsync<Setting>(_ConnectionString);
+            Task task;
             try
             {
-                SettingRepository.Delete(Id);
+                task = SettingRepository.Delete(Id);
             }
             catch (Exception)
             {
                 throw;
             }
-            return Task.CompletedTask;
+            return task;
         }
 
         public Task Disabled(int Id, bool Disabled) 
         {
-            IRepository<Setting> SettingRepository = new ContextSQL<Setting>(_ConnectionString);
+            IRepositoryAsync<Setting> SettingRepository = new ContextSQLAsync<Setting>(_ConnectionString);
             Dictionary<string, string> lParam = new Dictionary<string, string>();
+            Task task;
             try
             {
                 lParam.Add("Id", Id.ToString());
                 lParam.Add("Disabled",Disabled.ToString());
-                SettingRepository.ExecuteNonQuery("Disabled", lParam);
+                task = SettingRepository.ExecuteNonQuery("Disabled", lParam);
             }
             catch (Exception)
             {
                 throw;
             }
-            return Task.CompletedTask;
+            return task;
         }
 
 

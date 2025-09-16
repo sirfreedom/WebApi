@@ -16,22 +16,23 @@ namespace WebApi.Data
         }
 
         public Task<List<QuestionLevel>> List(int IdDependency) 
-        { 
+        {
+            IRepositoryAsync<QuestionLevel> Serv = new ContextSQLAsync<QuestionLevel>(_ConnectionString);
             Dictionary<string,string> lParam = new Dictionary<string, string>(); 
-            DataTable dt;
-            List<QuestionLevel> lQuestionLevel;
+            Task<DataTable> dt;
+            Task<List<QuestionLevel>> lQuestionLevel;
             try
             {
                 lParam.Add("IdDependency", IdDependency.ToString());
-                IRepository<QuestionLevel> Serv = new ContextSQL<QuestionLevel>(_ConnectionString);
+
                 dt = Serv.Fill("ListByDependency", lParam);
-                lQuestionLevel = QuestionLevel.ToList<QuestionLevel>(dt);
+                lQuestionLevel = Task.FromResult(QuestionLevel.ToList<QuestionLevel>(dt.Result));
             }
             catch (Exception) 
             {
                 throw;
             }
-            return Task.FromResult(lQuestionLevel);
+            return lQuestionLevel;
         }
 
 
@@ -53,16 +54,17 @@ namespace WebApi.Data
 
         public Task Update(QuestionLevel questionlevel)
         {
-            IRepository<QuestionLevel> QuestionLevelRepository = new ContextSQL<QuestionLevel>(_ConnectionString);
+            IRepositoryAsync<QuestionLevel> QuestionLevelRepository = new ContextSQLAsync<QuestionLevel>(_ConnectionString);
+            Task task;
             try
             {
-                QuestionLevelRepository.Update(questionlevel);
+                task = QuestionLevelRepository.Update(questionlevel);
             }
             catch (Exception)
             {
                 throw;
             }
-            return Task.CompletedTask;
+            return task;
         }
 
 

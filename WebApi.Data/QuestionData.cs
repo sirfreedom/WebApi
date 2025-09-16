@@ -17,29 +17,29 @@ namespace WebApi.Data
 
         public Task<List<Question>> List(int IdDependency, int CodLevel = 0) 
         {
+            IRepositoryAsync<Question> Serv = new ContextSQLAsync<Question>(_ConnectionString);
             Dictionary<string, string> lParam = new Dictionary<string, string>();
-            DataTable dt = new DataTable();
-            List<Question> lQuestion;
+            Task<DataTable> dt;
+            Task<List<Question>> lQuestion;
             try
             {
-                IRepository<Question> Serv = new ContextSQL<Question>(_ConnectionString);
                 lParam.Add("IdDependency", IdDependency.ToString());
                 lParam.Add("CodLevel", CodLevel.ToString());
                 dt = Serv.Fill("ListByDependency", lParam);
-                lQuestion = Question.ToList<Question>(dt);
+                lQuestion = Task.FromResult(Question.ToList<Question>(dt.Result));
             }
             catch (Exception) 
             {
                 throw;
             }
-            return Task.FromResult(lQuestion);
+            return lQuestion;
         }
 
 
         public Task<Question> Get(int Id)
         {
-            IRepository<Question> QuestionRepository = new ContextSQL<Question>(_ConnectionString);
-            Question oQuestion;
+            IRepositoryAsync<Question> QuestionRepository = new ContextSQLAsync<Question>(_ConnectionString);
+            Task<Question> oQuestion;
             try
             {
                 oQuestion = QuestionRepository.Get(Id);
@@ -48,29 +48,30 @@ namespace WebApi.Data
             {
                 throw;
             }
-            return Task.FromResult(oQuestion);
+            return oQuestion;
         }
 
 
         public Task Update(Question question)
         {
-            IRepository<Question> QuestionRepository = new ContextSQL<Question>(_ConnectionString);
+            IRepositoryAsync<Question> QuestionRepository = new ContextSQLAsync<Question>(_ConnectionString);
+            Task task;
             try
             {
-                QuestionRepository.Update(question);
+                task = QuestionRepository.Update(question);
             }
             catch (Exception)
             {
                 throw;
             }
-            return Task.CompletedTask;
+            return task;
         }
 
 
         public Task<Question> Insert(Question question)
         {
-            IRepository<Question> QuestionRepository = new ContextSQL<Question>(_ConnectionString);
-            Question oQuestion;
+            IRepositoryAsync<Question> QuestionRepository = new ContextSQLAsync<Question>(_ConnectionString);
+            Task<Question> oQuestion;
             try
             {
                  oQuestion = QuestionRepository.Insert(question);
@@ -79,40 +80,42 @@ namespace WebApi.Data
             {
                 throw;
             }
-            return Task.FromResult(oQuestion);
+            return oQuestion;
         }
 
 
         public Task Delete(int Id)
         {
-            IRepository<Question> QuestionRepository = new ContextSQL<Question>(_ConnectionString);
+            IRepositoryAsync<Question> QuestionRepository = new ContextSQLAsync<Question>(_ConnectionString);
+            Task task;
             try
             {
-                QuestionRepository.Delete(Id);
+                task = QuestionRepository.Delete(Id);
             }
             catch (Exception)
             {
                 throw;
             }
-            return Task.CompletedTask;
+            return task;
         }
 
 
         public Task Disabled(int Id, bool Disabled)
         {
-            IRepository<Question> SettingRepository = new ContextSQL<Question>(_ConnectionString);
+            IRepositoryAsync<Question> SettingRepository = new ContextSQLAsync<Question>(_ConnectionString);
             Dictionary<string, string> lParam = new Dictionary<string, string>();
+            Task<int> task;
             try
             {
                 lParam.Add("Id", Id.ToString());
                 lParam.Add("Disabled", Disabled.ToString());
-                SettingRepository.ExecuteNonQuery("Disabled", lParam);
+                task = SettingRepository.ExecuteNonQuery("Disabled", lParam);
             }
             catch (Exception)
             {
                 throw;
             }
-            return Task.CompletedTask;
+            return task;
         }
 
 

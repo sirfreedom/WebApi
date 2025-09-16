@@ -19,8 +19,8 @@ namespace WebApi.Data
 
 		public Task<List<Dependency>> List() 
 		{
-		IRepository<Dependency> DependencyRepository = new ContextSQL<Dependency>(_ConnectionString);
-		List<Dependency> lDependency;
+		IRepositoryAsync<Dependency> DependencyRepository = new ContextSQLAsync<Dependency>(_ConnectionString);
+		Task<List<Dependency>> lDependency;
 		try 
 		{
 			lDependency = DependencyRepository.List(); 
@@ -29,14 +29,14 @@ namespace WebApi.Data
 		{
 			throw;
 		}
-		return Task.FromResult(lDependency);
+		return lDependency;
 		}
 
 
 		public Task<Dependency> Get(int Id) 
 		{
-		IRepository<Dependency> DependencyRepository = new ContextSQL<Dependency>(_ConnectionString);
-		Dependency oDependency;
+		IRepositoryAsync<Dependency> DependencyRepository = new ContextSQLAsync<Dependency>(_ConnectionString);
+		Task<Dependency> oDependency;
 		try
 		{
 			oDependency = DependencyRepository.Get(Id);
@@ -45,29 +45,30 @@ namespace WebApi.Data
 		{
 			throw;
 		}
-		return Task.FromResult(oDependency);
+		return oDependency;
 		}
 
 
 		public Task Update(Dependency dependency)
 		{
-			IRepository<Dependency> DependencyRepository = new ContextSQL<Dependency>(_ConnectionString);
+			IRepositoryAsync<Dependency> DependencyRepository = new ContextSQLAsync<Dependency>(_ConnectionString);
+			Task task;
 			try
 			{
-				DependencyRepository.Update(dependency);
+				task = DependencyRepository.Update(dependency);
 			}
 			catch (Exception)
 			{
 				throw;
 			}
-			return Task.CompletedTask;
+			return task;
 		}
 
 
 		public Task<Dependency> Insert(Dependency dependency)
 		{
-			IRepository<Dependency> DependencyRepository = new ContextSQL<Dependency>(_ConnectionString);
-			Dependency oDependency;
+			IRepositoryAsync<Dependency> DependencyRepository = new ContextSQLAsync<Dependency>(_ConnectionString);
+			Task<Dependency> oDependency;
 			try
 			{
 				oDependency = DependencyRepository.Insert(dependency);
@@ -76,39 +77,41 @@ namespace WebApi.Data
 			{
 				throw;
 			}
-			return Task.FromResult(oDependency);
+			return oDependency;
 		}
 
 
 		public Task Delete(int Id)
 		{
-			IRepository<Dependency> DependencyRepository = new ContextSQL<Dependency>(_ConnectionString);
+			IRepositoryAsync<Dependency> DependencyRepository = new ContextSQLAsync<Dependency>(_ConnectionString);
+			Task task;
 			try
 			{
-				DependencyRepository.Delete(Id);
+				task = DependencyRepository.Delete(Id);
 			}
 			catch (Exception)
 			{
 				throw;
 			}
-			return Task.CompletedTask;
+			return task;
 		}
 
         public Task Disabled(int Id, bool Disabled)
         {
-            IRepository<Dependency> SettingRepository = new ContextSQL<Dependency>(_ConnectionString);
+            IRepositoryAsync<Dependency> SettingRepository = new ContextSQLAsync<Dependency>(_ConnectionString);
             Dictionary<string, string> lParam = new Dictionary<string, string>();
+			Task<int> task;
             try
             {
                 lParam.Add("Id", Id.ToString());
                 lParam.Add("Disabled", Disabled.ToString());
-                SettingRepository.ExecuteNonQuery("Disabled", lParam);
+                task = SettingRepository.ExecuteNonQuery("Disabled", lParam);
             }
             catch (Exception)
             {
                 throw;
             }
-			return Task.CompletedTask;
+			return task;
         }
 
 

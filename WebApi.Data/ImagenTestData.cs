@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Data;
 using System.Threading.Tasks;
 using WebApi.Entity;
 
@@ -16,26 +15,25 @@ namespace WebApi.Data
 
         public void Delete(int Id)
         {
-            IRepository<ImagenTest> Serv = new ContextSQL<ImagenTest>(_ConnectionString);
+            IRepositoryAsync<ImagenTest> Serv = new ContextSQLAsync<ImagenTest>(_ConnectionString);
             Serv.Delete(Id);
         }
 
-        public ImagenTest Insert(ImagenTest entity)
+        public Task<ImagenTest> Insert(ImagenTest entity)
         {
-            IRepository<ImagenTest> Serv = new ContextSQL<ImagenTest>(_ConnectionString);
-            ImagenTest oImagenTest;
+            IRepositoryAsync<ImagenTest> Serv = new ContextSQLAsync<ImagenTest>(_ConnectionString);
+            Task<ImagenTest> oImagenTest;
             oImagenTest = Serv.Insert(entity);
-
             return oImagenTest;
         }
 
-        public List<ImagenTest> List()
+        public Task<List<ImagenTest>> List()
         {
-            IRepository<ImagenTest> Serv = new ContextSQL<ImagenTest>(_ConnectionString);
-            return Serv.List();
+            IRepositoryAsync<ImagenTest> Serv = new ContextSQLAsync<ImagenTest>(_ConnectionString);
+            Task<List<ImagenTest>> lImagenTest;
+            lImagenTest = Serv.List();
+            return lImagenTest;
         }
-
-
 
         public List<ImagenTest> Test1()
         {

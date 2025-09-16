@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using WebApi.Data;
 using WebApi.Entity;
-using System.Net;
-using System.Net.Mail;
+using System.Threading.Tasks;
 
 namespace WebApi.Biz
 {
@@ -15,20 +14,17 @@ namespace WebApi.Biz
             _ConnectionString = ConnectionString;
         }
 
-        public List<ImagenTest> List() 
+        public Task<List<ImagenTest>> List() 
         {
             ImagenTestData Serv = new ImagenTestData(_ConnectionString);
             return Serv.List();
         }
 
-        public ImagenTest Insert(ImagenTest imagenTest) 
+        public Task<ImagenTest> Insert(ImagenTest imagenTest) 
         {
             ImagenTestData Serv = new ImagenTestData(_ConnectionString);
-            ImagenTest oImagenTest;
-
+            Task<ImagenTest> oImagenTest;
             oImagenTest = Serv.Insert(imagenTest);
-
-
             return oImagenTest;
         }
 
