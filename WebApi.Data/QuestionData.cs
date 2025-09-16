@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Reflection.Metadata.Ecma335;
-using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using WebApi.Entity;
 
 namespace WebApi.Data
@@ -16,7 +15,7 @@ namespace WebApi.Data
             _ConnectionString = ConnectionString;
         }
 
-        public List<Question> List(int IdDependency, int CodLevel = 0) 
+        public Task<List<Question>> List(int IdDependency, int CodLevel = 0) 
         {
             Dictionary<string, string> lParam = new Dictionary<string, string>();
             DataTable dt = new DataTable();
@@ -33,11 +32,11 @@ namespace WebApi.Data
             {
                 throw;
             }
-            return lQuestion;
+            return Task.FromResult(lQuestion);
         }
 
 
-        public Question Get(int Id)
+        public Task<Question> Get(int Id)
         {
             IRepository<Question> QuestionRepository = new ContextSQL<Question>(_ConnectionString);
             Question oQuestion;
@@ -49,11 +48,11 @@ namespace WebApi.Data
             {
                 throw;
             }
-            return oQuestion;
+            return Task.FromResult(oQuestion);
         }
 
 
-        public void Update(Question question)
+        public Task Update(Question question)
         {
             IRepository<Question> QuestionRepository = new ContextSQL<Question>(_ConnectionString);
             try
@@ -64,10 +63,11 @@ namespace WebApi.Data
             {
                 throw;
             }
+            return Task.CompletedTask;
         }
 
 
-        public Question Insert(Question question)
+        public Task<Question> Insert(Question question)
         {
             IRepository<Question> QuestionRepository = new ContextSQL<Question>(_ConnectionString);
             Question oQuestion;
@@ -79,11 +79,11 @@ namespace WebApi.Data
             {
                 throw;
             }
-            return oQuestion;
+            return Task.FromResult(oQuestion);
         }
 
 
-        public void Delete(int Id)
+        public Task Delete(int Id)
         {
             IRepository<Question> QuestionRepository = new ContextSQL<Question>(_ConnectionString);
             try
@@ -94,10 +94,11 @@ namespace WebApi.Data
             {
                 throw;
             }
+            return Task.CompletedTask;
         }
 
 
-        public void Disabled(int Id, bool Disabled)
+        public Task Disabled(int Id, bool Disabled)
         {
             IRepository<Question> SettingRepository = new ContextSQL<Question>(_ConnectionString);
             Dictionary<string, string> lParam = new Dictionary<string, string>();
@@ -111,6 +112,7 @@ namespace WebApi.Data
             {
                 throw;
             }
+            return Task.CompletedTask;
         }
 
 

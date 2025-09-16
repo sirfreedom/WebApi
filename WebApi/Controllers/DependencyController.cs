@@ -8,6 +8,7 @@ using System;
 using WebApi.Entity;
 using WebApi.Biz;
 using WebApi.Model;
+using System.Threading.Tasks;
 
 
 namespace WebApi.Controllers
@@ -36,13 +37,13 @@ namespace WebApi.Controllers
 		/// </returns>
 		[HttpGet("List")]
 		[AllowAnonymous]
-		public ActionResult List()
+		public async Task<ActionResult> List()
 		{
 		DependencyBiz oDependencyBiz = new DependencyBiz(_ConnectionString); 
 		List<Dependency> lDependency;
 		try 
 		{
-			lDependency = oDependencyBiz.List();
+			lDependency = await oDependencyBiz.List();
 		}
 		catch (WebException ex) 
 		{
@@ -69,13 +70,13 @@ namespace WebApi.Controllers
 		/// </returns>
 		[HttpGet("Get")]
 		[AllowAnonymous]
-		public ActionResult Get(int Id) 
+		public async Task<ActionResult> Get(int Id) 
 		{
 		DependencyBiz oDependencyBiz = new DependencyBiz(_ConnectionString); 
 		Dependency oDependency = new Dependency();
 		try
 		{
-			oDependency = oDependencyBiz.Get(Id);
+			oDependency = await oDependencyBiz.Get(Id);
 		}
 		catch (WebException ex) 
 		{
@@ -102,12 +103,12 @@ namespace WebApi.Controllers
 		/// </returns>
 		[HttpPut("Update")]
         [Authorize(Policy = "Admin")]
-        public ActionResult Update([FromBody] Dependency dependency)
+        public async Task<ActionResult> Update([FromBody] Dependency dependency)
 		{
 		DependencyBiz oDependencyBiz = new DependencyBiz(_ConnectionString); 
 		try
 		{
-			oDependencyBiz.Update(dependency); 
+			await oDependencyBiz.Update(dependency); 
 		}
 		catch (WebException ex) 
 		{
@@ -134,14 +135,14 @@ namespace WebApi.Controllers
 		/// </returns>
 		[HttpPost("Insert")]
         [Authorize(Policy = "Admin")]
-        public ActionResult Insert([FromBody] DependencyModel dependencyModel)
+        public async Task<ActionResult> Insert([FromBody] DependencyModel dependencyModel)
 		{
 		DependencyBiz oDependencyBiz = new DependencyBiz(_ConnectionString);
 			Dependency oDependency;
 		try
 		{
 			oDependency = Dependency.Merge<DependencyModel, Dependency>(dependencyModel);
-			oDependency = oDependencyBiz.Insert(oDependency);
+			oDependency = await oDependencyBiz.Insert(oDependency);
 		}
 		catch (WebException ex) 
 		{
@@ -168,12 +169,12 @@ namespace WebApi.Controllers
 		/// </returns>
 		[HttpDelete("Delete")]
         [Authorize(Policy = "SuperAdmin")]
-        public ActionResult Delete(int Id)
+        public async Task<ActionResult> Delete(int Id)
 		{
 		DependencyBiz oDependencyBiz = new DependencyBiz(_ConnectionString); 
 		try
 		{
-			oDependencyBiz.Delete(Id);
+			await oDependencyBiz.Delete(Id);
 		}
 		catch (WebException ex) 
 		{
@@ -197,12 +198,12 @@ namespace WebApi.Controllers
 		/// <returns></returns>
         [HttpPatch("Disabled")]
         [Authorize(Policy = "Admin")]
-        public ActionResult Disabled(int Id, bool Disabled)
+        public async Task<ActionResult> Disabled(int Id, bool Disabled)
         {
             DependencyBiz oDependencyBiz = new DependencyBiz(_ConnectionString);
             try
             {
-                oDependencyBiz.Disabled(Id, Disabled);
+                await oDependencyBiz.Disabled(Id, Disabled);
             }
             catch (WebException ex)
             {

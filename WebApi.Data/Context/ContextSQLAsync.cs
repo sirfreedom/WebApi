@@ -89,12 +89,12 @@ namespace WebApi.Data
 
         #region Interface Method
 
-        public async Task<List<TEntity>> List()
+        public Task<List<TEntity>> List()
         {
-            DataTable dt;
+            Task<DataTable> dt;
             try
             {
-                dt = await Fill("List"); // Cambiar .Result por await
+                dt = Fill("List"); 
             }
             catch (ContextSQLException ex)
             {
@@ -104,17 +104,17 @@ namespace WebApi.Data
             {
                 throw new Exception(ex.Message);
             }
-            return EntityBase.ToList<TEntity>(dt);
+            return Task.FromResult(EntityBase.ToList<TEntity>(dt.Result));
         }
 
         public Task<TEntity> Get(int Id)
         {
             Dictionary<string, string> lDictionary = [];
-            DataTable dt;
+            Task<DataTable> dt;
             lDictionary.Add("Id", Id.ToString());
             try
             {
-                dt = Fill("Get", lDictionary).Result;
+                dt = Fill("Get", lDictionary);
             }
             catch (ContextSQLException ex)
             {
@@ -124,19 +124,19 @@ namespace WebApi.Data
             {
                 throw new Exception(ex.Message);
             }
-            return Task.FromResult(EntityBase.ToList<TEntity>(dt).SingleOrDefault());
+            return Task.FromResult(EntityBase.ToList<TEntity>(dt.Result).SingleOrDefault());
         }
 
         public Task<List<dynamic>> Find(Dictionary<string, string> lParam)
         {
             List<dynamic> lDynamic = [];
-            DataTable dt;
+            Task<DataTable> dt;
             try
             {
-                dt = Fill("Find", lParam).Result;
-                if (dt.Rows.Count > 0)
+                dt = Fill("Find", lParam);
+                if (dt.Result.Rows.Count > 0)
                 {
-                    lDynamic = EntityBase.ToDynamic(dt);
+                    lDynamic = EntityBase.ToDynamic(dt.Result);
                 }
             }
             catch (ContextSQLException ex)
@@ -150,19 +150,20 @@ namespace WebApi.Data
             return Task.FromResult(lDynamic);
         }
 
-        public async Task Delete(int Id)
+        public Task Delete(int Id)
         {
             Dictionary<string, string> lDictionary = new()
             {
                 { "Id", Id.ToString() }
             };
+            Task<int> iTask;
             try
             {
                 if (Id == 0)
                 {
                     throw new Exception("This Id not be zero");
                 }
-                await ExecuteNonQuery("Delete", lDictionary); // Await the async call
+                iTask = ExecuteNonQuery("Delete", lDictionary);
             }
             catch (ContextSQLException ex)
             {
@@ -172,16 +173,17 @@ namespace WebApi.Data
             {
                 throw new Exception(ex.Message);
             }
+            return iTask;
         }
 
         public Task<TEntity> Insert(TEntity oEntity)
         {
             Dictionary<string, string> lParam = [];
-            DataTable dt;
+            Task<DataTable> dt;
             try
             {
                 lParam = EntityBase.ToDictionary(oEntity);
-                dt = Fill("Insert", lParam).Result;
+                dt = Fill("Insert", lParam);
             }
             catch (ContextSQLException ex)
             {
@@ -191,16 +193,17 @@ namespace WebApi.Data
             {
                 throw new Exception(ex.Message);
             }
-            return Task.FromResult(EntityBase.ToList<TEntity>(dt).SingleOrDefault());
+            return Task.FromResult(EntityBase.ToList<TEntity>(dt.Result).SingleOrDefault());
         }
 
         public Task Update(TEntity oEntity)
         {
             Dictionary<string, string> lParam = [];
+            Task<int> iTask;
             try
             {
                 lParam = EntityBase.ToDictionary(oEntity, true);
-                ExecuteNonQuery("Update", lParam);
+                iTask = ExecuteNonQuery("Update", lParam);
             }
             catch (ContextSQLException ex)
             {
@@ -210,7 +213,7 @@ namespace WebApi.Data
             {
                 throw new Exception(ex.Message);
             }
-            return Task.FromResult(Task.CompletedTask);
+            return iTask;
         }
 
         #endregion

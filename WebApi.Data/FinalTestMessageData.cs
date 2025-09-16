@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Threading.Tasks;
 using WebApi.Entity;
 
 namespace WebApi.Data
@@ -15,17 +16,26 @@ namespace WebApi.Data
             _ConnectionString = ConnectionString;
         }
 
-        public List<FinalTestMessage> List(int IdDependency) 
+        public Task<List<FinalTestMessage>> List(int IdDependency) 
         {
             Dictionary<string,string> lParam = new Dictionary<string, string>();
-            DataTable dt = new DataTable();
-            IRepository<FinalTestMessage> Serv = new ContextSQL<FinalTestMessage>(_ConnectionString);
-            lParam.Add("IdDependency",IdDependency.ToString());
-            dt = Serv.Fill("ListByDependency", lParam);
-            return FinalTestMessage.ToList<FinalTestMessage>(dt);
+            DataTable dt;
+            List<FinalTestMessage> lFinalTestMessage = new List<FinalTestMessage>();
+            try
+            {
+                IRepository<FinalTestMessage> Serv = new ContextSQL<FinalTestMessage>(_ConnectionString);
+                lParam.Add("IdDependency", IdDependency.ToString());
+                dt = Serv.Fill("ListByDependency", lParam);
+                lFinalTestMessage = FinalTestMessage.ToList<FinalTestMessage>(dt);
+            }
+            catch (Exception) 
+            { 
+                throw;
+            } 
+            return Task.FromResult(lFinalTestMessage);
         }
 
-        public FinalTestMessage Get(int Id)
+        public Task<FinalTestMessage> Get(int Id)
         {
             IRepository<FinalTestMessage> FinalTestMessageRepository = new ContextSQL<FinalTestMessage>(_ConnectionString);
             FinalTestMessage oFinalTestMessage;
@@ -37,11 +47,11 @@ namespace WebApi.Data
             {
                 throw;
             }
-            return oFinalTestMessage;
+            return Task.FromResult(oFinalTestMessage);
         }
 
 
-        public void Update(FinalTestMessage finaltestmessage)
+        public Task Update(FinalTestMessage finaltestmessage)
         {
             IRepository<FinalTestMessage> FinalTestMessageRepository = new ContextSQL<FinalTestMessage>(_ConnectionString);
             try
@@ -52,10 +62,11 @@ namespace WebApi.Data
             {
                 throw;
             }
+            return Task.CompletedTask;
         }
 
 
-        public FinalTestMessage Insert(FinalTestMessage finaltestmessage)
+        public Task<FinalTestMessage> Insert(FinalTestMessage finaltestmessage)
         {
             IRepository<FinalTestMessage> FinalTestMessageRepository = new ContextSQL<FinalTestMessage>(_ConnectionString);
             FinalTestMessage oFinalTestMessage;
@@ -67,11 +78,11 @@ namespace WebApi.Data
             {
                 throw;
             }
-            return oFinalTestMessage;   
+            return Task.FromResult(oFinalTestMessage);   
         }
 
 
-        public void Delete(int Id)
+        public Task Delete(int Id)
         {
             IRepository<FinalTestMessage> FinalTestMessageRepository = new ContextSQL<FinalTestMessage>(_ConnectionString);
             try
@@ -82,9 +93,10 @@ namespace WebApi.Data
             {
                 throw;
             }
+            return Task.CompletedTask;
         }
 
-        public void Disabled(int Id, bool Disabled)
+        public Task Disabled(int Id, bool Disabled)
         {
             IRepository<FinalTestMessage> SettingRepository = new ContextSQL<FinalTestMessage>(_ConnectionString);
             Dictionary<string, string> lParam = new Dictionary<string, string>();
@@ -98,6 +110,7 @@ namespace WebApi.Data
             {
                 throw;
             }
+            return Task.CompletedTask;
         }
 
     }

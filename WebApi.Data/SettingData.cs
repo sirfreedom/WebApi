@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 using WebApi.Entity;
 
 namespace WebApi.Data
@@ -17,8 +18,7 @@ namespace WebApi.Data
         }
 
 
-
-        public List<dynamic> Find(Dictionary<string, string> lParam)
+        public Task<List<dynamic>> Find(Dictionary<string, string> lParam)
         {
             IRepository<Setting> SettingRepository = new ContextSQL<Setting>(_ConnectionString);
             List<dynamic> ldynamic;
@@ -30,24 +30,31 @@ namespace WebApi.Data
             {
                 throw;
             }
-            return ldynamic;
+            return Task.FromResult(ldynamic);
         }
 
 
-        public Setting GetByDependency(int IdDependency)
+        public Task<Setting> GetByDependency(int IdDependency)
         {
-            DataTable dt = new DataTable();
-            Setting oSetting = new Setting();
+            DataTable dt;
+            Setting oSetting;
             Dictionary<string, string> lParam = new Dictionary<string, string>();
-            lParam.Add("IdDependency", IdDependency.ToString());
-            IRepository<Setting> Serv = new ContextSQL<Setting>(_ConnectionString);
-            dt = Serv.Fill("GetByDependency", lParam);
-            oSetting = Setting.ToList<Setting>(dt).SingleOrDefault();
-            return oSetting;
+            try
+            {
+                lParam.Add("IdDependency", IdDependency.ToString());
+                IRepository<Setting> Serv = new ContextSQL<Setting>(_ConnectionString);
+                dt = Serv.Fill("GetByDependency", lParam);
+                oSetting = Setting.ToList<Setting>(dt).SingleOrDefault();
+            }
+            catch (Exception) 
+            {
+                throw;
+            }
+            return Task.FromResult(oSetting);
         }
 
 
-        public Setting Get(int Id)
+        public Task<Setting> Get(int Id)
         {
             IRepository<Setting> SettingRepository = new ContextSQL<Setting>(_ConnectionString);
             Setting oSetting;
@@ -59,11 +66,11 @@ namespace WebApi.Data
             {
                 throw;
             }
-            return oSetting;
+            return Task.FromResult(oSetting);
         }
 
 
-        public void Update(Setting setting)
+        public Task Update(Setting setting)
         {
             IRepository<Setting> SettingRepository = new ContextSQL<Setting>(_ConnectionString);
             try
@@ -74,10 +81,11 @@ namespace WebApi.Data
             {
                 throw;
             }
+            return Task.CompletedTask;
         }
 
 
-        public Setting Insert(Setting setting)
+        public Task<Setting> Insert(Setting setting)
         {
             IRepository<Setting> SettingRepository = new ContextSQL<Setting>(_ConnectionString);
             Setting oSetting;
@@ -89,11 +97,11 @@ namespace WebApi.Data
             {
                 throw;
             }
-            return oSetting;
+            return Task.FromResult(oSetting);
         }
 
 
-        public void Delete(int Id)
+        public Task Delete(int Id)
         {
             IRepository<Setting> SettingRepository = new ContextSQL<Setting>(_ConnectionString);
             try
@@ -104,9 +112,10 @@ namespace WebApi.Data
             {
                 throw;
             }
+            return Task.CompletedTask;
         }
 
-        public void Disabled(int Id, bool Disabled) 
+        public Task Disabled(int Id, bool Disabled) 
         {
             IRepository<Setting> SettingRepository = new ContextSQL<Setting>(_ConnectionString);
             Dictionary<string, string> lParam = new Dictionary<string, string>();
@@ -120,6 +129,7 @@ namespace WebApi.Data
             {
                 throw;
             }
+            return Task.CompletedTask;
         }
 
 

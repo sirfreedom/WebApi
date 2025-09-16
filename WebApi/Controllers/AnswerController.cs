@@ -8,6 +8,7 @@ using WebApi.Entity;
 using WebApi.Biz;
 
 using WebApi.Model;
+using System.Threading.Tasks;
 
 namespace WebApi.Controllers
 {
@@ -38,13 +39,13 @@ namespace WebApi.Controllers
 		/// </returns>
 		[HttpGet("Get")]
 		[AllowAnonymous]
-		public ActionResult Get(int Id) 
+		public async Task<ActionResult> Get(int Id) 
 		{
 		AnswerBiz oAnswerBiz = new AnswerBiz(_ConectionString); 
 		Answer oAnswer = new Answer();
 		try
 		{
-			oAnswer = oAnswerBiz.Get(Id);
+			oAnswer = await oAnswerBiz.Get(Id);
 		}
 		catch (WebException ex) 
 		{
@@ -71,12 +72,12 @@ namespace WebApi.Controllers
 		/// </returns>
 		[HttpPut("Update")]
         [Authorize(Policy = "Admin")]
-        public ActionResult Update([FromBody] Answer answer)
+        public async Task<ActionResult> Update([FromBody] Answer answer)
 		{
 		AnswerBiz oAnswerBiz = new AnswerBiz(_ConectionString); 
 		try
 		{
-			oAnswerBiz.Update(answer); 
+			await oAnswerBiz.Update(answer); 
 		}
 		catch (WebException ex) 
 		{
@@ -103,14 +104,14 @@ namespace WebApi.Controllers
 		/// </returns>
 		[HttpPost("Insert")]
         [Authorize(Policy = "Admin")]
-        public ActionResult Insert([FromBody] AnswerModel answerModel)
+        public async Task<ActionResult> Insert([FromBody] AnswerModel answerModel)
 		{
 			AnswerBiz oAnswerBiz = new AnswerBiz(_ConectionString);
 			Answer oAnswer;
 			try
 			{
 				oAnswer = Answer.Merge<AnswerModel, Answer>(answerModel);
-				oAnswer = oAnswerBiz.Insert(oAnswer);
+				oAnswer = await oAnswerBiz.Insert(oAnswer);
 			}
 			catch (WebException ex)
 			{
@@ -137,12 +138,12 @@ namespace WebApi.Controllers
 		/// </returns>
 		[HttpDelete("Delete")]
         [Authorize(Policy = "Admin")]
-        public ActionResult Delete(int Id)
+        public async Task<ActionResult> Delete(int Id)
 		{
 		AnswerBiz oAnswerBiz = new AnswerBiz(_ConectionString); 
 		try
 		{
-			oAnswerBiz.Delete(Id);
+			await oAnswerBiz.Delete(Id);
 		}
 		catch (WebException ex) 
 		{
@@ -168,12 +169,12 @@ namespace WebApi.Controllers
 		/// </returns>
         [HttpPatch("Disabled")]
         [Authorize(Policy = "Admin")]
-        public ActionResult Disabled(int Id, bool Disabled)
+        public async Task<ActionResult> Disabled(int Id, bool Disabled)
         {
             AnswerBiz oAnswerBiz = new AnswerBiz(_ConectionString);
             try
             {
-                oAnswerBiz.Disabled(Id, Disabled);
+                await oAnswerBiz.Disabled(Id, Disabled);
             }
             catch (WebException ex)
             {

@@ -37,8 +37,8 @@ namespace WebApi.Controllers
         {
             ImagenBiz Serv = new ImagenBiz(_ConnectionString);
             List<ImagenTest> lImageTest1;
-            List<ImagenTest> lImageTest2;
-            List<ImagenTest> lImageTest3;
+            //List<ImagenTest> lImageTest2;
+            //List<ImagenTest> lImageTest3;
 
             Dictionary<string,string> lParam = new Dictionary<string,string>();
             try

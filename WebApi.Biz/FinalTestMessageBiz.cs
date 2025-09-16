@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using WebApi.Data;
 using WebApi.Entity;
 
@@ -14,10 +15,10 @@ namespace WebApi.Biz
             _ConnectionString = ConnectionString;
         }
 
-        public List<FinalTestMessage> List(int IdDependency) 
+        public Task<List<FinalTestMessage>> List(int IdDependency) 
         { 
             FinalTestMessageData Serv = new FinalTestMessageData(_ConnectionString);
-            List<FinalTestMessage> lFinalTestMessage;
+            Task<List<FinalTestMessage>> lFinalTestMessage;
             try
             {
                 lFinalTestMessage = Serv.List(IdDependency);
@@ -29,10 +30,10 @@ namespace WebApi.Biz
             return lFinalTestMessage;
         }
 
-        public FinalTestMessage Get(int Id)
+        public Task<FinalTestMessage> Get(int Id)
         {
             FinalTestMessageData oFinalTestMessageData = new FinalTestMessageData(_ConnectionString);
-            FinalTestMessage oFinalTestMessage;
+            Task<FinalTestMessage> oFinalTestMessage;
             try
             {
                 oFinalTestMessage = oFinalTestMessageData.Get(Id);
@@ -45,24 +46,26 @@ namespace WebApi.Biz
         }
 
 
-        public void Update(FinalTestMessage finaltestmessage)
+        public Task Update(FinalTestMessage finaltestmessage)
         {
             FinalTestMessageData oFinalTestMessageData = new FinalTestMessageData(_ConnectionString);
+            Task task;
             try
             {
-                oFinalTestMessageData.Update(finaltestmessage);
+                task = oFinalTestMessageData.Update(finaltestmessage);
             }
             catch (Exception)
             {
                 throw;
             }
+            return task;
         }
 
 
-        public FinalTestMessage Insert(FinalTestMessage finaltestmessage)
+        public Task<FinalTestMessage> Insert(FinalTestMessage finaltestmessage)
         {
             FinalTestMessageData oFinalTestMessageData = new FinalTestMessageData(_ConnectionString);
-            FinalTestMessage oFinalTestMessage;
+            Task<FinalTestMessage> oFinalTestMessage;
             try
             {
                 oFinalTestMessage = oFinalTestMessageData.Insert(finaltestmessage);
@@ -75,30 +78,34 @@ namespace WebApi.Biz
         }
 
 
-        public void Delete(int Id)
+        public Task Delete(int Id)
         {
             FinalTestMessageData oFinalTestMessageData = new FinalTestMessageData(_ConnectionString);
+            Task task;
             try
             {
-                oFinalTestMessageData.Delete(Id);
+                task = oFinalTestMessageData.Delete(Id);
             }
             catch (Exception)
             {
                 throw;
             }
+            return task;    
         }
 
-        public void Disabled(int Id, bool Disabled)
+        public Task Disabled(int Id, bool Disabled)
         {
             FinalTestMessageData oFinalTestMessageData = new FinalTestMessageData(_ConnectionString);
+            Task task;
             try
             {
-                oFinalTestMessageData.Disabled(Id, Disabled);
+                task = oFinalTestMessageData.Disabled(Id, Disabled);
             }
             catch (Exception)
             {
                 throw;
             }
+            return task;
         }
 
 

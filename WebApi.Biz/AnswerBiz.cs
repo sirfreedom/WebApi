@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System;
+﻿using System;
 using WebApi.Entity;
 using WebApi.Data;
+using System.Threading.Tasks;
 
 namespace WebApi.Biz
 {
@@ -17,10 +17,10 @@ namespace WebApi.Biz
 			_ConnectionString = ConnectionString;
 		}
 
-		public Answer Get(int Id) 
+		public Task<Answer> Get(int Id) 
 		{
 		AnswerData oAnswerData = new AnswerData(_ConnectionString); 
-		Answer oAnswer;
+		Task<Answer> oAnswer;
 		try
 		{
 			oAnswer = oAnswerData.Get(Id);
@@ -33,24 +33,26 @@ namespace WebApi.Biz
 		}
 
 
-		public void Update(Answer answer)
-		{
-		AnswerData oAnswerData = new AnswerData(_ConnectionString); 
-		try
-		{
-			oAnswerData.Update(answer); 
-		}
-		catch (Exception) 
-		{
-			throw;
-		}
-		}
-
-
-		public Answer Insert(Answer answer)
+		public Task Update(Answer answer)
 		{
 			AnswerData oAnswerData = new AnswerData(_ConnectionString);
-			Answer oAnswer;
+			Task task;
+			try
+			{
+				task = oAnswerData.Update(answer);
+			}
+			catch (Exception)
+			{
+				throw;
+			}
+			return task;
+		}
+
+
+		public Task<Answer> Insert(Answer answer)
+		{
+			AnswerData oAnswerData = new AnswerData(_ConnectionString);
+			Task<Answer> oAnswer;
 			try
 			{
 			 	oAnswer = oAnswerData.Insert(answer);
@@ -63,30 +65,34 @@ namespace WebApi.Biz
 		}
 
 
-		public void Delete(int Id)
+		public Task Delete(int Id)
 		{
-		AnswerData oAnswerData = new AnswerData(_ConnectionString); 
-		try
-		{
-			oAnswerData.Delete(Id);
-		}
-		catch (Exception) 
-		{
-			throw;
-		}
+			AnswerData oAnswerData = new AnswerData(_ConnectionString);
+			Task task;
+			try
+			{
+				task = oAnswerData.Delete(Id);
+			}
+			catch (Exception)
+			{
+				throw;
+			}
+			return task;
 		}
 
-        public void Disabled(int Id, bool Disabled)
+        public Task Disabled(int Id, bool Disabled)
         {
             AnswerData oAnswerData = new AnswerData(_ConnectionString);
+			Task task;
             try
             {
-                oAnswerData.Disabled(Id, Disabled);
+                task = oAnswerData.Disabled(Id, Disabled);
             }
             catch (Exception)
             {
                 throw;
             }
+			return task;	
         }
 
     }

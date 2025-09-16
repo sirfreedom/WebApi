@@ -5,6 +5,8 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using WebApi.Biz;
 using WebApi.Entity;
 using WebApi.Model;
@@ -36,13 +38,13 @@ namespace WebApi.Controllers
         /// </returns>
         [HttpGet("Find")]
         [AllowAnonymous]
-        public ActionResult Find()
+        public async Task<ActionResult> Find()
         {
             SettingBiz oSettingBiz = new SettingBiz(_ConnectionString);
             List<dynamic> ldynamic;
             try
             {
-                ldynamic = oSettingBiz.Find(new Dictionary<string, string>());
+                ldynamic = await oSettingBiz.Find(new Dictionary<string, string>());
             }
             catch (WebException ex)
             {
@@ -54,7 +56,7 @@ namespace WebApi.Controllers
                 _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
                 return ValidationProblem("Error", "Get ", 500, ex.Message);
             }
-            return Ok(new { listsetting = ldynamic }); //OK 200);
+            return Ok(new { listsetting = ldynamic });
         }
 
 
@@ -69,13 +71,13 @@ namespace WebApi.Controllers
         /// </returns>
         [HttpGet("Get")]
         [AllowAnonymous]
-        public ActionResult Get(int Id)
+        public async Task<ActionResult> Get(int Id)
         {
             Setting oSetting;
             SettingBiz settingBiz = new SettingBiz(_ConnectionString);
             try
             {
-                oSetting = settingBiz.Get(Id);
+                oSetting = await settingBiz.Get(Id);
             }
             catch (WebException ex)
             {
@@ -103,13 +105,13 @@ namespace WebApi.Controllers
         /// </returns>
         [HttpGet("GetByDependency")]
         [AllowAnonymous]
-        public ActionResult GetByDependency(int IdDependency)
+        public async Task<ActionResult> GetByDependency(int IdDependency)
         {
             Setting oSetting;
             SettingBiz settingBiz = new SettingBiz(_ConnectionString);
             try
             {
-                oSetting = settingBiz.GetByDependency(IdDependency);
+                oSetting = await settingBiz.GetByDependency(IdDependency);
             }
             catch (WebException ex)
             {
@@ -134,12 +136,12 @@ namespace WebApi.Controllers
         /// </returns>
         [HttpPut("Update")]
         [Authorize(Policy = "Admin")]
-        public ActionResult Update([FromBody] Setting setting)
+        public async Task<ActionResult> Update([FromBody] Setting setting)
         {
             SettingBiz settingBiz = new SettingBiz(_ConnectionString);
             try
             {
-                settingBiz.Update(setting);
+                await settingBiz.Update(setting);
             }
             catch (WebException ex)
             {
@@ -165,7 +167,7 @@ namespace WebApi.Controllers
         /// </returns>
         [HttpPost("Insert")]
         [Authorize(Policy = "Admin")]
-        public ActionResult Insert([FromBody] SettingModel setting)
+        public async Task<ActionResult> Insert([FromBody] SettingModel setting)
         {
             SettingBiz settingBiz = new SettingBiz(_ConnectionString);
             Setting oSetting;
@@ -177,7 +179,7 @@ namespace WebApi.Controllers
                 }
 
                 oSetting = Setting.Merge<SettingModel,Setting>(setting);
-                oSetting = settingBiz.Insert(oSetting);
+                oSetting = await settingBiz.Insert(oSetting);
             }
             catch (WebException ex)
             {
@@ -202,12 +204,12 @@ namespace WebApi.Controllers
         /// </returns>
         [HttpDelete("Delete")]
         [Authorize(Policy = "SuperAdmin")]
-        public ActionResult Delete(int Id)
+        public async Task<ActionResult> Delete(int Id)
         {
             SettingBiz settingBiz = new SettingBiz(_ConnectionString);
             try
             {
-                settingBiz.Delete(Id);
+                await settingBiz.Delete(Id);
             }
             catch (WebException ex)
             {
@@ -233,12 +235,12 @@ namespace WebApi.Controllers
         /// </returns>
         [HttpPatch("Disabled")]
         [Authorize(Policy = "Admin")]
-        public ActionResult Disabled(int Id, bool Disabled)
+        public async Task<ActionResult> Disabled(int Id, bool Disabled)
         {
             SettingBiz settingBiz = new SettingBiz(_ConnectionString);
             try
             {
-                settingBiz.Disabled(Id,Disabled);
+                await settingBiz.Disabled(Id,Disabled);
             }
             catch (WebException ex)
             {
