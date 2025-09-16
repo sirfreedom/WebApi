@@ -18,7 +18,7 @@ namespace WebApi.Data
     /// la entidad TEntity es una entidad abstracta hasta que se implementa de forma concreta para poder interactuar con el List o demas metodos
     /// TEntity solo puede existir SOLO si esta heredada por EntityBase y tiene un constructor sin parametros asi lo exige la implementacion.
     /// </typeparam>
-    public sealed class ContextSQLAsync<TEntity> : IRepositoryAsync<TEntity> where TEntity : EntityBase, new()
+    public sealed class ContextSQL<TEntity> : IRepository<TEntity> where TEntity : EntityBase, new()
     {
 
         #region Declaration
@@ -27,7 +27,7 @@ namespace WebApi.Data
 
         #endregion
 
-        public ContextSQLAsync(string ConnectionString)
+        public ContextSQL(string ConnectionString)
         {
             _connectionCommandPool = new ConnectionCommandPool(ConnectionString, 10); // Initialize the pool
         }
@@ -178,7 +178,7 @@ namespace WebApi.Data
 
         public Task<TEntity> Insert(TEntity oEntity)
         {
-            Dictionary<string, string> lParam = [];
+            Dictionary<string, string> lParam;
             Task<DataTable> dt;
             try
             {
@@ -198,7 +198,7 @@ namespace WebApi.Data
 
         public Task Update(TEntity oEntity)
         {
-            Dictionary<string, string> lParam = [];
+            Dictionary<string, string> lParam;
             Task<int> iTask;
             try
             {
@@ -253,7 +253,7 @@ namespace WebApi.Data
                 sbFunctionName.Append('_');
                 sbFunctionName.Append(FunctionName);
 
-                Parameters = Parameters ?? [];
+                Parameters ??= [];
                 cmd = _connectionCommandPool.GetCommand();
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.CommandText = sbFunctionName.ToString();

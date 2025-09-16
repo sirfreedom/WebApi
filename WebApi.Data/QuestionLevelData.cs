@@ -17,7 +17,7 @@ namespace WebApi.Data
 
         public Task<List<QuestionLevel>> List(int IdDependency) 
         {
-            IRepositoryAsync<QuestionLevel> Serv = new ContextSQLAsync<QuestionLevel>(_ConnectionString);
+            IRepository<QuestionLevel> Serv = new ContextSQL<QuestionLevel>(_ConnectionString);
             Dictionary<string,string> lParam = new Dictionary<string, string>(); 
             Task<DataTable> dt;
             Task<List<QuestionLevel>> lQuestionLevel;
@@ -38,7 +38,7 @@ namespace WebApi.Data
 
         public Task<QuestionLevel> Get(int Id)
         {
-            IRepositoryAsync<QuestionLevel> QuestionLevelRepository = new ContextSQLAsync<QuestionLevel>(_ConnectionString);
+            IRepository<QuestionLevel> QuestionLevelRepository = new ContextSQL<QuestionLevel>(_ConnectionString);
             Task<QuestionLevel> oQuestionLevel;
             try
             {
@@ -54,7 +54,7 @@ namespace WebApi.Data
 
         public Task Update(QuestionLevel questionlevel)
         {
-            IRepositoryAsync<QuestionLevel> QuestionLevelRepository = new ContextSQLAsync<QuestionLevel>(_ConnectionString);
+            IRepository<QuestionLevel> QuestionLevelRepository = new ContextSQL<QuestionLevel>(_ConnectionString);
             Task task;
             try
             {
@@ -70,7 +70,7 @@ namespace WebApi.Data
 
         public Task<QuestionLevel> Insert(QuestionLevel questionlevel)
         {
-            IRepositoryAsync<QuestionLevel> QuestionLevelRepository = new ContextSQLAsync<QuestionLevel>(_ConnectionString);
+            IRepository<QuestionLevel> QuestionLevelRepository = new ContextSQL<QuestionLevel>(_ConnectionString);
             Task<QuestionLevel> oQuestionLevel;
             try
             {
@@ -86,7 +86,7 @@ namespace WebApi.Data
 
         public Task Delete(int Id)
         {
-            IRepositoryAsync<QuestionLevel> QuestionLevelRepository = new ContextSQLAsync<QuestionLevel>(_ConnectionString);
+            IRepository<QuestionLevel> QuestionLevelRepository = new ContextSQL<QuestionLevel>(_ConnectionString);
             try
             {
                 QuestionLevelRepository.Delete(Id);
@@ -100,7 +100,7 @@ namespace WebApi.Data
 
         public Task Disabled(int Id, bool Disabled)
         {
-            IRepositoryAsync<QuestionLevel> SettingRepository = new ContextSQLAsync<QuestionLevel>(_ConnectionString);
+            IRepository<QuestionLevel> SettingRepository = new ContextSQL<QuestionLevel>(_ConnectionString);
             Dictionary<string, string> lParam = new Dictionary<string, string>();
             try
             {

@@ -15,13 +15,13 @@ namespace WebApi.Data
 
         public void Delete(int Id)
         {
-            IRepositoryAsync<ImagenTest> Serv = new ContextSQLAsync<ImagenTest>(_ConnectionString);
+            IRepository<ImagenTest> Serv = new ContextSQL<ImagenTest>(_ConnectionString);
             Serv.Delete(Id);
         }
 
         public Task<ImagenTest> Insert(ImagenTest entity)
         {
-            IRepositoryAsync<ImagenTest> Serv = new ContextSQLAsync<ImagenTest>(_ConnectionString);
+            IRepository<ImagenTest> Serv = new ContextSQL<ImagenTest>(_ConnectionString);
             Task<ImagenTest> oImagenTest;
             oImagenTest = Serv.Insert(entity);
             return oImagenTest;
@@ -29,7 +29,7 @@ namespace WebApi.Data
 
         public Task<List<ImagenTest>> List()
         {
-            IRepositoryAsync<ImagenTest> Serv = new ContextSQLAsync<ImagenTest>(_ConnectionString);
+            IRepository<ImagenTest> Serv = new ContextSQL<ImagenTest>(_ConnectionString);
             Task<List<ImagenTest>> lImagenTest;
             lImagenTest = Serv.List();
             return lImagenTest;
@@ -37,7 +37,7 @@ namespace WebApi.Data
 
         public List<ImagenTest> Test1()
         {
-            IRepositoryAsync<ImagenTest> Serv = new ContextSQLAsync<ImagenTest>(_ConnectionString);
+            IRepository<ImagenTest> Serv = new ContextSQL<ImagenTest>(_ConnectionString);
             List<ImagenTest> lImagenTest = new List<ImagenTest>();
 
             var tareas = new List<Task>();

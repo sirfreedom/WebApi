@@ -17,7 +17,7 @@ namespace WebApi.Data
 
         public Task<List<Question>> List(int IdDependency, int CodLevel = 0) 
         {
-            IRepositoryAsync<Question> Serv = new ContextSQLAsync<Question>(_ConnectionString);
+            IRepository<Question> Serv = new ContextSQL<Question>(_ConnectionString);
             Dictionary<string, string> lParam = new Dictionary<string, string>();
             Task<DataTable> dt;
             Task<List<Question>> lQuestion;
@@ -38,7 +38,7 @@ namespace WebApi.Data
 
         public Task<Question> Get(int Id)
         {
-            IRepositoryAsync<Question> QuestionRepository = new ContextSQLAsync<Question>(_ConnectionString);
+            IRepository<Question> QuestionRepository = new ContextSQL<Question>(_ConnectionString);
             Task<Question> oQuestion;
             try
             {
@@ -54,7 +54,7 @@ namespace WebApi.Data
 
         public Task Update(Question question)
         {
-            IRepositoryAsync<Question> QuestionRepository = new ContextSQLAsync<Question>(_ConnectionString);
+            IRepository<Question> QuestionRepository = new ContextSQL<Question>(_ConnectionString);
             Task task;
             try
             {
@@ -70,7 +70,7 @@ namespace WebApi.Data
 
         public Task<Question> Insert(Question question)
         {
-            IRepositoryAsync<Question> QuestionRepository = new ContextSQLAsync<Question>(_ConnectionString);
+            IRepository<Question> QuestionRepository = new ContextSQL<Question>(_ConnectionString);
             Task<Question> oQuestion;
             try
             {
@@ -86,7 +86,7 @@ namespace WebApi.Data
 
         public Task Delete(int Id)
         {
-            IRepositoryAsync<Question> QuestionRepository = new ContextSQLAsync<Question>(_ConnectionString);
+            IRepository<Question> QuestionRepository = new ContextSQL<Question>(_ConnectionString);
             Task task;
             try
             {
@@ -102,7 +102,7 @@ namespace WebApi.Data
 
         public Task Disabled(int Id, bool Disabled)
         {
-            IRepositoryAsync<Question> SettingRepository = new ContextSQLAsync<Question>(_ConnectionString);
+            IRepository<Question> SettingRepository = new ContextSQL<Question>(_ConnectionString);
             Dictionary<string, string> lParam = new Dictionary<string, string>();
             Task<int> task;
             try

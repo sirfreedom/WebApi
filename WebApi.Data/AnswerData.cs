@@ -17,7 +17,7 @@ namespace WebApi.Data
 
 		public Task<Answer> Get(int Id)
 		{
-			IRepositoryAsync<Answer> AnswerRepository = new ContextSQLAsync<Answer>(_ConnectionString);
+			IRepository<Answer> AnswerRepository = new ContextSQL<Answer>(_ConnectionString);
 			Task<Answer> oAnswer;
 			try
 			{
@@ -33,7 +33,7 @@ namespace WebApi.Data
 
 		public Task Update(Answer answer)
 		{
-			IRepositoryAsync<Answer> AnswerRepository = new ContextSQLAsync<Answer>(_ConnectionString);
+			IRepository<Answer> AnswerRepository = new ContextSQL<Answer>(_ConnectionString);
 			Task task;
 			try
 			{
@@ -49,7 +49,7 @@ namespace WebApi.Data
 
 		public Task<Answer> Insert(Answer answer)
 		{
-			IRepositoryAsync<Answer> AnswerRepository = new ContextSQLAsync<Answer>(_ConnectionString);
+			IRepository<Answer> AnswerRepository = new ContextSQL<Answer>(_ConnectionString);
 			Task<Answer> oAnswer;
 			try
 			{
@@ -65,7 +65,7 @@ namespace WebApi.Data
 
 		public Task Delete(int Id)
 		{
-			IRepositoryAsync<Answer> AnswerRepository = new ContextSQLAsync<Answer>(_ConnectionString);
+			IRepository<Answer> AnswerRepository = new ContextSQL<Answer>(_ConnectionString);
 			Task task;
 			try
 			{
@@ -80,7 +80,7 @@ namespace WebApi.Data
 
         public Task Disabled(int Id, bool Disabled)
         {
-            IRepositoryAsync<Answer> SettingRepository = new ContextSQLAsync<Answer>(_ConnectionString);
+            IRepository<Answer> SettingRepository = new ContextSQL<Answer>(_ConnectionString);
             Dictionary<string, string> lParam = new Dictionary<string, string>();
 			Task<int> task;
             try

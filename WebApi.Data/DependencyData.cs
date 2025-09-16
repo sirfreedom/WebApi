@@ -19,7 +19,7 @@ namespace WebApi.Data
 
 		public Task<List<Dependency>> List() 
 		{
-		IRepositoryAsync<Dependency> DependencyRepository = new ContextSQLAsync<Dependency>(_ConnectionString);
+		IRepository<Dependency> DependencyRepository = new ContextSQL<Dependency>(_ConnectionString);
 		Task<List<Dependency>> lDependency;
 		try 
 		{
@@ -35,7 +35,7 @@ namespace WebApi.Data
 
 		public Task<Dependency> Get(int Id) 
 		{
-		IRepositoryAsync<Dependency> DependencyRepository = new ContextSQLAsync<Dependency>(_ConnectionString);
+		IRepository<Dependency> DependencyRepository = new ContextSQL<Dependency>(_ConnectionString);
 		Task<Dependency> oDependency;
 		try
 		{
@@ -51,7 +51,7 @@ namespace WebApi.Data
 
 		public Task Update(Dependency dependency)
 		{
-			IRepositoryAsync<Dependency> DependencyRepository = new ContextSQLAsync<Dependency>(_ConnectionString);
+			IRepository<Dependency> DependencyRepository = new ContextSQL<Dependency>(_ConnectionString);
 			Task task;
 			try
 			{
@@ -67,7 +67,7 @@ namespace WebApi.Data
 
 		public Task<Dependency> Insert(Dependency dependency)
 		{
-			IRepositoryAsync<Dependency> DependencyRepository = new ContextSQLAsync<Dependency>(_ConnectionString);
+			IRepository<Dependency> DependencyRepository = new ContextSQL<Dependency>(_ConnectionString);
 			Task<Dependency> oDependency;
 			try
 			{
@@ -83,7 +83,7 @@ namespace WebApi.Data
 
 		public Task Delete(int Id)
 		{
-			IRepositoryAsync<Dependency> DependencyRepository = new ContextSQLAsync<Dependency>(_ConnectionString);
+			IRepository<Dependency> DependencyRepository = new ContextSQL<Dependency>(_ConnectionString);
 			Task task;
 			try
 			{
@@ -98,7 +98,7 @@ namespace WebApi.Data
 
         public Task Disabled(int Id, bool Disabled)
         {
-            IRepositoryAsync<Dependency> SettingRepository = new ContextSQLAsync<Dependency>(_ConnectionString);
+            IRepository<Dependency> SettingRepository = new ContextSQL<Dependency>(_ConnectionString);
             Dictionary<string, string> lParam = new Dictionary<string, string>();
 			Task<int> task;
             try

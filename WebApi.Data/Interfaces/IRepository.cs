@@ -5,7 +5,7 @@ using WebApi.Entity;
 
 namespace WebApi.Data
 {
-    internal interface IRepositoryAsync<TEntity> where TEntity : EntityBase, new()
+    internal interface IRepository<TEntity> where TEntity : EntityBase, new()
     {
 
         Task<List<TEntity>> List();
