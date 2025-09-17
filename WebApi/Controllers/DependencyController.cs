@@ -37,13 +37,13 @@ namespace WebApi.Controllers
 		/// </returns>
 		[HttpGet("List")]
 		[AllowAnonymous]
-		public async Task<ActionResult> List()
+		public ActionResult List()
 		{
 		DependencyBiz oDependencyBiz = new DependencyBiz(_ConnectionString); 
 		List<Dependency> lDependency;
 		try 
 		{
-			lDependency = await oDependencyBiz.List();
+			lDependency = oDependencyBiz.List().Result;
 		}
 		catch (WebException ex) 
 		{

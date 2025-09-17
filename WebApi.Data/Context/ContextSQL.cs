@@ -89,12 +89,14 @@ namespace WebApi.Data
 
         #region Interface Method
 
-        public Task<List<TEntity>> List()
+        public async Task<List<TEntity>> List()
         {
-            Task<DataTable> dt;
+            DataTable dt;
+            List<TEntity> lEntity;
             try
             {
-                dt = Fill("List"); 
+                dt = await Fill("List");
+                lEntity = EntityBase.ToList<TEntity>(dt);
             }
             catch (ContextSQLException ex)
             {
@@ -104,17 +106,19 @@ namespace WebApi.Data
             {
                 throw new Exception(ex.Message);
             }
-            return Task.FromResult(EntityBase.ToList<TEntity>(dt.Result));
+            return lEntity;
         }
 
-        public Task<TEntity> Get(int Id)
+        public async Task<TEntity> Get(int Id)
         {
             Dictionary<string, string> lDictionary = [];
-            Task<DataTable> dt;
+            DataTable dt;
             lDictionary.Add("Id", Id.ToString());
+            TEntity entity;
             try
             {
-                dt = Fill("Get", lDictionary);
+                dt = await Fill("Get", lDictionary);
+                entity = EntityBase.ToList<TEntity>(dt).SingleOrDefault();
             }
             catch (ContextSQLException ex)
             {
@@ -124,19 +128,19 @@ namespace WebApi.Data
             {
                 throw new Exception(ex.Message);
             }
-            return Task.FromResult(EntityBase.ToList<TEntity>(dt.Result).SingleOrDefault());
+            return entity;
         }
 
-        public Task<List<dynamic>> Find(Dictionary<string, string> lParam)
+        public async Task<List<dynamic>> Find(Dictionary<string, string> lParam)
         {
             List<dynamic> lDynamic = [];
-            Task<DataTable> dt;
+            DataTable dt;
             try
             {
-                dt = Fill("Find", lParam);
-                if (dt.Result.Rows.Count > 0)
+                dt = await Fill("Find", lParam);
+                if (dt.Rows.Count > 0)
                 {
-                    lDynamic = EntityBase.ToDynamic(dt.Result);
+                    lDynamic = EntityBase.ToDynamic(dt);
                 }
             }
             catch (ContextSQLException ex)
@@ -147,7 +151,7 @@ namespace WebApi.Data
             {
                 throw new Exception(ex.Message);
             }
-            return Task.FromResult(lDynamic);
+            return lDynamic;
         }
 
         public Task Delete(int Id)
@@ -176,14 +180,16 @@ namespace WebApi.Data
             return iTask;
         }
 
-        public Task<TEntity> Insert(TEntity oEntity)
+        public async Task<TEntity> Insert(TEntity oEntity)
         {
             Dictionary<string, string> lParam;
-            Task<DataTable> dt;
+            DataTable dt;
+            TEntity entity;
             try
             {
                 lParam = EntityBase.ToDictionary(oEntity);
-                dt = Fill("Insert", lParam);
+                dt = await Fill("Insert", lParam);
+                entity = EntityBase.ToList<TEntity>(dt).SingleOrDefault();
             }
             catch (ContextSQLException ex)
             {
@@ -193,7 +199,7 @@ namespace WebApi.Data
             {
                 throw new Exception(ex.Message);
             }
-            return Task.FromResult(EntityBase.ToList<TEntity>(dt.Result).SingleOrDefault());
+            return entity;
         }
 
         public Task Update(TEntity oEntity)
@@ -244,7 +250,7 @@ namespace WebApi.Data
             DataSet ds = new();
             StringBuilder sbKey = new();
             StringBuilder sbFunctionName = new();
-            DataTable dt = new DataTable();
+            DataTable dt = new();
             SqlCommand cmd = null; 
             SqlDataAdapter da;
             try
@@ -273,6 +279,7 @@ namespace WebApi.Data
                     cmd.Connection = cn;
                     cn.InfoMessage += cn_InfoMessage;
                     da.Fill(ds);
+                    dt = ds.Tables[0];
                 }
 
                 if (MessageError.Length > 0)

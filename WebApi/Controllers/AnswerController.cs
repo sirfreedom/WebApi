@@ -39,13 +39,13 @@ namespace WebApi.Controllers
 		/// </returns>
 		[HttpGet("Get")]
 		[AllowAnonymous]
-		public async Task<ActionResult> Get(int Id) 
+		public ActionResult Get(int Id) 
 		{
 		AnswerBiz oAnswerBiz = new AnswerBiz(_ConectionString); 
 		Answer oAnswer = new Answer();
 		try
 		{
-			oAnswer = await oAnswerBiz.Get(Id);
+			oAnswer = oAnswerBiz.Get(Id).Result;
 		}
 		catch (WebException ex) 
 		{
