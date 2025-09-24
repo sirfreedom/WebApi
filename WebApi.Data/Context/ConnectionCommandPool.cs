@@ -20,8 +20,8 @@ namespace WebApi.Data
         {
             _connectionString = connectionString;
             _maxPoolSize = maxPoolSize;
-            _connectionPool = [];
-            _commandPool = [];
+            _connectionPool = new ConcurrentBag<SqlConnection>();
+            _commandPool = new ConcurrentBag<SqlCommand>();
         }
 
         public SqlConnection GetConnection()
@@ -39,7 +39,7 @@ namespace WebApi.Data
                 // Create a new connection if pool is empty or max size not reached
                 if (_connectionPool.Count <= _maxPoolSize)
                 {
-                    SqlConnection newConnection = new(_connectionString);
+                    SqlConnection newConnection = new SqlConnection(_connectionString);
                     newConnection.Open();
                     return newConnection;
                 }

@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Threading.Tasks;
+using System.Reflection.Metadata.Ecma335;
+using System.Text.RegularExpressions;
 using WebApi.Entity;
 
 namespace WebApi.Data
@@ -15,18 +16,18 @@ namespace WebApi.Data
             _ConnectionString = ConnectionString;
         }
 
-        public Task<List<Question>> List(int IdDependency, int CodLevel = 0) 
+        public List<Question> List(int IdDependency, int CodLevel = 0) 
         {
-            IRepository<Question> Serv = new ContextSQL<Question>(_ConnectionString);
             Dictionary<string, string> lParam = new Dictionary<string, string>();
-            Task<DataTable> dt;
-            Task<List<Question>> lQuestion;
+            DataTable dt = new DataTable();
+            List<Question> lQuestion;
             try
             {
+                IRepository<Question> Serv = new ContextSQL<Question>(_ConnectionString);
                 lParam.Add("IdDependency", IdDependency.ToString());
                 lParam.Add("CodLevel", CodLevel.ToString());
                 dt = Serv.Fill("ListByDependency", lParam);
-                lQuestion = Task.FromResult(Question.ToList<Question>(dt.Result));
+                lQuestion = Question.ToList<Question>(dt);
             }
             catch (Exception) 
             {
@@ -36,10 +37,10 @@ namespace WebApi.Data
         }
 
 
-        public Task<Question> Get(int Id)
+        public Question Get(int Id)
         {
             IRepository<Question> QuestionRepository = new ContextSQL<Question>(_ConnectionString);
-            Task<Question> oQuestion;
+            Question oQuestion;
             try
             {
                 oQuestion = QuestionRepository.Get(Id);
@@ -52,26 +53,24 @@ namespace WebApi.Data
         }
 
 
-        public Task Update(Question question)
+        public void Update(Question question)
         {
             IRepository<Question> QuestionRepository = new ContextSQL<Question>(_ConnectionString);
-            Task task;
             try
             {
-                task = QuestionRepository.Update(question);
+                QuestionRepository.Update(question);
             }
             catch (Exception)
             {
                 throw;
             }
-            return task;
         }
 
 
-        public Task<Question> Insert(Question question)
+        public Question Insert(Question question)
         {
             IRepository<Question> QuestionRepository = new ContextSQL<Question>(_ConnectionString);
-            Task<Question> oQuestion;
+            Question oQuestion;
             try
             {
                  oQuestion = QuestionRepository.Insert(question);
@@ -84,38 +83,34 @@ namespace WebApi.Data
         }
 
 
-        public Task Delete(int Id)
+        public void Delete(int Id)
         {
             IRepository<Question> QuestionRepository = new ContextSQL<Question>(_ConnectionString);
-            Task task;
             try
             {
-                task = QuestionRepository.Delete(Id);
+                QuestionRepository.Delete(Id);
             }
             catch (Exception)
             {
                 throw;
             }
-            return task;
         }
 
 
-        public Task Disabled(int Id, bool Disabled)
+        public void Disabled(int Id, bool Disabled)
         {
             IRepository<Question> SettingRepository = new ContextSQL<Question>(_ConnectionString);
             Dictionary<string, string> lParam = new Dictionary<string, string>();
-            Task<int> task;
             try
             {
                 lParam.Add("Id", Id.ToString());
                 lParam.Add("Disabled", Disabled.ToString());
-                task = SettingRepository.ExecuteNonQuery("Disabled", lParam);
+                SettingRepository.ExecuteNonQuery("Disabled", lParam);
             }
             catch (Exception)
             {
                 throw;
             }
-            return task;
         }
 
 

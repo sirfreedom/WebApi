@@ -5,7 +5,6 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Threading.Tasks;
 using WebApi.Biz;
 using WebApi.Entity;
 using WebApi.Model;
@@ -40,13 +39,13 @@ namespace WebApi.Controllers
         /// </returns>
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult> List(int IdDependency)
+        public ActionResult List(int IdDependency)
         {
             List<QuestionLevel> lq;
             QuestionLevelBiz questionLevelBiz = new QuestionLevelBiz(_ConnectionString);
             try
             {
-                lq = await questionLevelBiz.List(IdDependency);
+                lq = questionLevelBiz.List(IdDependency);
             }
             catch (WebException ex)
             {
@@ -73,13 +72,13 @@ namespace WebApi.Controllers
         /// </returns>
         [HttpGet("Get")]
         [AllowAnonymous]
-        public async Task<ActionResult> Get(int Id)
+        public ActionResult Get(int Id)
         {
             QuestionLevelBiz oQuestionLevelBiz = new QuestionLevelBiz(_ConnectionString);
             QuestionLevel oQuestionLevel = new QuestionLevel();
             try
             {
-                oQuestionLevel = await oQuestionLevelBiz.Get(Id);
+                oQuestionLevel = oQuestionLevelBiz.Get(Id);
             }
             catch (WebException ex)
             {
@@ -106,12 +105,12 @@ namespace WebApi.Controllers
         /// </returns>
         [HttpPut("Update")]
         [Authorize(Policy = "Admin")]
-        public async Task<ActionResult> Update([FromBody] QuestionLevel questionlevel)
+        public ActionResult Update([FromBody] QuestionLevel questionlevel)
         {
             QuestionLevelBiz oQuestionLevelBiz = new QuestionLevelBiz(_ConnectionString);
             try
             {
-                await oQuestionLevelBiz.Update(questionlevel);
+                oQuestionLevelBiz.Update(questionlevel);
             }
             catch (WebException ex)
             {
@@ -138,14 +137,14 @@ namespace WebApi.Controllers
         /// </returns>
         [HttpPost("Insert")]
         [Authorize(Policy = "Admin")]
-        public async Task<ActionResult> Insert([FromBody] QuestionLevelModel questionlevelModel)
+        public ActionResult Insert([FromBody] QuestionLevelModel questionlevelModel)
         {
             QuestionLevelBiz oQuestionLevelBiz = new QuestionLevelBiz(_ConnectionString);
             QuestionLevel oQuestionLevel;
             try
             {
                 oQuestionLevel = QuestionLevel.Merge<QuestionLevelModel, QuestionLevel>(questionlevelModel);
-                oQuestionLevel = await oQuestionLevelBiz.Insert(oQuestionLevel);
+                oQuestionLevel = oQuestionLevelBiz.Insert(oQuestionLevel);
             }
             catch (WebException ex)
             {
@@ -172,12 +171,12 @@ namespace WebApi.Controllers
         /// </returns>
         [HttpDelete("Delete")]
         [Authorize(Policy = "SuperAdmin")]
-        public async Task<ActionResult> Delete(int Id)
+        public ActionResult Delete(int Id)
         {
             QuestionLevelBiz oQuestionLevelBiz = new QuestionLevelBiz(_ConnectionString);
             try
             {
-                await oQuestionLevelBiz.Delete(Id);
+                oQuestionLevelBiz.Delete(Id);
             }
             catch (WebException ex)
             {
@@ -203,12 +202,12 @@ namespace WebApi.Controllers
         /// </returns>
         [HttpPatch("Disabled")]
         [Authorize(Policy = "Admin")]
-        public async Task<ActionResult> Disabled(int Id, bool Disabled)
+        public ActionResult Disabled(int Id, bool Disabled)
         {
             QuestionLevelBiz oQuestionLevelBiz = new QuestionLevelBiz(_ConnectionString);
             try
             {
-                await oQuestionLevelBiz.Disabled(Id,Disabled);
+                oQuestionLevelBiz.Disabled(Id,Disabled);
             }
             catch (WebException ex)
             {

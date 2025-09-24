@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using WebApi.Data;
 using WebApi.Entity;
 
@@ -16,25 +15,16 @@ namespace WebApi.Biz
             _ConnectionString = ConecctionString;
         }
 
-        public Task<Setting> GetByDependency(int IdDependency) 
+        public Setting GetByDependency(int IdDependency) 
         {
             SettingData Serv = new SettingData(_ConnectionString);
-            Task<Setting> oSetting;
-            try
-            {
-                oSetting = Serv.GetByDependency(IdDependency);
-            }
-            catch (Exception) 
-            {
-                throw;
-            }
-            return oSetting;
+            return Serv.GetByDependency(IdDependency);
         }
 
-        public Task<List<dynamic>> Find(Dictionary<string, string> lParam)
+        public List<dynamic> Find(Dictionary<string, string> lParam)
         {
             SettingData oSettingData = new SettingData(_ConnectionString);
-            Task<List<dynamic>> ldynamic;
+            List<dynamic> ldynamic;
             try
             {
                 ldynamic = oSettingData.Find(lParam);
@@ -47,10 +37,10 @@ namespace WebApi.Biz
         }
 
 
-        public Task<Setting> Get(int Id)
+        public Setting Get(int Id)
         {
             SettingData oSettingData = new SettingData(_ConnectionString);
-            Task<Setting> oSetting;
+            Setting oSetting;
             try
             {
                 oSetting = oSettingData.Get(Id);
@@ -63,26 +53,24 @@ namespace WebApi.Biz
         }
 
 
-        public Task Update(Setting setting)
+        public void Update(Setting setting)
         {
             SettingData oSettingData = new SettingData(_ConnectionString);
-            Task task;
             try
             {
-                task = oSettingData.Update(setting);
+                oSettingData.Update(setting);
             }
             catch (Exception)
             {
                 throw;
             }
-            return task;
         }
 
 
-        public Task<Setting> Insert(Setting setting)
+        public Setting Insert(Setting setting)
         {
             SettingData oSettingData = new SettingData(_ConnectionString);
-            Task<Setting> oSetting;
+            Setting oSetting;
             try
             {
                 oSetting = oSettingData.Insert(setting);
@@ -95,22 +83,20 @@ namespace WebApi.Biz
         }
 
 
-        public Task Delete(int Id)
+        public void Delete(int Id)
         {
             SettingData oSettingData = new SettingData(_ConnectionString);
-            Task task;
             try
             {
-                task = oSettingData.Delete(Id);
+                oSettingData.Delete(Id);
             }
             catch (Exception)
             {
                 throw;
             }
-            return task;
         }
 
-        public Task Disabled(int Id,bool Disabled)
+        public void Disabled(int Id,bool Disabled)
         {
             SettingData oSettingData = new SettingData(_ConnectionString);
             try
@@ -121,7 +107,6 @@ namespace WebApi.Biz
             {
                 throw;
             }
-            return Task.CompletedTask;
         }
 
 

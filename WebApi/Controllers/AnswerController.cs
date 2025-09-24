@@ -8,7 +8,6 @@ using WebApi.Entity;
 using WebApi.Biz;
 
 using WebApi.Model;
-using System.Threading.Tasks;
 
 namespace WebApi.Controllers
 {
@@ -45,7 +44,7 @@ namespace WebApi.Controllers
 		Answer oAnswer = new Answer();
 		try
 		{
-			oAnswer = oAnswerBiz.Get(Id).Result;
+			oAnswer = oAnswerBiz.Get(Id);
 		}
 		catch (WebException ex) 
 		{
@@ -72,12 +71,12 @@ namespace WebApi.Controllers
 		/// </returns>
 		[HttpPut("Update")]
         [Authorize(Policy = "Admin")]
-        public async Task<ActionResult> Update([FromBody] Answer answer)
+        public ActionResult Update([FromBody] Answer answer)
 		{
 		AnswerBiz oAnswerBiz = new AnswerBiz(_ConectionString); 
 		try
 		{
-			await oAnswerBiz.Update(answer); 
+			oAnswerBiz.Update(answer); 
 		}
 		catch (WebException ex) 
 		{
@@ -104,14 +103,14 @@ namespace WebApi.Controllers
 		/// </returns>
 		[HttpPost("Insert")]
         [Authorize(Policy = "Admin")]
-        public async Task<ActionResult> Insert([FromBody] AnswerModel answerModel)
+        public ActionResult Insert([FromBody] AnswerModel answerModel)
 		{
 			AnswerBiz oAnswerBiz = new AnswerBiz(_ConectionString);
 			Answer oAnswer;
 			try
 			{
 				oAnswer = Answer.Merge<AnswerModel, Answer>(answerModel);
-				oAnswer = await oAnswerBiz.Insert(oAnswer);
+				oAnswer = oAnswerBiz.Insert(oAnswer);
 			}
 			catch (WebException ex)
 			{
@@ -138,12 +137,12 @@ namespace WebApi.Controllers
 		/// </returns>
 		[HttpDelete("Delete")]
         [Authorize(Policy = "Admin")]
-        public async Task<ActionResult> Delete(int Id)
+        public ActionResult Delete(int Id)
 		{
 		AnswerBiz oAnswerBiz = new AnswerBiz(_ConectionString); 
 		try
 		{
-			await oAnswerBiz.Delete(Id);
+			oAnswerBiz.Delete(Id);
 		}
 		catch (WebException ex) 
 		{
@@ -169,12 +168,12 @@ namespace WebApi.Controllers
 		/// </returns>
         [HttpPatch("Disabled")]
         [Authorize(Policy = "Admin")]
-        public async Task<ActionResult> Disabled(int Id, bool Disabled)
+        public ActionResult Disabled(int Id, bool Disabled)
         {
             AnswerBiz oAnswerBiz = new AnswerBiz(_ConectionString);
             try
             {
-                await oAnswerBiz.Disabled(Id, Disabled);
+                oAnswerBiz.Disabled(Id, Disabled);
             }
             catch (WebException ex)
             {

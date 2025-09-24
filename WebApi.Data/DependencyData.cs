@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System;
 using WebApi.Entity;
-using System.Threading.Tasks;
 
 namespace WebApi.Data
 {
@@ -17,10 +16,10 @@ namespace WebApi.Data
 			_ConnectionString = ConnectionString;
 		}
 
-		public Task<List<Dependency>> List() 
+		public List<Dependency> List() 
 		{
 		IRepository<Dependency> DependencyRepository = new ContextSQL<Dependency>(_ConnectionString);
-		Task<List<Dependency>> lDependency;
+		List<Dependency> lDependency;
 		try 
 		{
 			lDependency = DependencyRepository.List(); 
@@ -33,10 +32,10 @@ namespace WebApi.Data
 		}
 
 
-		public Task<Dependency> Get(int Id) 
+		public Dependency Get(int Id) 
 		{
 		IRepository<Dependency> DependencyRepository = new ContextSQL<Dependency>(_ConnectionString);
-		Task<Dependency> oDependency;
+		Dependency oDependency;
 		try
 		{
 			oDependency = DependencyRepository.Get(Id);
@@ -49,26 +48,24 @@ namespace WebApi.Data
 		}
 
 
-		public Task Update(Dependency dependency)
+		public void Update(Dependency dependency)
 		{
 			IRepository<Dependency> DependencyRepository = new ContextSQL<Dependency>(_ConnectionString);
-			Task task;
 			try
 			{
-				task = DependencyRepository.Update(dependency);
+				DependencyRepository.Update(dependency);
 			}
 			catch (Exception)
 			{
 				throw;
 			}
-			return task;
 		}
 
 
-		public Task<Dependency> Insert(Dependency dependency)
+		public Dependency Insert(Dependency dependency)
 		{
 			IRepository<Dependency> DependencyRepository = new ContextSQL<Dependency>(_ConnectionString);
-			Task<Dependency> oDependency;
+			Dependency oDependency;
 			try
 			{
 				oDependency = DependencyRepository.Insert(dependency);
@@ -81,37 +78,33 @@ namespace WebApi.Data
 		}
 
 
-		public Task Delete(int Id)
+		public void Delete(int Id)
 		{
-			IRepository<Dependency> DependencyRepository = new ContextSQL<Dependency>(_ConnectionString);
-			Task task;
-			try
-			{
-				task = DependencyRepository.Delete(Id);
-			}
-			catch (Exception)
-			{
-				throw;
-			}
-			return task;
+		IRepository<Dependency> DependencyRepository = new ContextSQL<Dependency>(_ConnectionString);
+		try
+		{
+			DependencyRepository.Delete(Id);
+		}
+		catch (Exception) 
+		{
+			throw;
+		}
 		}
 
-        public Task Disabled(int Id, bool Disabled)
+        public void Disabled(int Id, bool Disabled)
         {
             IRepository<Dependency> SettingRepository = new ContextSQL<Dependency>(_ConnectionString);
             Dictionary<string, string> lParam = new Dictionary<string, string>();
-			Task<int> task;
             try
             {
                 lParam.Add("Id", Id.ToString());
                 lParam.Add("Disabled", Disabled.ToString());
-                task = SettingRepository.ExecuteNonQuery("Disabled", lParam);
+                SettingRepository.ExecuteNonQuery("Disabled", lParam);
             }
             catch (Exception)
             {
                 throw;
             }
-			return task;
         }
 
 

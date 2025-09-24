@@ -2,7 +2,6 @@
 using System;
 using WebApi.Entity;
 using WebApi.Data;
-using System.Threading.Tasks;
 
 namespace WebApi.Biz
 {
@@ -18,10 +17,10 @@ namespace WebApi.Biz
 			_ConnectionString = ConnectionString;
 		}
 
-		public Task<List<Dependency>> List() 
+		public List<Dependency> List() 
 		{
 		DependencyData oDependencyData = new DependencyData(_ConnectionString); 
-		Task<List<Dependency>> lDependency;
+		List<Dependency> lDependency;
 		try 
 		{
 			lDependency = oDependencyData.List();
@@ -34,10 +33,10 @@ namespace WebApi.Biz
 		}
 
 
-		public Task<Dependency> Get(int Id) 
+		public Dependency Get(int Id) 
 		{
 		DependencyData oDependencyData = new DependencyData(_ConnectionString); 
-		Task<Dependency> oDependency;
+		Dependency oDependency;
 		try
 		{
 			oDependency = oDependencyData.Get(Id);
@@ -50,26 +49,24 @@ namespace WebApi.Biz
 		}
 
 
-		public Task Update(Dependency dependency)
+		public void Update(Dependency dependency)
 		{
-			DependencyData oDependencyData = new DependencyData(_ConnectionString);
-			Task task;
-			try
-			{
-				task = oDependencyData.Update(dependency);
-			}
-			catch (Exception)
-			{
-				throw;
-			}
-			return task;
+		DependencyData oDependencyData = new DependencyData(_ConnectionString); 
+		try
+		{
+			oDependencyData.Update(dependency); 
+		}
+		catch (Exception) 
+		{
+			throw;
+		}
 		}
 
 
-		public Task<Dependency> Insert(Dependency dependency)
+		public Dependency Insert(Dependency dependency)
 		{
 			DependencyData oDependencyData = new DependencyData(_ConnectionString);
-			Task<Dependency> oDependency;
+			Dependency oDependency;
 			try
 			{
 				oDependency = oDependencyData.Insert(dependency);
@@ -82,34 +79,30 @@ namespace WebApi.Biz
 		}
 
 
-		public Task Delete(int Id)
+		public void Delete(int Id)
 		{
-		DependencyData oDependencyData = new DependencyData(_ConnectionString);
-		Task task;
-			try
-			{
-				task = oDependencyData.Delete(Id);
-			}
-			catch (Exception)
-			{
-				throw;
-			}
-			return task;			
+		DependencyData oDependencyData = new DependencyData(_ConnectionString); 
+		try
+		{
+			oDependencyData.Delete(Id);
+		}
+		catch (Exception) 
+		{
+			throw;
+		}
 		}
 
-        public Task Disabled(int Id, bool Disabled)
+        public void Disabled(int Id, bool Disabled)
         {
             DependencyData oDependencyData = new DependencyData(_ConnectionString);
-			Task task;
             try
             {
-                task = oDependencyData.Disabled(Id, Disabled);
+                oDependencyData.Disabled(Id, Disabled);
             }
             catch (Exception)
             {
                 throw;
             }
-			return task;
         }
 
     }

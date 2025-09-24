@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Threading.Tasks;
 using WebApi.Entity;
 
 namespace WebApi.Data
@@ -15,18 +14,17 @@ namespace WebApi.Data
             _ConnectionString = ConnectionString;
         }
 
-        public Task<List<QuestionLevel>> List(int IdDependency) 
-        {
-            IRepository<QuestionLevel> Serv = new ContextSQL<QuestionLevel>(_ConnectionString);
+        public List<QuestionLevel> List(int IdDependency) 
+        { 
             Dictionary<string,string> lParam = new Dictionary<string, string>(); 
-            Task<DataTable> dt;
-            Task<List<QuestionLevel>> lQuestionLevel;
+            DataTable dt;
+            List<QuestionLevel> lQuestionLevel;
             try
             {
                 lParam.Add("IdDependency", IdDependency.ToString());
-
+                IRepository<QuestionLevel> Serv = new ContextSQL<QuestionLevel>(_ConnectionString);
                 dt = Serv.Fill("ListByDependency", lParam);
-                lQuestionLevel = Task.FromResult(QuestionLevel.ToList<QuestionLevel>(dt.Result));
+                lQuestionLevel = QuestionLevel.ToList<QuestionLevel>(dt);
             }
             catch (Exception) 
             {
@@ -36,10 +34,10 @@ namespace WebApi.Data
         }
 
 
-        public Task<QuestionLevel> Get(int Id)
+        public QuestionLevel Get(int Id)
         {
             IRepository<QuestionLevel> QuestionLevelRepository = new ContextSQL<QuestionLevel>(_ConnectionString);
-            Task<QuestionLevel> oQuestionLevel;
+            QuestionLevel oQuestionLevel;
             try
             {
                 oQuestionLevel = QuestionLevelRepository.Get(Id);
@@ -52,26 +50,24 @@ namespace WebApi.Data
         }
 
 
-        public Task Update(QuestionLevel questionlevel)
+        public void Update(QuestionLevel questionlevel)
         {
             IRepository<QuestionLevel> QuestionLevelRepository = new ContextSQL<QuestionLevel>(_ConnectionString);
-            Task task;
             try
             {
-                task = QuestionLevelRepository.Update(questionlevel);
+                QuestionLevelRepository.Update(questionlevel);
             }
             catch (Exception)
             {
                 throw;
             }
-            return task;
         }
 
 
-        public Task<QuestionLevel> Insert(QuestionLevel questionlevel)
+        public QuestionLevel Insert(QuestionLevel questionlevel)
         {
             IRepository<QuestionLevel> QuestionLevelRepository = new ContextSQL<QuestionLevel>(_ConnectionString);
-            Task<QuestionLevel> oQuestionLevel;
+            QuestionLevel oQuestionLevel;
             try
             {
                 oQuestionLevel = QuestionLevelRepository.Insert(questionlevel);
@@ -84,7 +80,7 @@ namespace WebApi.Data
         }
 
 
-        public Task Delete(int Id)
+        public void Delete(int Id)
         {
             IRepository<QuestionLevel> QuestionLevelRepository = new ContextSQL<QuestionLevel>(_ConnectionString);
             try
@@ -95,10 +91,9 @@ namespace WebApi.Data
             {
                 throw;
             }
-            return Task.CompletedTask;
         }
 
-        public Task Disabled(int Id, bool Disabled)
+        public void Disabled(int Id, bool Disabled)
         {
             IRepository<QuestionLevel> SettingRepository = new ContextSQL<QuestionLevel>(_ConnectionString);
             Dictionary<string, string> lParam = new Dictionary<string, string>();
@@ -112,7 +107,6 @@ namespace WebApi.Data
             {
                 throw;
             }
-            return Task.CompletedTask;
         }
 
 

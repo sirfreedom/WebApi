@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using WebApi.Data;
 using WebApi.Entity;
 
@@ -16,10 +15,10 @@ namespace WebApi.Biz
             _ConnectionString = ConnectionString;
         }
 
-        public Task<List<QuestionLevel>> List(int IdDependency) 
+        public List<QuestionLevel> List(int IdDependency) 
         {
             QuestionLevelData Serv = new QuestionLevelData(_ConnectionString);
-            Task<List<QuestionLevel>> lQuestionLevel;
+            List<QuestionLevel> lQuestionLevel;
             try
             {
                 lQuestionLevel = Serv.List(IdDependency);
@@ -32,10 +31,10 @@ namespace WebApi.Biz
         }
 
 
-        public Task<QuestionLevel> Get(int Id)
+        public QuestionLevel Get(int Id)
         {
             QuestionLevelData oQuestionLevelData = new QuestionLevelData(_ConnectionString);
-            Task<QuestionLevel> oQuestionLevel;
+            QuestionLevel oQuestionLevel;
             try
             {
                 oQuestionLevel = oQuestionLevelData.Get(Id);
@@ -48,7 +47,7 @@ namespace WebApi.Biz
         }
 
 
-        public Task Update(QuestionLevel questionlevel)
+        public void Update(QuestionLevel questionlevel)
         {
             QuestionLevelData oQuestionLevelData = new QuestionLevelData(_ConnectionString);
             try
@@ -59,14 +58,13 @@ namespace WebApi.Biz
             {
                 throw;
             }
-            return Task.CompletedTask;
         }
 
 
-        public Task<QuestionLevel> Insert(QuestionLevel questionlevel)
+        public QuestionLevel Insert(QuestionLevel questionlevel)
         {
             QuestionLevelData oQuestionLevelData = new QuestionLevelData(_ConnectionString);
-            Task<QuestionLevel> oQuestionLevel;
+            QuestionLevel oQuestionLevel;
             try
             {
                 oQuestionLevel = oQuestionLevelData.Insert(questionlevel);
@@ -79,7 +77,7 @@ namespace WebApi.Biz
         }
 
 
-        public Task Delete(int Id)
+        public void Delete(int Id)
         {
             QuestionLevelData oQuestionLevelData = new QuestionLevelData(_ConnectionString);
             try
@@ -90,11 +88,10 @@ namespace WebApi.Biz
             {
                 throw;
             }
-            return Task.CompletedTask;
         }
 
 
-        public Task Disabled(int Id, bool Disabled)
+        public void Disabled(int Id, bool Disabled)
         {
             QuestionLevelData oQuestionLevelData = new QuestionLevelData(_ConnectionString);
             try
@@ -105,7 +102,6 @@ namespace WebApi.Biz
             {
                 throw;
             }
-            return Task.CompletedTask;
         }
 
     }

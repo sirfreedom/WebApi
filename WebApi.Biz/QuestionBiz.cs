@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using WebApi.Data;
 using WebApi.Entity;
 
@@ -16,10 +15,10 @@ namespace WebApi.Biz
             _ConnectionString = ConnectionString;
         }
 
-        public Task<List<Question>> List(int IdDependency, int CodLevel) 
+        public List<Question> List(int IdDependency, int CodLevel) 
         { 
             QuestionData Serv = new QuestionData(_ConnectionString);
-            Task<List<Question>> lQuestion;
+            List<Question> lQuestion;
             try
             {
                 lQuestion = Serv.List(IdDependency, CodLevel);
@@ -32,10 +31,10 @@ namespace WebApi.Biz
         }
 
 
-        public Task<Question> Get(int Id)
+        public Question Get(int Id)
         {
             QuestionData oQuestionData = new QuestionData(_ConnectionString);
-            Task<Question> oQuestion;
+            Question oQuestion;
             try
             {
                 oQuestion = oQuestionData.Get(Id);
@@ -48,26 +47,24 @@ namespace WebApi.Biz
         }
 
 
-        public Task Update(Question question)
+        public void Update(Question question)
         {
             QuestionData oQuestionData = new QuestionData(_ConnectionString);
-            Task task;
             try
             {
-                task = oQuestionData.Update(question);
+                oQuestionData.Update(question);
             }
             catch (Exception)
             {
                 throw;
             }
-            return task;
         }
 
 
-        public Task<Question> Insert(Question question)
+        public Question Insert(Question question)
         {
             QuestionData oQuestionData = new QuestionData(_ConnectionString);
-            Task<Question> oQuestion;
+            Question oQuestion;
             try
             {
                  oQuestion = oQuestionData.Insert(question);
@@ -80,34 +77,30 @@ namespace WebApi.Biz
         }
 
 
-        public Task Delete(int Id)
+        public void Delete(int Id)
         {
             QuestionData oQuestionData = new QuestionData(_ConnectionString);
-            Task task;
             try
             {
-                task = oQuestionData.Delete(Id);
+                oQuestionData.Delete(Id);
             }
             catch (Exception)
             {
                 throw;
             }
-            return task;
         }
 
-        public Task Disabled(int Id, bool Disabled)
+        public void Disabled(int Id, bool Disabled)
         {
             QuestionData oQuestionData = new QuestionData(_ConnectionString);
-            Task task;
             try
             {
-                 task = oQuestionData.Disabled(Id, Disabled);
+                oQuestionData.Disabled(Id, Disabled);
             }
             catch (Exception)
             {
                 throw;
             }
-            return task;
         }
 
 

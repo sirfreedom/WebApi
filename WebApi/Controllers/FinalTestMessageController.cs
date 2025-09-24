@@ -5,7 +5,6 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Threading.Tasks;
 using WebApi.Biz;
 using WebApi.Entity;
 using WebApi.Model;
@@ -42,13 +41,13 @@ namespace WebApi.Controllers
         /// </returns>
         [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult> List(int IdDependency)
+        public ActionResult List(int IdDependency)
         {
             List<FinalTestMessage> lf;
             FinalTestMessageBiz finalTestMessageBiz = new FinalTestMessageBiz(_ConnectionString);
             try
             {
-                lf = await finalTestMessageBiz.List(IdDependency);
+                lf = finalTestMessageBiz.List(IdDependency);
             }
             catch (WebException ex)
             {
@@ -75,13 +74,13 @@ namespace WebApi.Controllers
         /// </returns>
         [HttpGet("Get")]
         [AllowAnonymous]
-        public async Task<ActionResult> Get(int Id)
+        public ActionResult Get(int Id)
         {
             FinalTestMessageBiz oFinalTestMessageBiz = new FinalTestMessageBiz(_ConnectionString);
             FinalTestMessage oFinalTestMessage = new FinalTestMessage();
             try
             {
-                oFinalTestMessage = await oFinalTestMessageBiz.Get(Id);
+                oFinalTestMessage = oFinalTestMessageBiz.Get(Id);
             }
             catch (WebException ex)
             {
@@ -108,12 +107,12 @@ namespace WebApi.Controllers
         /// </returns>
         [HttpPut("Update")]
         [Authorize(Policy = "Admin")]
-        public async Task<ActionResult> Update([FromBody] FinalTestMessage finaltestmessage)
+        public ActionResult Update([FromBody] FinalTestMessage finaltestmessage)
         {
             FinalTestMessageBiz oFinalTestMessageBiz = new FinalTestMessageBiz(_ConnectionString);
             try
             {
-                await oFinalTestMessageBiz.Update(finaltestmessage);
+                oFinalTestMessageBiz.Update(finaltestmessage);
             }
             catch (WebException ex)
             {
@@ -140,14 +139,14 @@ namespace WebApi.Controllers
         /// </returns>
         [HttpPost("Insert")]
         [Authorize(Policy = "Admin")]
-        public async Task<ActionResult> Insert([FromBody] FinalTestMessageModel finaltestmessageModel)
+        public ActionResult Insert([FromBody] FinalTestMessageModel finaltestmessageModel)
         {
             FinalTestMessageBiz oFinalTestMessageBiz = new FinalTestMessageBiz(_ConnectionString);
             FinalTestMessage oFinalTestMessage;
             try
             {
                 oFinalTestMessage = FinalTestMessage.Merge<FinalTestMessageModel, FinalTestMessage>(finaltestmessageModel);
-                oFinalTestMessage = await oFinalTestMessageBiz.Insert(oFinalTestMessage);
+                oFinalTestMessage = oFinalTestMessageBiz.Insert(oFinalTestMessage);
             }
             catch (WebException ex)
             {
@@ -174,12 +173,12 @@ namespace WebApi.Controllers
         /// </returns>
         [HttpDelete("Delete")]
         [Authorize(Policy = "SuperAdmin")]
-        public async Task<ActionResult> Delete(int Id)
+        public ActionResult Delete(int Id)
         {
             FinalTestMessageBiz oFinalTestMessageBiz = new FinalTestMessageBiz(_ConnectionString);
             try
             {
-                await oFinalTestMessageBiz.Delete(Id);
+                oFinalTestMessageBiz.Delete(Id);
             }
             catch (WebException ex)
             {
@@ -206,12 +205,12 @@ namespace WebApi.Controllers
         /// </returns>
         [HttpPatch("Disabled")]
         [Authorize(Policy = "Admin")]
-        public async Task<ActionResult> Disabled(int Id, bool Disabled)
+        public ActionResult Disabled(int Id, bool Disabled)
         {
             FinalTestMessageBiz oFinalTestMessageBiz = new FinalTestMessageBiz(_ConnectionString);
             try
             {
-                await oFinalTestMessageBiz.Disabled(Id,Disabled);
+                oFinalTestMessageBiz.Disabled(Id,Disabled);
             }
             catch (WebException ex)
             {
