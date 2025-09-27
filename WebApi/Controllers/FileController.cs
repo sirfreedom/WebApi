@@ -1,13 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using System.Net;
-using System;
-using WebApi.Model;
-using WebApi.Entity;
-using System.Collections.Generic;
-using WebApi.Biz;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Threading.Tasks;
+using WebApi.Biz;
+using WebApi.Entity;
+using WebApi.Model;
 
 namespace WebApi.Controllers
 {
@@ -33,26 +34,28 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
-        public ActionResult List()
+        public async Task<ActionResult> List()
         {
             ImagenBiz Serv = new ImagenBiz(_ConnectionString);
             List<ImagenTest> lImageTest;
             Dictionary<string,string> lParam = new Dictionary<string,string>();
+            ActionResult result;
             try
             {
-                lImageTest = lImageTest = Serv.List();
+                lImageTest = await Task.Run(() => Serv.List());
+                result = await Task.Run(() => Ok(new { ImageList = lImageTest })); //OK 200
             }
             catch (WebException ex)
             {
                 _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
-                return ValidationProblem("Error", "Get", 500, ex.Message);
+                result = ValidationProblem("Error", "List", 500, ex.Message);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
-                return ValidationProblem("Error", "Get", 500, ex.Message);
+                result = ValidationProblem("Error", "List", 500, ex.Message);
             }
-            return Ok(new { ImageList = lImageTest }); //OK 200
+            return result;
         }
 
 
@@ -64,14 +67,14 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
-        public ActionResult Post([FromBody] FileModel imagentext)
+        public async Task<ActionResult> Post([FromBody] FileModel imagentext)
         {
             ImagenBiz Serv = new ImagenBiz(_ConnectionString);
             ImagenTest oImagen = new ImagenTest();
             try
             {
                 oImagen = ImagenTest.Merge<FileModel, ImagenTest>(imagentext);
-                Serv.Insert(oImagen);
+                await Task.Run(() => Serv.Insert(oImagen));
             }
             catch (WebException ex)
             {
@@ -94,13 +97,13 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [HttpDelete]
         [AllowAnonymous]
-        public ActionResult Delete(int Id)
+        public async Task<ActionResult> Delete(int Id)
         {
             ImagenBiz Serv = new ImagenBiz(_ConnectionString);
             ImagenTest oImagen = new ImagenTest();
             try
             {
-                Serv.Delete(Id);
+                await Task.Run(() => Serv.Delete(Id));
             }
             catch (WebException ex)
             {
@@ -146,6 +149,15 @@ namespace WebApi.Controllers
             }
             return Ok(new { Image = imagentext }); //OK 200
         }
+
+
+
+   
+
+
+
+
+
 
 
 
