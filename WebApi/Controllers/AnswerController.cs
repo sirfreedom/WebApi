@@ -8,6 +8,7 @@ using WebApi.Entity;
 using WebApi.Biz;
 
 using WebApi.Model;
+using System.Threading.Tasks;
 
 namespace WebApi.Controllers
 {
@@ -38,13 +39,13 @@ namespace WebApi.Controllers
 		/// </returns>
 		[HttpGet("Get")]
 		[AllowAnonymous]
-		public ActionResult Get(int Id) 
+		public async Task<ActionResult> Get(int Id) 
 		{
 		AnswerBiz oAnswerBiz = new AnswerBiz(_ConectionString); 
-		Answer oAnswer = new Answer();
+		Answer oAnswer = new ();
 		try
 		{
-			oAnswer = oAnswerBiz.Get(Id);
+			oAnswer = await Task.Run(() => oAnswerBiz.Get(Id));
 		}
 		catch (WebException ex) 
 		{
@@ -54,7 +55,7 @@ namespace WebApi.Controllers
 		catch (Exception ex)
 		{
 			_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
-			return ValidationProblem("Error", "Get ", 500, ex.Message);
+			return ValidationProblem("Error", "Get", 500, ex.Message);
 		}
 		return Ok(new {  answer = oAnswer}); //OK 200);
 		}
@@ -70,25 +71,25 @@ namespace WebApi.Controllers
 		/// devuelve Status: 200 en caso de haber actualizado correctamente 
 		/// </returns>
 		[HttpPut("Update")]
-        [Authorize(Policy = "Admin")]
-        public ActionResult Update([FromBody] Answer answer)
+		[Authorize(Policy = "Admin")]
+		public async Task<ActionResult> Update([FromBody] Answer answer)
 		{
-		AnswerBiz oAnswerBiz = new AnswerBiz(_ConectionString); 
-		try
-		{
-			oAnswerBiz.Update(answer); 
-		}
-		catch (WebException ex) 
-		{
-			_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
-			return ValidationProblem("Error", "Get", 500, ex.Message);
-		}
-		catch (Exception ex)
-		{
-			_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
-			return ValidationProblem("Error", "Get ", 500, ex.Message);
-		}
-		return Ok(); //OK 200
+			AnswerBiz oAnswerBiz = new (_ConectionString);
+			try
+			{
+				await Task.Run(() => oAnswerBiz.Update(answer));
+			}
+			catch (WebException ex)
+			{
+				_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+				return ValidationProblem("Error", "Update", 500, ex.Message);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+				return ValidationProblem("Error", "Update", 500, ex.Message);
+			}
+			return Ok(); //OK 200
 		}
 
 
@@ -103,24 +104,24 @@ namespace WebApi.Controllers
 		/// </returns>
 		[HttpPost("Insert")]
         [Authorize(Policy = "Admin")]
-        public ActionResult Insert([FromBody] AnswerModel answerModel)
+        public async Task<ActionResult> Insert([FromBody] AnswerModel answerModel)
 		{
-			AnswerBiz oAnswerBiz = new AnswerBiz(_ConectionString);
+			AnswerBiz oAnswerBiz = new (_ConectionString);
 			Answer oAnswer;
 			try
 			{
 				oAnswer = Answer.Merge<AnswerModel, Answer>(answerModel);
-				oAnswer = oAnswerBiz.Insert(oAnswer);
+				oAnswer = await Task.Run(() => oAnswerBiz.Insert(oAnswer));
 			}
 			catch (WebException ex)
 			{
 				_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
-				return ValidationProblem("Error", "Get", 500, ex.Message);
+				return ValidationProblem("Error", "Insert", 500, ex.Message);
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
-				return ValidationProblem("Error", "Get ", 500, ex.Message);
+				return ValidationProblem("Error", "Insert", 500, ex.Message);
 			}
 			return Created("answer", oAnswer); //OK 201/204
 		}
@@ -137,22 +138,22 @@ namespace WebApi.Controllers
 		/// </returns>
 		[HttpDelete("Delete")]
         [Authorize(Policy = "Admin")]
-        public ActionResult Delete(int Id)
+        public async Task<ActionResult> Delete(int Id)
 		{
-		AnswerBiz oAnswerBiz = new AnswerBiz(_ConectionString); 
+		AnswerBiz oAnswerBiz = new (_ConectionString); 
 		try
 		{
-			oAnswerBiz.Delete(Id);
+                await Task.Run(() => oAnswerBiz.Delete(Id));
 		}
 		catch (WebException ex) 
 		{
 			_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
-			return ValidationProblem("Error", "Get", 500, ex.Message);
+			return ValidationProblem("Error", "Delete", 500, ex.Message);
 		}
 		catch (Exception ex)
 		{
 			_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
-			return ValidationProblem("Error", "Get ", 500, ex.Message);
+			return ValidationProblem("Error", "Delete", 500, ex.Message);
 		}
 		return Ok(); //OK 200
 		}
@@ -168,22 +169,22 @@ namespace WebApi.Controllers
 		/// </returns>
         [HttpPatch("Disabled")]
         [Authorize(Policy = "Admin")]
-        public ActionResult Disabled(int Id, bool Disabled)
+        public async Task<ActionResult> Disabled(int Id, bool Disabled)
         {
             AnswerBiz oAnswerBiz = new AnswerBiz(_ConectionString);
             try
             {
-                oAnswerBiz.Disabled(Id, Disabled);
+                await Task.Run(() => oAnswerBiz.Disabled(Id, Disabled));
             }
             catch (WebException ex)
             {
                 _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
-                return ValidationProblem("Error", "Get", 500, ex.Message);
+                return ValidationProblem("Error", "Disabled", 500, ex.Message);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
-                return ValidationProblem("Error", "Get ", 500, ex.Message);
+                return ValidationProblem("Error", "Disabled", 500, ex.Message);
             }
             return Ok(); //OK 200
         }

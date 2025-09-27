@@ -32,7 +32,7 @@ namespace WebApi.Entity
             {
                 if (dt == null)
                 {
-                    return []; //new List<T>();
+                    return [];
                 }
 
                 columnNames = dt.Columns.Cast<DataColumn>().Select(c => c.ColumnName).ToList();
@@ -44,7 +44,6 @@ namespace WebApi.Entity
                     {
                         if (columnNames.Contains(p.Name) && (dr[p.Name] != DBNull.Value && p.PropertyType.Name != "Nullable"))
                         {
-
                             switch (p.PropertyType.Name)
                             {
                                 case "Decimal":
@@ -121,7 +120,7 @@ namespace WebApi.Entity
 
         public static List<T> ToList<T>(List<dynamic> odynamic)
         {
-            List<T> lReturn = new List<T>();
+            List<T> lReturn = new();
             PropertyInfo[] TipoConcretoProperties = typeof(T).GetProperties();
             string sTempValue;
             try
@@ -218,7 +217,7 @@ namespace WebApi.Entity
         public static List<string> ToList(DataTable dt, string column, string Condicion = "")
         {
             List<string> lReturn = [];
-            DataTable dtFiltrada = new DataTable();
+            DataTable dtFiltrada = new();
             try
             {
                 if (!dt.Columns.Contains(column))
@@ -249,22 +248,22 @@ namespace WebApi.Entity
 
         public static string ToString(DataTable dt, string Condicion, string Campo, string ValorDefault = "")
         {
-            string s = ValorDefault;
+            string sReturn = ValorDefault;
             DataRow[] ldr;
             try
             {
                 if (dt.Rows.Count > 0 && Condicion.Length > 0 && dt.Select(Condicion).Length == 1)
                 {
                     ldr = dt.Select(Condicion);
-                    s = ldr.CopyToDataTable().Rows[0][Campo].ToString();
+                    sReturn = ldr.CopyToDataTable().Rows[0][Campo].ToString();
                 }
                 if (dt.Rows.Count == 1 && Condicion.Length == 0)
                 {
-                    s = dt.Rows[0][Campo].ToString();
+                    sReturn = dt.Rows[0][Campo].ToString();
 
-                    if (s.Length == 0)
+                    if (sReturn.Length == 0)
                     {
-                        s = ValorDefault;
+                        sReturn = ValorDefault;
                     }
                 }
             }
@@ -272,51 +271,51 @@ namespace WebApi.Entity
             {
                 throw new Exception(ex.Message);
             }
-            return s;
+            return sReturn;
         }
 
         public static string ToString(DataTable dt, string Campo, string ValorDefault = "")
         {
-            string s = ValorDefault;
+            string sReturn = ValorDefault;
             try
             {
                 if (dt.Rows.Count == 1 && Campo != string.Empty)
                 {
                     if (dt.Columns.Contains(Campo))
                     {
-                        s = dt.Rows[0][Campo].ToString();
+                        sReturn = dt.Rows[0][Campo].ToString();
                     }
-                    if (s.Length == 0)
+                    if (sReturn.Length == 0)
                     {
-                        s = ValorDefault;
+                        sReturn = ValorDefault;
                     }
                 }
                 if (dt.Rows.Count > 1)
                 {
-                    s = dt.Rows[0][Campo].ToString();
+                    sReturn = dt.Rows[0][Campo].ToString();
                 }
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
-            return s;
+            return sReturn;
         }
 
         public static string ToString(DataRow dr, string Campo, string ValorDefault = "")
         {
-            string s = ValorDefault;
+            string sReturn = ValorDefault;
             try
             {
                 if (dr[Campo] != null)
                 {
                     if (dr[Campo].ToString().Length != 0)
                     {
-                        s = dr[Campo].ToString();
+                        sReturn = dr[Campo].ToString();
 
-                        if (s.Length == 0)
+                        if (sReturn.Length == 0)
                         {
-                            s = ValorDefault;
+                            sReturn = ValorDefault;
                         }
                     }
                 }
@@ -325,7 +324,7 @@ namespace WebApi.Entity
             {
                 throw new Exception(ex.Message);
             }
-            return s;
+            return sReturn;
         }
 
         #endregion
@@ -493,7 +492,7 @@ namespace WebApi.Entity
         /// </returns>
         public static Dictionary<string, string> ToDictionary<T>(T entidad, bool MergeKeyValue = false)
         {
-            Dictionary<string, string> lDictionary = new Dictionary<string, string>();
+            Dictionary<string, string> lDictionary = new ();
             PropertyInfo[] propiedades = entidad.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
             PropertyInfo[] Subpropiedades = [];
             string sPrimitive = string.Empty;
@@ -573,14 +572,14 @@ namespace WebApi.Entity
         /// </returns>
         public Dictionary<string, string> ToDictionary(bool IncludeBlankSpace = false, bool IncludeZero = false)
         {
-            Dictionary<string, string> lProperty = new Dictionary<string, string>();
+            Dictionary<string, string> lProperty = [];
             Type t = this.GetType();
             PropertyInfo[] properties = t.GetProperties();
             try
             {
                 foreach (PropertyInfo p in properties)
                 {
-                    StringBuilder sb = new StringBuilder();
+                    StringBuilder sb = new();
                     object PropertyValue = p.GetValue(this, null);
                     string typeName = p.PropertyType.Name;
                     bool isPropertyNotMapped = Attribute.IsDefined(p, typeof(NotMappedAttribute));
@@ -679,8 +678,8 @@ namespace WebApi.Entity
         public static string ToJson(DataSet ds)
         {
             const string COMILLADOBLE = "\"";
-            StringBuilder sb = new StringBuilder();
-            sb.Append("{");
+            StringBuilder sb = new ();
+            sb.Append('{');
             sb.AppendLine();
             try
             {
@@ -690,8 +689,8 @@ namespace WebApi.Entity
                     sb.Append(COMILLADOBLE);
                     sb.Append(ds.Tables[iTable].TableName);
                     sb.Append(COMILLADOBLE);
-                    sb.Append(":");
-                    sb.Append("[");
+                    sb.Append(':');
+                    sb.Append('[');
                     sb.AppendLine();
 
                     for (int i = 0; i < ds.Tables[ds.Tables[iTable].TableName].Rows.Count; i++)
@@ -699,7 +698,7 @@ namespace WebApi.Entity
                         decimal Numero = 0;
                         bool bNumero;
 
-                        sb.Append("{");
+                        sb.Append('{');
 
                         for (int j = 0; j < ds.Tables[ds.Tables[iTable].TableName].Columns.Count; j++)
                         {
@@ -707,21 +706,21 @@ namespace WebApi.Entity
                             if (j < ds.Tables[ds.Tables[iTable].TableName].Columns.Count - 1)
                             {
                                 sb.Append(COMILLADOBLE);
-                                sb.Append(ds.Tables[0].Columns[j].ColumnName.ToString());
+                                sb.Append(ds.Tables[0].Columns[j].ColumnName);
                                 sb.Append(COMILLADOBLE);
-                                sb.Append(":");
+                                sb.Append(':');
                                 sb.Append(COMILLADOBLE);
                                 sb.Append(ds.Tables[0].Rows[i][j].ToString());
                                 sb.Append(COMILLADOBLE);
-                                sb.Append(",");
+                                sb.Append(',');
                             }
 
                             if (j == ds.Tables[ds.Tables[iTable].TableName].Columns.Count - 1)
                             {
                                 sb.Append(COMILLADOBLE);
-                                sb.Append(ds.Tables[ds.Tables[iTable].TableName].Columns[j].ColumnName.ToString());
+                                sb.Append(ds.Tables[ds.Tables[iTable].TableName].Columns[j].ColumnName);
                                 sb.Append(COMILLADOBLE);
-                                sb.Append(":");
+                                sb.Append(':');
 
                                 bNumero = decimal.TryParse(ds.Tables[ds.Tables[iTable].TableName].Rows[i][j].ToString(), out Numero);
 
@@ -739,7 +738,7 @@ namespace WebApi.Entity
                         }
                         if (i == ds.Tables[0].Rows.Count - 1)
                         {
-                            sb.Append("}");
+                            sb.Append('}');
                         }
                         else
                         {
@@ -748,11 +747,11 @@ namespace WebApi.Entity
                         sb.AppendLine();
                     }
 
-                    sb.Append("]");
+                    sb.Append(']');
                     sb.AppendLine();
                 }
 
-                sb.Append("}");
+                sb.Append('}');
                 sb.AppendLine();
             }
             catch (Exception ex)
@@ -764,7 +763,7 @@ namespace WebApi.Entity
 
         public static List<dynamic> ToDynamic(DataTable dt)
         {
-            List<dynamic> dynamicDt = new List<dynamic>();
+            List<dynamic> dynamicDt = [];
             try
             {
                 foreach (DataRow row in dt.Rows)
@@ -788,7 +787,7 @@ namespace WebApi.Entity
         public static DataSet ToDataset(string xml)
         {
             StringReader r;
-            DataSet ds = new DataSet();
+            DataSet ds = new ();
             try
             {
                 r = new StringReader(xml);
@@ -823,7 +822,7 @@ namespace WebApi.Entity
         {
             var type = typeof(T);
             var sortProperty = type.GetProperty(property);
-            List<dynamic> lReturn = new List<dynamic>();
+            List<dynamic> lReturn = [];
             try
             {
                 lReturn = input.OrderBy(p => sortProperty.GetValue(p, null)).ToList();
@@ -837,7 +836,7 @@ namespace WebApi.Entity
 
         public static List<dynamic> Sort(List<dynamic> input, string property)
         {
-            List<dynamic> lReturn = new List<dynamic>();
+            List<dynamic> lReturn = [];
             try
             {
                 // Se necesita quitar el ordenamiento porque no es compatible.
@@ -865,7 +864,7 @@ namespace WebApi.Entity
         /// <returns></returns>
         public static DataTable Sort(DataTable dt, string Orden)
         {
-            DataView dv = new DataView();
+            DataView dv = new ();
             try
             {
                 if (dt.Rows.Count == 0)
@@ -910,7 +909,7 @@ namespace WebApi.Entity
         public static List<string> EntityPropertyToList<T>(T TEntity) 
         {
             PropertyInfo[] initProperties = typeof(T).GetProperties();
-            List<string> lPropertyName = new List<string>();
+            List<string> lPropertyName = new ();
 
             foreach (PropertyInfo p in initProperties) {
                 lPropertyName.Add(p.Name);
@@ -939,7 +938,7 @@ namespace WebApi.Entity
         /// </exception>
         public static TFinal Merge<TInit, TFinal>(TInit obj1) where TFinal : new()
         {
-            TFinal result = new TFinal();
+            TFinal result = new ();
 
             // Obtener las propiedades de la clase inicial
             PropertyInfo[] initProperties = typeof(TInit).GetProperties();
@@ -975,7 +974,7 @@ namespace WebApi.Entity
                                 }
                                 if (initProperty.PropertyType.Name == "DateOnly" && finalProperty.PropertyType.Name == "String")
                                 {
-                                    StringBuilder sb = new StringBuilder();
+                                    StringBuilder sb = new ();
                                     sb.Append((((DateOnly)value)).Year.ToString());
                                     sb.Append((((DateOnly)value)).Month.ToString());
                                     sb.Append((((DateOnly)value).Day.ToString()));
@@ -1001,11 +1000,15 @@ namespace WebApi.Entity
 
         public static string NombreDelMes(int iMes, string sCultura = "es-AR")
         {
-            string sRta = string.Empty;
+            StringBuilder sbNombreMes = new();
+            string sRta;
             try
             {
                 sRta = CultureInfo.GetCultureInfo(sCultura).DateTimeFormat.GetMonthName(iMes);
-                return sRta.First().ToString().ToUpper() + sRta.Substring(1);
+                sbNombreMes.Append(CultureInfo.GetCultureInfo(sCultura).DateTimeFormat.GetMonthName(iMes));
+                sbNombreMes.Append(sRta.First().ToString().ToUpper());
+                sbNombreMes.Append(sRta.Substring(1));
+                return sbNombreMes.ToString();
             }
             catch (Exception ex)
             {

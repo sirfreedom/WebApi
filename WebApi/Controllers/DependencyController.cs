@@ -8,6 +8,7 @@ using System;
 using WebApi.Entity;
 using WebApi.Biz;
 using WebApi.Model;
+using System.Threading.Tasks;
 
 
 namespace WebApi.Controllers
@@ -36,25 +37,25 @@ namespace WebApi.Controllers
 		/// </returns>
 		[HttpGet("List")]
 		[AllowAnonymous]
-		public ActionResult List()
+		public async Task<ActionResult> List()
 		{
-		DependencyBiz oDependencyBiz = new DependencyBiz(_ConnectionString); 
-		List<Dependency> lDependency;
-		try 
-		{
-			lDependency = oDependencyBiz.List();
-		}
-		catch (WebException ex) 
-		{
-			_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
-			return ValidationProblem("Error", "Get", 500, ex.Message);
-		}
-		catch (Exception ex)
-		{
-			_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
-			return ValidationProblem("Error", "Get ", 500, ex.Message);
-		}
-		return Ok(new {  dependencies = lDependency }); //OK 200);
+			DependencyBiz oDependencyBiz = new DependencyBiz(_ConnectionString);
+			List<Dependency> lDependency;
+			try
+			{
+				lDependency = await Task.Run(() => oDependencyBiz.List());
+			}
+			catch (WebException ex)
+			{
+				_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+				return ValidationProblem("Error", "List", 500, ex.Message);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+				return ValidationProblem("Error", "List", 500, ex.Message);
+			}
+			return Ok(new { dependencies = lDependency }); //OK 200);
 		}
 
 
@@ -69,13 +70,13 @@ namespace WebApi.Controllers
 		/// </returns>
 		[HttpGet("Get")]
 		[AllowAnonymous]
-		public ActionResult Get(int Id) 
+		public async Task<ActionResult> Get(int Id) 
 		{
 		DependencyBiz oDependencyBiz = new DependencyBiz(_ConnectionString); 
 		Dependency oDependency = new Dependency();
 		try
 		{
-			oDependency = oDependencyBiz.Get(Id);
+			oDependency = await Task.Run(() => oDependencyBiz.Get(Id));
 		}
 		catch (WebException ex) 
 		{
@@ -85,7 +86,7 @@ namespace WebApi.Controllers
 		catch (Exception ex)
 		{
 			_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
-			return ValidationProblem("Error", "Get ", 500, ex.Message);
+			return ValidationProblem("Error", "Get", 500, ex.Message);
 		}
 		return Ok(new {  dependency = oDependency}); //OK 200);
 		}
@@ -102,22 +103,22 @@ namespace WebApi.Controllers
 		/// </returns>
 		[HttpPut("Update")]
         [Authorize(Policy = "Admin")]
-        public ActionResult Update([FromBody] Dependency dependency)
+        public async Task<ActionResult> Update([FromBody] Dependency dependency)
 		{
 		DependencyBiz oDependencyBiz = new DependencyBiz(_ConnectionString); 
 		try
 		{
-			oDependencyBiz.Update(dependency); 
+			await Task.Run(() =>oDependencyBiz.Update(dependency)); 
 		}
 		catch (WebException ex) 
 		{
 			_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
-			return ValidationProblem("Error", "Get", 500, ex.Message);
+			return ValidationProblem("Error", "Update", 500, ex.Message);
 		}
 		catch (Exception ex)
 		{
 			_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
-			return ValidationProblem("Error", "Get ", 500, ex.Message);
+			return ValidationProblem("Error", "Update", 500, ex.Message);
 		}
 		return Ok(); //OK 200
 		}
@@ -133,25 +134,25 @@ namespace WebApi.Controllers
 		/// devuelve un status: 201/204 si inserto correctamente 
 		/// </returns>
 		[HttpPost("Insert")]
-        [Authorize(Policy = "Admin")]
-        public ActionResult Insert([FromBody] DependencyModel dependencyModel)
-		{
+		[Authorize(Policy = "Admin")]
+		public async Task<ActionResult> Insert([FromBody] DependencyModel dependencyModel)
+		{ 
 		DependencyBiz oDependencyBiz = new DependencyBiz(_ConnectionString);
 			Dependency oDependency;
 		try
 		{
 			oDependency = Dependency.Merge<DependencyModel, Dependency>(dependencyModel);
-			oDependency = oDependencyBiz.Insert(oDependency);
+			oDependency = await Task.Run(() => oDependencyBiz.Insert(oDependency));
 		}
 		catch (WebException ex) 
 		{
 			_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
-			return ValidationProblem("Error", "Get", 500, ex.Message);
+			return ValidationProblem("Error", "Insert", 500, ex.Message);
 		}
 		catch (Exception ex)
 		{
 			_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
-			return ValidationProblem("Error", "Get ", 500, ex.Message);
+			return ValidationProblem("Error", "Insert", 500, ex.Message);
 		}
 		return Created("dependency",oDependency); //OK 201/204
 		}
@@ -167,25 +168,25 @@ namespace WebApi.Controllers
 		/// devuelve Status: 200 en caso de haber eliminado correctamente 
 		/// </returns>
 		[HttpDelete("Delete")]
-        [Authorize(Policy = "SuperAdmin")]
-        public ActionResult Delete(int Id)
+		[Authorize(Policy = "SuperAdmin")]
+		public async Task<ActionResult> Delete(int Id)
 		{
-		DependencyBiz oDependencyBiz = new DependencyBiz(_ConnectionString); 
-		try
-		{
-			oDependencyBiz.Delete(Id);
-		}
-		catch (WebException ex) 
-		{
-			_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
-			return ValidationProblem("Error", "Get", 500, ex.Message);
-		}
-		catch (Exception ex)
-		{
-			_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
-			return ValidationProblem("Error", "Get ", 500, ex.Message);
-		}
-		return Ok(); //OK 200
+			DependencyBiz oDependencyBiz = new DependencyBiz(_ConnectionString);
+			try
+			{
+                await Task.Run(() => oDependencyBiz.Delete(Id));
+			}
+			catch (WebException ex)
+			{
+				_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+				return ValidationProblem("Error", "Delete", 500, ex.Message);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+				return ValidationProblem("Error", "Delete", 500, ex.Message);
+			}
+			return Ok(); //OK 200
 		}
 
 
@@ -197,22 +198,22 @@ namespace WebApi.Controllers
 		/// <returns></returns>
         [HttpPatch("Disabled")]
         [Authorize(Policy = "Admin")]
-        public ActionResult Disabled(int Id, bool Disabled)
+        public async Task<ActionResult> Disabled(int Id, bool Disabled)
         {
             DependencyBiz oDependencyBiz = new DependencyBiz(_ConnectionString);
             try
             {
-                oDependencyBiz.Disabled(Id, Disabled);
+                await Task.Run(() => oDependencyBiz.Disabled(Id, Disabled));
             }
             catch (WebException ex)
             {
                 _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
-                return ValidationProblem("Error", "Get", 500, ex.Message);
+                return ValidationProblem("Error", "Disabled", 500, ex.Message);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
-                return ValidationProblem("Error", "Get ", 500, ex.Message);
+                return ValidationProblem("Error", "Disabled", 500, ex.Message);
             }
             return Ok(); //OK 200
         }
