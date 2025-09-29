@@ -2,50 +2,55 @@
 using System.Collections.Concurrent;
 using System.Data;
 using System.Data.SqlClient;
-
+using System.Threading;
 /*
     Esta es la implementacion pura del patron Object Pooling orientado a limitar la cantidad de conexiones abiertas 
 */
 namespace WebApi.Data
 {
 
-    public class ConnectionCommandPool
+    public class ConnectionCommandPool : IDisposable
     {
         private readonly string _connectionString;
-        private readonly ConcurrentBag<SqlConnection> _connectionPool;
-        private readonly ConcurrentBag<SqlCommand> _commandPool;
+        private readonly ConcurrentBag<SqlConnection> _connectionPool = new();
+        private readonly ConcurrentBag<SqlCommand> _commandPool = new();
         private readonly int _maxPoolSize;
+        private int _currentConnectionCount = 0;
+        private bool _disposed = false;
 
         public ConnectionCommandPool(string connectionString, int maxPoolSize = 10)
         {
             _connectionString = connectionString;
             _maxPoolSize = maxPoolSize;
-            _connectionPool = new ConcurrentBag<SqlConnection>();
-            _commandPool = new ConcurrentBag<SqlCommand>();
         }
 
         public SqlConnection GetConnection()
         {
-            if (_connectionPool.TryTake(out SqlConnection connection))
+            if (_disposed) throw new ObjectDisposedException(nameof(ConnectionCommandPool));
+
+            if (_connectionPool.TryTake(out var connection))
             {
                 if (connection.State == ConnectionState.Closed)
+                    connection.Open();
+                else if (connection.State == ConnectionState.Broken)
                 {
-                    connection.Open(); // Reopen if closed
+                    connection.Dispose();
+                    Interlocked.Decrement(ref _currentConnectionCount);
+                    return GetConnection(); // Retry
                 }
                 return connection;
             }
             else
             {
-                // Create a new connection if pool is empty or max size not reached
-                if (_connectionPool.Count <= _maxPoolSize)
+                if (Interlocked.Increment(ref _currentConnectionCount) <= _maxPoolSize)
                 {
-                    SqlConnection newConnection = new SqlConnection(_connectionString);
+                    var newConnection = new SqlConnection(_connectionString);
                     newConnection.Open();
                     return newConnection;
                 }
                 else
                 {
-                    // Optionally, wait or throw an exception if pool is exhausted
+                    Interlocked.Decrement(ref _currentConnectionCount);
                     throw new InvalidOperationException("Connection pool exhausted.");
                 }
             }
@@ -53,49 +58,67 @@ namespace WebApi.Data
 
         public void ReturnConnection(SqlConnection connection)
         {
-            if (connection != null && _connectionPool.Count < _maxPoolSize)
+            if (_disposed) throw new ObjectDisposedException(nameof(ConnectionCommandPool));
+
+            if (connection == null) return;
+
+            if (connection.State == ConnectionState.Open)
             {
-                _connectionPool.Add(connection);
+                // Opcional: rollback transacciones abiertas aquí
+                if (_connectionPool.Count < _maxPoolSize)
+                {
+                    _connectionPool.Add(connection);
+                    return;
+                }
             }
-            else
-            {
-                connection?.Dispose(); // Dispose if pool is full or connection is invalid
-            }
+
+            connection.Dispose();
+            Interlocked.Decrement(ref _currentConnectionCount);
         }
 
         public SqlCommand GetCommand()
         {
-            if (_commandPool.TryTake(out SqlCommand command))
+            if (_disposed) throw new ObjectDisposedException(nameof(ConnectionCommandPool));
+
+            if (_commandPool.TryTake(out var command))
             {
                 return command;
             }
             else
             {
-                // Create a new command if pool is empty
                 return new SqlCommand();
             }
         }
 
         public void ReturnCommand(SqlCommand command)
         {
-            if (command != null)
-            {
-                command.Parameters.Clear(); // Clear parameters for reuse
-                command.Connection = null; // Detach connection
-                _commandPool.Add(command);
-            }
+            if (_disposed) throw new ObjectDisposedException(nameof(ConnectionCommandPool));
+
+            if (command == null) return;
+
+            command.Parameters.Clear();
+            command.Connection = null;
+            _commandPool.Add(command);
         }
 
         public void Dispose()
         {
-            while (_connectionPool.TryTake(out SqlConnection connection))
+            if (_disposed) return;
+
+            while (_connectionPool.TryTake(out var connection))
             {
                 connection.Dispose();
             }
-            while (_commandPool.TryTake(out SqlCommand command))
+            while (_commandPool.TryTake(out var command))
             {
                 command.Dispose();
             }
+            _disposed = true;
         }
     }
+
+
+
+
+
 }
