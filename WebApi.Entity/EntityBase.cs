@@ -12,6 +12,8 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization.Json;
 using System.Text;
+using System.Text.Json;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace WebApi.Entity
 {
@@ -675,92 +677,6 @@ namespace WebApi.Entity
             return lProperty;
         }
 
-        public static string ToJson(DataSet ds)
-        {
-            const string COMILLADOBLE = "\"";
-            StringBuilder sb = new ();
-            sb.Append('{');
-            sb.AppendLine();
-            try
-            {
-
-                for (int iTable = 0; iTable < ds.Tables.Count; iTable++)
-                {
-                    sb.Append(COMILLADOBLE);
-                    sb.Append(ds.Tables[iTable].TableName);
-                    sb.Append(COMILLADOBLE);
-                    sb.Append(':');
-                    sb.Append('[');
-                    sb.AppendLine();
-
-                    for (int i = 0; i < ds.Tables[ds.Tables[iTable].TableName].Rows.Count; i++)
-                    {
-                        decimal Numero = 0;
-                        bool bNumero;
-
-                        sb.Append('{');
-
-                        for (int j = 0; j < ds.Tables[ds.Tables[iTable].TableName].Columns.Count; j++)
-                        {
-
-                            if (j < ds.Tables[ds.Tables[iTable].TableName].Columns.Count - 1)
-                            {
-                                sb.Append(COMILLADOBLE);
-                                sb.Append(ds.Tables[0].Columns[j].ColumnName);
-                                sb.Append(COMILLADOBLE);
-                                sb.Append(':');
-                                sb.Append(COMILLADOBLE);
-                                sb.Append(ds.Tables[0].Rows[i][j].ToString());
-                                sb.Append(COMILLADOBLE);
-                                sb.Append(',');
-                            }
-
-                            if (j == ds.Tables[ds.Tables[iTable].TableName].Columns.Count - 1)
-                            {
-                                sb.Append(COMILLADOBLE);
-                                sb.Append(ds.Tables[ds.Tables[iTable].TableName].Columns[j].ColumnName);
-                                sb.Append(COMILLADOBLE);
-                                sb.Append(':');
-
-                                bNumero = decimal.TryParse(ds.Tables[ds.Tables[iTable].TableName].Rows[i][j].ToString(), out Numero);
-
-                                if (bNumero)
-                                {
-                                    sb.Append(ds.Tables[ds.Tables[iTable].TableName].Rows[i][j].ToString());
-                                }
-                                else
-                                {
-                                    sb.Append(COMILLADOBLE);
-                                    sb.Append(ds.Tables[ds.Tables[iTable].TableName].Rows[i][j].ToString());
-                                    sb.Append(COMILLADOBLE);
-                                }
-                            }
-                        }
-                        if (i == ds.Tables[0].Rows.Count - 1)
-                        {
-                            sb.Append('}');
-                        }
-                        else
-                        {
-                            sb.Append("},");
-                        }
-                        sb.AppendLine();
-                    }
-
-                    sb.Append(']');
-                    sb.AppendLine();
-                }
-
-                sb.Append('}');
-                sb.AppendLine();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-            return sb.ToString();
-        }
-
         public static List<dynamic> ToDynamic(DataTable dt)
         {
             List<dynamic> dynamicDt = [];
@@ -892,6 +808,140 @@ namespace WebApi.Entity
 
         #endregion
 
+
+        #region ToJson
+
+        /// <summary>
+        /// ToJson : Funcion que convierte un dataset en un json
+        /// </summary>
+        /// <param name="ds">
+        /// convierte un dataset en un json
+        /// </param>
+        /// <returns>
+        /// devuelve un string con el json
+        /// </returns>
+        /// <exception cref="Exception">
+        /// envia una excepcion en caso de error
+        /// </exception>
+        public static string ToJson(DataSet ds)
+        {
+            const string COMILLADOBLE = "\"";
+            StringBuilder sb = new();
+            sb.Append('{');
+            sb.AppendLine();
+            try
+            {
+
+                for (int iTable = 0; iTable < ds.Tables.Count; iTable++)
+                {
+                    sb.Append(COMILLADOBLE);
+                    sb.Append(ds.Tables[iTable].TableName);
+                    sb.Append(COMILLADOBLE);
+                    sb.Append(':');
+                    sb.Append('[');
+                    sb.AppendLine();
+
+                    for (int i = 0; i < ds.Tables[ds.Tables[iTable].TableName].Rows.Count; i++)
+                    {
+                        decimal Numero = 0;
+                        bool bNumero;
+
+                        sb.Append('{');
+
+                        for (int j = 0; j < ds.Tables[ds.Tables[iTable].TableName].Columns.Count; j++)
+                        {
+
+                            if (j < ds.Tables[ds.Tables[iTable].TableName].Columns.Count - 1)
+                            {
+                                sb.Append(COMILLADOBLE);
+                                sb.Append(ds.Tables[0].Columns[j].ColumnName);
+                                sb.Append(COMILLADOBLE);
+                                sb.Append(':');
+                                sb.Append(COMILLADOBLE);
+                                sb.Append(ds.Tables[0].Rows[i][j].ToString());
+                                sb.Append(COMILLADOBLE);
+                                sb.Append(',');
+                            }
+
+                            if (j == ds.Tables[ds.Tables[iTable].TableName].Columns.Count - 1)
+                            {
+                                sb.Append(COMILLADOBLE);
+                                sb.Append(ds.Tables[ds.Tables[iTable].TableName].Columns[j].ColumnName);
+                                sb.Append(COMILLADOBLE);
+                                sb.Append(':');
+
+                                bNumero = decimal.TryParse(ds.Tables[ds.Tables[iTable].TableName].Rows[i][j].ToString(), out Numero);
+
+                                if (bNumero)
+                                {
+                                    sb.Append(ds.Tables[ds.Tables[iTable].TableName].Rows[i][j].ToString());
+                                }
+                                else
+                                {
+                                    sb.Append(COMILLADOBLE);
+                                    sb.Append(ds.Tables[ds.Tables[iTable].TableName].Rows[i][j].ToString());
+                                    sb.Append(COMILLADOBLE);
+                                }
+                            }
+                        }
+                        if (i == ds.Tables[0].Rows.Count - 1)
+                        {
+                            sb.Append('}');
+                        }
+                        else
+                        {
+                            sb.Append("},");
+                        }
+                        sb.AppendLine();
+                    }
+
+                    sb.Append(']');
+                    sb.AppendLine();
+                }
+
+                sb.Append('}');
+                sb.AppendLine();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return sb.ToString();
+        }
+
+
+        /// <summary>
+        /// ToJson : funcion que convierte una lista de entidades en un json
+        /// </summary>
+        /// <typeparam name="T">
+        /// debe determinarse el tipo de dato a serializar
+        /// </typeparam>
+        /// <param name="lista">
+        /// se debe ingresar una lista de entidades
+        /// </param>
+        /// <returns>
+        /// devuelve un json 
+        /// </returns>
+        /// <exception cref="Exception">
+        /// envia una excepcion en caso de error
+        /// </exception>
+        public static string ToJson<T>(List<T> lista)
+        {
+            JsonSerializerOptions opciones = new JsonSerializerOptions { WriteIndented = true };
+            string jsonResult = string.Empty;
+            try
+            {
+                jsonResult = JsonSerializer.Serialize(lista, opciones);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return jsonResult;
+        }
+
+        #endregion
+
         #region Util 
 
         /// <summary>
@@ -909,12 +959,18 @@ namespace WebApi.Entity
         public static List<string> EntityPropertyToList<T>(T TEntity) 
         {
             PropertyInfo[] initProperties = typeof(T).GetProperties();
-            List<string> lPropertyName = new ();
-
-            foreach (PropertyInfo p in initProperties) {
-                lPropertyName.Add(p.Name);
+            List<string> lPropertyName = [];
+            try
+            {
+                foreach (PropertyInfo p in initProperties)
+                {
+                    lPropertyName.Add(p.Name);
+                }
             }
-
+            catch (Exception ex) 
+            {
+                throw new Exception(ex.Message);
+            }
             return lPropertyName;
         }
 
