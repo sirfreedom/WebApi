@@ -13,7 +13,6 @@ using System.Reflection;
 using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Text.Json;
-using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace WebApi.Entity
 {
@@ -931,7 +930,7 @@ namespace WebApi.Entity
             string jsonResult = string.Empty;
             try
             {
-                jsonResult = JsonSerializer.Serialize(lista, opciones);
+                jsonResult = System.Text.Json.JsonSerializer.Serialize(lista, opciones);
             }
             catch (Exception ex)
             {

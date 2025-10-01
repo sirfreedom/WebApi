@@ -71,24 +71,22 @@ namespace WebApi.Controllers
 		[AllowAnonymous]
 		public ActionResult Insert([FromBody] UsuarioDependencyModel usuariodependencyModel)
 		{
-		UsuarioDependencyBiz oUsuarioDependencyBiz = new UsuarioDependencyBiz(_ConectionString); 
-		UsuarioDependency usuariodependency = new UsuarioDependency();
-		try
-		{
-			usuariodependency = UsuarioDependency.Merge<UsuarioDependencyModel, UsuarioDependency>(usuariodependencyModel);
-			oUsuarioDependencyBiz.Insert(usuariodependency);
-		}
-		catch (WebException ex) 
-		{
-			_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
-			return ValidationProblem("Error", "Get", 500, ex.Message);
-		}
-		catch (Exception ex)
-		{
-			_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
-			return ValidationProblem("Error", "Get ", 500, ex.Message);
-		}
-		return Created(); //OK 201/204
+			UsuarioDependencyBiz oUsuarioDependencyBiz = new UsuarioDependencyBiz(_ConectionString);
+			try
+			{
+				oUsuarioDependencyBiz.Insert(usuariodependencyModel.lUsuarioDependency);
+			}
+			catch (WebException ex)
+			{
+				_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+				return ValidationProblem("Error", "Get", 500, ex.Message);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+				return ValidationProblem("Error", "Get ", 500, ex.Message);
+			}
+			return Created(); //OK 201/204
 		}
 
 

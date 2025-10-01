@@ -33,28 +33,13 @@ namespace WebApi.Biz
 		}
 
 
-		public List<dynamic> Find (Dictionary<string, string> lParam)
-		{
-		UsuarioDependencyData oUsuarioDependencyData = new UsuarioDependencyData(_ConnectionString); 
-		List<dynamic> ldynamic;
-		try
-		{
-			ldynamic = oUsuarioDependencyData.Find(lParam);
-		}
-		catch (Exception) 
-		{
-			throw;
-		}
-		return ldynamic;
-		}
 
-
-		public void Insert(UsuarioDependency usuariodependency)
+		public void Insert(List<UsuarioDependency> lusuariodependency)
 		{
 		UsuarioDependencyData oUsuarioDependencyData = new UsuarioDependencyData(_ConnectionString); 
 		try
 		{
-			oUsuarioDependencyData.Insert(usuariodependency);
+			oUsuarioDependencyData.Insert(lusuariodependency);
 		}
 		catch (Exception) 
 		{

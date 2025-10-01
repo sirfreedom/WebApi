@@ -6,7 +6,7 @@ namespace WebApi.Model
 	public class UsuarioDependencyModel
 	{
 
-		List<UsuarioDependency> lUsuarioDependency { get; set; 	} 
+		public List<UsuarioDependency> lUsuarioDependency { get; set; 	} 
 
 	}
 
