@@ -31,24 +31,19 @@ namespace WebApi.Controllers
 		/// <summary>
 		/// Busca un ExamResult
 		/// </summary>
-		/// <param name="examresultFindModel">
-		/// Esta entidad permite filtrar de manera sensilla por todos los campos que contiene
-		/// Los valores que son filtrables son de tipo string. 
-		/// ESTE METODO NO SE PUEDE PROBAR CON SWAGGER, intente probarlo con Postman u otro programa
-		/// </param>
 		/// <returns>
 		/// devuelve una lista dinamica de los valores obtenidos en la base de datos, puede alterar los valores sin problemas
 		/// Esta lista dinamica, es convertible tranquilamente a un Model
 		/// </returns>
-		[HttpGet("Find")]
+		[HttpGet("List")]
 		[AllowAnonymous]
-		public async Task<ActionResult> Find ([FromBody] ExamResultFindModel examresultFindModel)
+		public async Task<ActionResult> List ()
 		{
 		ExamResultBiz oExamResultBiz = new ExamResultBiz(_ConectionString); 
-		List<dynamic> ldynamic;
+		List<ExamResult> examResults;
 		try
 		{
-                ldynamic = await Task.Run(() => oExamResultBiz.Find(ExamResult.ToDictionary<ExamResultFindModel>(examresultFindModel)));
+                examResults = await Task.Run(() => oExamResultBiz.List());
 		}
 		catch (WebException ex) 
 		{
@@ -60,7 +55,7 @@ namespace WebApi.Controllers
 			_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
 			return ValidationProblem("Error", "Get ", 500, ex.Message);
 		}
-		return Ok(new {  listexamresult = ldynamic}); //OK 200);
+		return Ok(new {  listexamresult = examResults}); //OK 200);
 		}
 
 

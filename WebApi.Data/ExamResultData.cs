@@ -15,19 +15,19 @@ namespace WebApi.Data
 			_ConnectionString = ConnectionString;
 		}
 
-		public List<dynamic> Find (Dictionary<string, string> lParam)
+		public List<ExamResult> List ()
 		{
 		IRepository<ExamResult> ExamResultRepository = new ContextSQL<ExamResult>(_ConnectionString);
-		List<dynamic> ldynamic;
+		List<ExamResult> examResults;
 		try
 		{
-			ldynamic = ExamResultRepository.Find(lParam);
+			examResults = ExamResultRepository.List();
 		}
 		catch (Exception) 
 		{
 			throw;
 		}
-		return ldynamic;
+		return examResults;
 		}
 
 

@@ -11,25 +11,24 @@ namespace WebApi.Biz
 
 		private readonly string _ConnectionString = string.Empty;
 
-
 		public ExamResultBiz (string ConnectionString)
 		{
 			_ConnectionString = ConnectionString;
 		}
 
-		public List<dynamic> Find (Dictionary<string, string> lParam)
+		public List<ExamResult> List ()
 		{
-		ExamResultData oExamResultData = new ExamResultData(_ConnectionString); 
-		List<dynamic> ldynamic;
+		ExamResultData oExamResultData = new ExamResultData(_ConnectionString);
+			List<ExamResult> examResults;
 		try
 		{
-			ldynamic = oExamResultData.Find(lParam);
+			examResults = oExamResultData.List();
 		}
 		catch (Exception) 
 		{
 			throw;
 		}
-		return ldynamic;
+		return examResults;
 		}
 
 
