@@ -25,6 +25,19 @@ namespace WebApi.Entity
 
         #region ToList
 
+        /// <summary>
+        /// ToList : convierte un datatable en un lista de un tipo de dato
+        /// </summary>
+        /// <typeparam name="T">
+        /// se debe especificar que tipo de dato se va a convertir
+        /// </typeparam>
+        /// <param name="dt">
+        /// toma un datatable como parametro
+        /// </param>
+        /// <returns>
+        /// devuelve una lista de 
+        /// </returns>
+        /// <exception cref="Exception"></exception>
         public static List<T> ToList<T>(DataTable dt)
         {
             var properties = typeof(T).GetProperties();
@@ -117,78 +130,6 @@ namespace WebApi.Entity
             {
                 throw new Exception(ex.Message);
             }
-        }
-
-        public static List<T> ToList<T>(List<dynamic> odynamic)
-        {
-            List<T> lReturn = new();
-            PropertyInfo[] TipoConcretoProperties = typeof(T).GetProperties();
-            string sTempValue;
-            try
-            {
-                foreach (dynamic item in odynamic)
-                {
-                    var oEntity = Activator.CreateInstance<T>();
-
-                    foreach (PropertyInfo p in TipoConcretoProperties)
-                    {
-                        if (p.PropertyType.Name != "Nullable" && p.PropertyType.Name.Contains("List") == false)
-                        {
-                            try
-                            {
-                                sTempValue = ((IDictionary<string, object>)item)[p.Name].ToString();
-                            }
-                            catch (KeyNotFoundException)
-                            {
-                                continue; // no existe la propiedad en la clase concreta, asi que no puede pasar el valor de la dynamic a la propiedad concreta.
-                            }
-
-                            switch (p.PropertyType.Name)
-                            {
-                                case "Decimal":
-                                    p.SetValue(oEntity, decimal.Parse(sTempValue), null);
-                                    break;
-                                case "String":
-                                    p.SetValue(oEntity, sTempValue, null); ;
-                                    break;
-                                case "Int64":
-                                    p.SetValue(oEntity, long.Parse(sTempValue), null);
-                                    break;
-                                case "Int16":
-                                    p.SetValue(oEntity, short.Parse(sTempValue), null);
-                                    break;
-                                case "Int32":
-                                    p.SetValue(oEntity, int.Parse(sTempValue), null);
-                                    break;
-                                case "Byte":
-                                    p.SetValue(oEntity, byte.Parse(sTempValue), null);
-                                    break;
-                                case "Short":
-                                    p.SetValue(oEntity, short.Parse(sTempValue), null);
-                                    break;
-                                case "Boolean":
-                                    p.SetValue(oEntity, bool.Parse(sTempValue), null);
-                                    break;
-                                case "Single":
-                                    p.SetValue(oEntity, Single.Parse(sTempValue), null);
-                                    break;
-                                case "DateTime":
-                                    p.SetValue(oEntity, DateTime.Parse(sTempValue), null);
-                                    break;
-                                default:
-                                    p.SetValue(oEntity, sTempValue, null);
-                                    break;
-                            }
-                        }
-                    }
-                    lReturn.Add(oEntity);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-            return lReturn;
         }
 
         public static T ToList<T>(string json)
@@ -675,6 +616,18 @@ namespace WebApi.Entity
             return lProperty;
         }
 
+        /// <summary>
+        /// ToDynamic : toma un datatable y devuelve un dinamic property con las propiedades en minuscula
+        /// </summary>
+        /// <param name="dt">
+        /// recibe un datatable
+        /// </param>
+        /// <returns>
+        /// devuelve una lista de propiedades dinamicas
+        /// </returns>
+        /// <exception cref="Exception">
+        /// puede devolver el error como nueva excepcion
+        /// </exception>
         public static List<dynamic> ToDynamic(DataTable dt)
         {
             List<dynamic> dynamicDt = [];
@@ -687,7 +640,7 @@ namespace WebApi.Entity
                     foreach (DataColumn column in dt.Columns)
                     {
                         var dic = (IDictionary<string, object>)dyn;
-                        dic[column.ColumnName] = row[column];
+                        dic[column.ColumnName.ToLower()] = row[column];
                     }
                 }
             }
@@ -698,6 +651,18 @@ namespace WebApi.Entity
             return dynamicDt;
         }
 
+        /// <summary>
+        /// ToDataset
+        /// </summary>
+        /// <param name="xml">
+        /// toma un xml como parametro
+        /// </param>
+        /// <returns>
+        /// convierte un xml en un dataset completo
+        /// </returns>
+        /// <exception cref="Exception">
+        /// puede hacer throw de una excepcion
+        /// </exception>
         public static DataSet ToDataset(string xml)
         {
             StringReader r;
@@ -805,7 +770,6 @@ namespace WebApi.Entity
         }
 
         #endregion
-
 
         #region ToJson
 
@@ -940,40 +904,10 @@ namespace WebApi.Entity
 
         #endregion
 
-        #region Util 
+        #region Merge 
 
         /// <summary>
-        /// EntityPropertyToList
-        /// </summary>
-        /// <typeparam name="T">
-        /// Tipo de dato de la clase
-        /// </typeparam>
-        /// <param name="TEntity">
-        /// la clase propiamente declarada
-        /// </param>
-        /// <returns>
-        /// Devuelve todas las propiedades de una clase en una lista de string
-        /// </returns>
-        public static List<string> EntityPropertyToList<T>(T TEntity) 
-        {
-            PropertyInfo[] initProperties = typeof(T).GetProperties();
-            List<string> lPropertyName = [];
-            try
-            {
-                foreach (PropertyInfo p in initProperties)
-                {
-                    lPropertyName.Add(p.Name);
-                }
-            }
-            catch (Exception ex) 
-            {
-                throw new Exception(ex.Message);
-            }
-            return lPropertyName;
-        }
-
-        /// <summary>
-        /// Merge
+        /// Merge : copia una lista de propiedades a otra que se llame igual.
         /// </summary>
         /// <typeparam name="TInit">
         /// Tipo de dato de la clase origen
@@ -992,7 +926,7 @@ namespace WebApi.Entity
         /// </exception>
         public static TFinal Merge<TInit, TFinal>(TInit obj1) where TFinal : new()
         {
-            TFinal result = new ();
+            TFinal result = new();
 
             // Obtener las propiedades de la clase inicial
             PropertyInfo[] initProperties = typeof(TInit).GetProperties();
@@ -1027,13 +961,13 @@ namespace WebApi.Entity
                                 }
                                 if (initProperty.PropertyType.Name == "DateOnly" && finalProperty.PropertyType.Name == "String")
                                 {
-                                    StringBuilder sb = new ();
+                                    StringBuilder sb = new();
                                     sb.Append((((DateOnly)value)).Year.ToString());
                                     sb.Append((((DateOnly)value)).Month.ToString());
                                     sb.Append((((DateOnly)value).Day.ToString()));
                                     finalProperty.SetValue(result, sb.ToString());
                                 }
-                                if (value != null && initProperty.PropertyType.Name == "Nullable`1" && finalProperty.PropertyType.Name == "String") 
+                                if (value != null && initProperty.PropertyType.Name == "Nullable`1" && finalProperty.PropertyType.Name == "String")
                                 {
                                     finalProperty.SetValue(result, ((DateTime)value).ToString("yyyy-MM-dd"));
                                 }
@@ -1051,6 +985,134 @@ namespace WebApi.Entity
             return result;
         }
 
+        /// <summary>
+        /// Merge dynamic to List<T>
+        /// </summary>
+        /// <typeparam name="T">
+        /// El tipo tipo es un tipo de dato establecido para ser devuelto al convertir.
+        /// </typeparam>
+        /// <param name="odynamic">
+        /// recibe una dynamic property
+        /// </param>
+        /// <returns>
+        /// devuelve una lista de entidades definidas por T
+        /// </returns>
+        /// <exception cref="Exception">
+        /// puede generar una excepcion y ser devuelta 
+        /// </exception>
+        public static List<T> Merge<T>(List<dynamic> odynamic)
+        {
+            List<T> lReturn = new();
+            PropertyInfo[] TipoConcretoProperties = typeof(T).GetProperties();
+            string sTempValue;
+            try
+            {
+                foreach (dynamic item in odynamic)
+                {
+                    var oEntity = Activator.CreateInstance<T>();
+
+                    foreach (PropertyInfo p in TipoConcretoProperties)
+                    {
+                        if (p.PropertyType.Name != "Nullable" && p.PropertyType.Name.Contains("List") == false)
+                        {
+                            try
+                            {
+                                sTempValue = ((IDictionary<string, object>)item)[p.Name].ToString();
+                            }
+                            catch (KeyNotFoundException)
+                            {
+                                continue; // no existe la propiedad en la clase concreta, asi que no puede pasar el valor de la dynamic a la propiedad concreta.
+                            }
+
+                            switch (p.PropertyType.Name)
+                            {
+                                case "Decimal":
+                                    p.SetValue(oEntity, decimal.Parse(sTempValue), null);
+                                    break;
+                                case "String":
+                                    p.SetValue(oEntity, sTempValue, null); ;
+                                    break;
+                                case "Int64":
+                                    p.SetValue(oEntity, long.Parse(sTempValue), null);
+                                    break;
+                                case "Int16":
+                                    p.SetValue(oEntity, short.Parse(sTempValue), null);
+                                    break;
+                                case "Int32":
+                                    p.SetValue(oEntity, int.Parse(sTempValue), null);
+                                    break;
+                                case "Byte":
+                                    p.SetValue(oEntity, byte.Parse(sTempValue), null);
+                                    break;
+                                case "Short":
+                                    p.SetValue(oEntity, short.Parse(sTempValue), null);
+                                    break;
+                                case "Boolean":
+                                    p.SetValue(oEntity, bool.Parse(sTempValue), null);
+                                    break;
+                                case "Single":
+                                    p.SetValue(oEntity, Single.Parse(sTempValue), null);
+                                    break;
+                                case "DateTime":
+                                    p.SetValue(oEntity, DateTime.Parse(sTempValue), null);
+                                    break;
+                                default:
+                                    p.SetValue(oEntity, sTempValue, null);
+                                    break;
+                            }
+                        }
+                    }
+                    lReturn.Add(oEntity);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return lReturn;
+        }
+
+        #endregion
+
+        #region Util 
+
+        /// <summary>
+        /// EntityPropertyToList
+        /// </summary>
+        /// <typeparam name="T">
+        /// Tipo de dato de la clase
+        /// </typeparam>
+        /// <param name="TEntity">
+        /// la clase propiamente declarada
+        /// </param>
+        /// <returns>
+        /// Devuelve todas las propiedades de una clase en una lista de string
+        /// </returns>
+        public static List<string> EntityPropertyToList<T>(T TEntity) 
+        {
+            PropertyInfo[] initProperties = typeof(T).GetProperties();
+            List<string> lPropertyName = [];
+            try
+            {
+                foreach (PropertyInfo p in initProperties)
+                {
+                    lPropertyName.Add(p.Name);
+                }
+            }
+            catch (Exception ex) 
+            {
+                throw new Exception(ex.Message);
+            }
+            return lPropertyName;
+        }
+
+        /// <summary>
+        /// NombreDelMes : determina el nombre del mes con pasarle el numero
+        /// </summary>
+        /// <param name="iMes"></param>
+        /// <param name="sCultura"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public static string NombreDelMes(int iMes, string sCultura = "es-AR")
         {
             StringBuilder sbNombreMes = new();
@@ -1068,7 +1130,6 @@ namespace WebApi.Entity
                 throw new Exception(ex.Message);
             }
         }
-
 
         /// <summary>
         /// Devuelve cantidad de dias entre dos fechas, enviandole como parametro el dia que queremos que cuente de la semanas.
@@ -1104,8 +1165,6 @@ namespace WebApi.Entity
             }
             return iCantidad;
         }
-
-
 
 
         /// <summary>

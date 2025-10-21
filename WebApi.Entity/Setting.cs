@@ -5,7 +5,6 @@ namespace WebApi.Entity
 {
 	public class Setting : EntityBase
 	{
-
 		[Required]
 		public int iddependency { get; set; }
 
