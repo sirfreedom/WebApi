@@ -36,14 +36,14 @@ namespace WebApi.Entity
                     return [];
                 }
 
-                columnNames = dt.Columns.Cast<DataColumn>().Select(c => c.ColumnName).ToList();
+                columnNames = dt.Columns.Cast<DataColumn>().Select(c => c.ColumnName.ToLower()).ToList();
                 return dt.AsEnumerable().Select(dr =>
                 {
                     var objT = Activator.CreateInstance<T>();
 
                     foreach (var p in properties)
                     {
-                        if (columnNames.Contains(p.Name) && (dr[p.Name] != DBNull.Value && p.PropertyType.Name != "Nullable"))
+                        if (columnNames.Contains(p.Name.ToLower()) && (dr[p.Name] != DBNull.Value && p.PropertyType.Name != "Nullable"))
                         {
                             switch (p.PropertyType.Name)
                             {
@@ -357,7 +357,6 @@ namespace WebApi.Entity
                                 jTableRowResult.Add(column.Name, column.Value);
                             }
                         }
-
                         jArrayResult.Add(jTableRowResult);
                     }
 
@@ -1010,13 +1009,12 @@ namespace WebApi.Entity
                         // Buscar una propiedad correspondiente en la clase final
                         foreach (PropertyInfo finalProperty in finalProperties)
                         {
-
                             if (finalProperty.GetCustomAttribute<NotMappedAttribute>() != null)
                             {
                                 continue; // Omitir esta propiedad
                             }
 
-                            if (finalProperty.Name == initProperty.Name && finalProperty.CanWrite)
+                            if (finalProperty.Name.ToLower() == initProperty.Name.ToLower() && finalProperty.CanWrite)
                             {
                                 // Asignar el valor si no es null
                                 if (value != null && initProperty.PropertyType.Name == finalProperty.PropertyType.Name)

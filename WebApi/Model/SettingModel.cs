@@ -32,6 +32,6 @@ namespace WebApi.Model
 
         [Required]
         [Range(1, 60, ErrorMessage = "El valor debe estar entre 1 y 60.")]
-        public int TimeInMinutes { get; set; }
+        public int timeinminutes { get; set; }
     }
 }
