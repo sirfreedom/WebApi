@@ -33,6 +33,12 @@ namespace WebApi.Entity
         public string preinstructiontitle { get; set; }
 		
         public string preinstruction { get; set; }
+
+        [Required]
+        [Range(1, 60, ErrorMessage = "El valor debe estar entre 1 y 60.")]
+        public int TimeInMinutes { get; set; }
+
+
 	}
 
 }
