@@ -54,43 +54,7 @@ namespace WebApi.Controllers
 				_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
 				return ValidationProblem("Error", "Get ", 500, ex.Message);
 			}
-			return Ok(new { BestProducts = lBestProduct }); //OK 200
-        }
-
-
-		/// <summary>
-		/// Busca un Product
-		/// </summary>
-		/// <param name="bestproductFindModel">
-		/// Esta entidad permite filtrar de manera sensilla por todos los campos que contiene
-		/// Los valores que son filtrables son de tipo string. 
-		/// ESTE METODO NO SE PUEDE PROBAR CON SWAGGER, intente probarlo con Postman u otro programa
-		/// </param>
-		/// <returns>
-		/// devuelve una lista dinamica de los valores obtenidos en la base de datos, puede alterar los valores sin problemas
-		/// Esta lista dinamica, es convertible tranquilamente a un Model
-		/// </returns>
-		[HttpGet("Find")]
-		[AllowAnonymous]
-		public async Task<ActionResult> Find([FromBody] BestProductFindModel bestproductFindModel)
-		{
-			BestProductBiz oBestProductBiz = new BestProductBiz(_ConectionString);
-			List<dynamic> ldynamic;
-			try
-			{
-				ldynamic = await Task.Run(() => oBestProductBiz.Find(BestProduct.ToDictionary<BestProductFindModel>(bestproductFindModel)));
-            }
-			catch (WebException ex)
-			{
-				_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
-				return ValidationProblem("Error", "Get", 500, ex.Message);
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
-				return ValidationProblem("Error", "Get ", 500, ex.Message);
-			}
-			return Ok(new { BestProducts = ldynamic });
+			return Ok(new { listbestproduct = lBestProduct }); //OK 200
         }
 
 
@@ -108,7 +72,7 @@ namespace WebApi.Controllers
 		public async Task<ActionResult> Get(int Id)
 		{
 			BestProductBiz oProductBiz = new BestProductBiz(_ConectionString);
-			BestProduct oBestProduct = new BestProduct();
+			BestProduct oBestProduct;
 			try
 			{
 				oBestProduct = await Task.Run(() => oProductBiz.Get(Id));
@@ -159,16 +123,16 @@ namespace WebApi.Controllers
 		}
 
 
-		/// <summary>
-		/// Inserta BestProduct
-		/// </summary>
-		/// <param name="bestproductModel">
-		/// Inserta todos los campos de la entidad Product.
-		/// </param>
-		/// <returns>
-		/// devuelve un status: 201/204 si inserto correctamente 
-		/// </returns>
-		[HttpPost("Insert")]
+        /// <summary>
+        /// Inserta BestProduct
+        /// </summary>
+        /// <param name="bestproductModel">
+        /// Inserta todos los campos de la entidad Product.
+        /// </param>
+        /// <returns>
+        /// devuelve un objeto unico del tipo BestProduct y un 201
+        /// </returns>
+        [HttpPost("Insert")]
 		[AllowAnonymous]
 		public async Task<ActionResult> Insert([FromBody] BestProductModel bestproductModel)
 		{
@@ -177,8 +141,7 @@ namespace WebApi.Controllers
 			try
 			{
 				bestproduct = BestProduct.Merge<BestProductModel, BestProduct>(bestproductModel);
-                await Task.Run(() => oBestProductBiz.Insert(bestproduct));
-				
+                bestproduct = await Task.Run(() => oBestProductBiz.Insert(bestproduct));
 			}
 			catch (WebException ex)
 			{
@@ -190,8 +153,8 @@ namespace WebApi.Controllers
 				_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
 				return ValidationProblem("Error", "Get ", 500, ex.Message);
 			}
-			return Ok(); 
-		}
+            return Ok(new { bestproduct = bestproduct }); //OK 200
+        }
 
 
 		/// <summary>

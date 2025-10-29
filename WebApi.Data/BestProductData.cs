@@ -32,22 +32,6 @@ namespace WebApi.Data
 		}
 
 
-		public List<dynamic> Find(Dictionary<string, string> lParam)
-		{
-			IRepository<BestProduct> ProductRepository = new ContextSQL<BestProduct>(_ConnectionString);
-			List<dynamic> ldynamic;
-			try
-			{
-				ldynamic = ProductRepository.Find(lParam);
-			}
-			catch (Exception)
-			{
-				throw;
-			}
-			return ldynamic;
-		}
-
-
 		public BestProduct Get(int Id)
 		{
 			IRepository<BestProduct> ProductRepository = new ContextSQL<BestProduct>(_ConnectionString);
@@ -78,17 +62,18 @@ namespace WebApi.Data
 		}
 
 
-		public void Insert(BestProduct bestproduct)
+		public BestProduct Insert(BestProduct bestproduct)
 		{
 			IRepository<BestProduct> BestProductRepository = new ContextSQL<BestProduct>(_ConnectionString);
 			try
 			{
-				BestProductRepository.Insert(bestproduct);
+				bestproduct = BestProductRepository.Insert(bestproduct);
 			}
 			catch (Exception)
 			{
 				throw;
 			}
+			return bestproduct;
 		}
 
 

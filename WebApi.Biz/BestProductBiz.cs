@@ -31,22 +31,6 @@ namespace WebApi.Biz
 		}
 
 
-		public List<dynamic> Find (Dictionary<string, string> lParam)
-		{
-		BestProductData oBestProductData = new BestProductData(_ConnectionString); 
-		List<dynamic> ldynamic;
-		try
-		{
-			ldynamic = oBestProductData.Find(lParam);
-		}
-		catch (Exception) 
-		{
-			throw;
-		}
-		return ldynamic;
-		}
-
-
 		public BestProduct Get(int Id)
 		{
 			BestProductData oBestProductData = new BestProductData(_ConnectionString);
@@ -77,17 +61,18 @@ namespace WebApi.Biz
 		}
 
 
-		public void Insert(BestProduct product)
+		public BestProduct Insert(BestProduct bestproduct)
 		{
 			BestProductData oBestProductData = new BestProductData(_ConnectionString);
-			try
+            try
 			{
-				oBestProductData.Insert(product);
+				bestproduct = oBestProductData.Insert(bestproduct);
 			}
 			catch (Exception)
 			{
 				throw;
 			}
+			return bestproduct;
 		}
 
 
