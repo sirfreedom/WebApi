@@ -54,7 +54,7 @@ namespace WebApi.Controllers
 				_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
 				return ValidationProblem("Error", "Get ", 500, ex.Message);
 			}
-			return Ok(new { CardPicture = lCardPicture }); //OK 200);
+			return Ok(new { cardpictures = lCardPicture }); //OK 200);
 		}
 
 
@@ -89,7 +89,7 @@ namespace WebApi.Controllers
 				_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
 				return ValidationProblem("Error", "Get ", 500, ex.Message);
 			}
-			return Ok(new { CardPicture = CardPicture }); //OK 200);
+			return Ok(new { cardpictures = CardPicture }); //OK 200);
 		}
 
 
