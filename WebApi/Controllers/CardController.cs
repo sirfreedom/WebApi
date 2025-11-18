@@ -105,12 +105,12 @@ namespace WebApi.Controllers
 		/// </returns>
 		[HttpDelete("Delete")]
 		[AllowAnonymous]
-		public ActionResult Delete(int Id)
+		public async Task<ActionResult> Delete(int Id)
 		{
 			CardPictureBiz oCardPictureBiz = new CardPictureBiz(_ConectionString);
 			try
 			{
-				oCardPictureBiz.Delete(Id);
+                await Task.Run(() => oCardPictureBiz.Delete(Id));
 			}
 			catch (WebException ex)
 			{
