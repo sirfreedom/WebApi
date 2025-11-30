@@ -77,7 +77,7 @@ namespace WebApi.Controllers
 		try
 		{
 			incripcion = Incripcion.Merge<IncripcionModel, Incripcion>(incripcionModel);
- 			incripcion = await Task.Run(() => oIncripcionBiz.Insert(incripcion));
+ 			await Task.Run(() => oIncripcionBiz.Insert(incripcion));
 		}
 		catch (WebException ex) 
 		{
@@ -89,7 +89,7 @@ namespace WebApi.Controllers
 			_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
 			return ValidationProblem("Error", "Get ", 500, ex.Message);
 		}
-		return Ok(new {  incripcion = incripcion}); //OK 200);
+			return Created(); //OK 201);
 		}
 
 
