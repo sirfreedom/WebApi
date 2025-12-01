@@ -6,20 +6,20 @@ using WebApi.Data;
 namespace WebApi.Biz
 {
 
-	public class IncripcionBiz
+	public class InscripcionBiz
 	{
 
 		private readonly string _ConnectionString = string.Empty;
 
-		public IncripcionBiz (string ConnectionString)
+		public InscripcionBiz (string ConnectionString)
 		{
 			_ConnectionString = ConnectionString;
 		}
 
-		public List<Incripcion> List()
+		public List<Inscripcion> List()
 		{
-			IncripcionData oIncripcionData = new IncripcionData(_ConnectionString);
-			List<Incripcion> lIncripcion;
+			InscripcionData oIncripcionData = new InscripcionData(_ConnectionString);
+			List<Inscripcion> lIncripcion;
 			try
 			{
 				lIncripcion = oIncripcionData.List();
@@ -32,12 +32,12 @@ namespace WebApi.Biz
 		}
 
 
-		public void Insert(Incripcion oIncripcion)
+		public void Insert(List<Inscripcion> Incripciones)
 		{
-			IncripcionData oIncripcionData = new IncripcionData(_ConnectionString);
+			InscripcionData oIncripcionData = new InscripcionData(_ConnectionString);
 			try
 			{
-				oIncripcionData.Insert(oIncripcion);
+				oIncripcionData.Insert(Incripciones);
 			}
 			catch (Exception)
 			{
@@ -48,7 +48,7 @@ namespace WebApi.Biz
 
 		public void Delete(int Id)
 		{
-			IncripcionData oIncripcionData = new IncripcionData(_ConnectionString);
+			InscripcionData oIncripcionData = new InscripcionData(_ConnectionString);
 			try
 			{
 				oIncripcionData.Delete(Id);

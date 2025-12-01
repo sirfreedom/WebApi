@@ -14,14 +14,14 @@ namespace WebApi.Controllers
 {
 	[ApiController]
 	[Route("api/[controller]")]
-	public class IncripcionController : Controller 
+	public class InscripcionController : Controller 
 	{
-		private readonly ILogger<IncripcionController> _logger;
+		private readonly ILogger<InscripcionController> _logger;
 		private readonly IConfiguration _configuration;
 		private readonly string _ConectionString;
 
 
-		public IncripcionController(ILogger<IncripcionController> logger, IConfiguration configuration)
+		public InscripcionController(ILogger<InscripcionController> logger, IConfiguration configuration)
 		{
 			_logger = logger;
 			_configuration = configuration;
@@ -29,17 +29,17 @@ namespace WebApi.Controllers
 		}
 
 		/// <summary>
-		/// Lista Incripcion
+		/// Lista Inscripcion
 		/// </summary>
 		/// <returns>
-		/// devuelve la lista de Incripcion. generalmente usado para combos y lugares donde no necesitarias un filtro
+		/// devuelve la lista de Inscripcion. generalmente usado para combos y lugares donde no necesitarias un filtro
 		/// </returns>
 		[HttpGet("List")]
 		[AllowAnonymous]
 		public async Task<ActionResult> List()
 		{
-			IncripcionBiz oIncripcionBiz = new IncripcionBiz(_ConectionString);
-			List<Incripcion> lIncripcion;
+			InscripcionBiz oIncripcionBiz = new InscripcionBiz(_ConectionString);
+			List<Inscripcion> lIncripcion;
 			try
 			{
 				lIncripcion = await Task.Run(() => oIncripcionBiz.List());
@@ -60,9 +60,9 @@ namespace WebApi.Controllers
 
 
 		/// <summary>
-		/// Inserta Incripcion
+		/// Inserta Inscripcion
 		/// </summary>
-		/// <param name="incripcionModel">
+		/// <param name="inscripcionModel">
 		/// Inserta todos los campos de la entidad Incripcion.
 		/// </param>
 		/// <returns>
@@ -70,14 +70,12 @@ namespace WebApi.Controllers
 		/// </returns>
 		[HttpPost("Insert")]
 		[AllowAnonymous]
-		public async Task<ActionResult> Insert([FromBody] IncripcionModel incripcionModel)
+		public async Task<ActionResult> Insert([FromBody] InscripcionModel inscripcionModel)
 		{
-		IncripcionBiz oIncripcionBiz = new IncripcionBiz(_ConectionString); 
-		Incripcion incripcion;
+		InscripcionBiz oIncripcionBiz = new InscripcionBiz(_ConectionString); 
 		try
 		{
-			incripcion = Incripcion.Merge<IncripcionModel, Incripcion>(incripcionModel);
- 			await Task.Run(() => oIncripcionBiz.Insert(incripcion));
+ 			await Task.Run(() => oIncripcionBiz.Insert(inscripcionModel.Inscripciones));
 		}
 		catch (WebException ex) 
 		{
@@ -95,7 +93,7 @@ namespace WebApi.Controllers
 
 
 		/// <summary>
-		/// Elimina un registro de  Incripcion
+		/// Elimina un registro de  Inscripcion
 		/// </summary>
 		/// <param name="Id">
 		/// El Id es la clave unica PK de la entidad Incripcion.
@@ -107,7 +105,7 @@ namespace WebApi.Controllers
 		[AllowAnonymous]
 		public ActionResult Delete(int Id)
 		{
-		IncripcionBiz oIncripcionBiz = new IncripcionBiz(_ConectionString); 
+		InscripcionBiz oIncripcionBiz = new InscripcionBiz(_ConectionString); 
 		try
 		{
 			oIncripcionBiz.Delete(Id);
