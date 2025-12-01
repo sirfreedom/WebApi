@@ -13,6 +13,7 @@ using System.Reflection;
 using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Text.Json;
+using System.Xml.Linq;
 
 namespace WebApi.Entity
 {
@@ -344,6 +345,7 @@ namespace WebApi.Entity
             }
             return dataTable;
         }
+
 
         public static DataTable ToDatatable(DataTable dt, string Condicion)
         {
@@ -1188,5 +1190,51 @@ namespace WebApi.Entity
 
         #endregion
 
+
+        #region ToXml 
+
+
+        public static string ToXml<T>(List<T> lista)
+        {
+            DataSet ds = new DataSet("ds");
+            DataTable dt = new DataTable("dt");
+            string xmlResult = string.Empty;    
+            try
+            {
+                PropertyInfo[] propiedades = typeof(T).GetProperties();
+
+                foreach (var propiedad in propiedades)
+                {
+                    dt.Columns.Add(propiedad.Name, propiedad.PropertyType);
+                }
+
+                foreach (var item in lista)
+                {
+                    var fila = dt.NewRow();
+                    foreach (var propiedad in propiedades)
+                    {
+                        fila[propiedad.Name] = propiedad.GetValue(item) ?? DBNull.Value; // Manejo de valores nulos
+                    }
+                    dt.Rows.Add(fila);
+                }
+                    
+                ds.Tables.Add(dt);
+                xmlResult = ds.GetXml();    
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return xmlResult;
+        }
+
+
+        #endregion 
+
+
+
+
     }
+
+
 }
