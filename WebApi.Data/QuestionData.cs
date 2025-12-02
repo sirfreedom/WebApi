@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Text.RegularExpressions;
 using WebApi.Entity;
@@ -71,9 +72,11 @@ namespace WebApi.Data
         {
             IRepository<Question> QuestionRepository = new ContextSQL<Question>(_ConnectionString);
             Question oQuestion;
+            DataTable dt;
             try
             {
-                 oQuestion = QuestionRepository.Insert(question);
+                 dt = QuestionRepository.Fill("Insert", question.ToDictionary());
+                 oQuestion = Question.ToList<Question>(dt).SingleOrDefault();
             }
             catch (Exception)
             {
