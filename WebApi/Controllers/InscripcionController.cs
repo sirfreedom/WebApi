@@ -58,35 +58,71 @@ namespace WebApi.Controllers
 		}
 
 
+        /// <summary>
+        /// Find 
+        /// </summary>
+        /// <param name="inscripcionFindModel">
+        /// Filtros
+        /// </param>
+        /// <returns>
+        /// Retorna las filas de Inscripcion segun los filtros enviados
+        /// </returns>
+        [HttpGet("Find")]
+        [AllowAnonymous]
+        public async Task<ActionResult> Find(InscripcionFindModel inscripcionFindModel)
+        {
+            InscripcionBiz oIncripcionBiz = new InscripcionBiz(_ConectionString);
+            List<dynamic> lIncripcion;
+			Dictionary<string, string> lParam = new Dictionary<string, string>();
+            try
+            {
+				lParam = Inscripcion.ToDictionary<InscripcionFindModel>(inscripcionFindModel);
+                lIncripcion = await Task.Run(() => oIncripcionBiz.Find(lParam));
+            }
+            catch (WebException ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get", 500, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get ", 500, ex.Message);
+            }
+            return Ok(new { incripcion = lIncripcion }); //OK 200);
+        }
 
-		/// <summary>
-		/// Inserta Inscripcion
-		/// </summary>
-		/// <param name="inscripcionModel">
-		/// Inserta todos los campos de la entidad Incripcion.
-		/// </param>
-		/// <returns>
-		/// devuelve un status: 201/204 si inserto correctamente 
-		/// </returns>
-		[HttpPost("Insert")]
+
+        /// <summary>
+        /// Inserta Inscripcion
+        /// </summary>
+        /// <param name="inscripcionModel">
+        /// Inserta todos los campos de la entidad Incripcion.
+        /// </param>
+        /// <returns>
+        /// devuelve un status: 201/204 si inserto correctamente 
+        /// </returns>
+        [HttpPost("Insert")]
 		[AllowAnonymous]
-		public async Task<ActionResult> Insert([FromBody] InscripcionModel inscripcionModel)
-		{
-		InscripcionBiz oIncripcionBiz = new InscripcionBiz(_ConectionString); 
-		try
-		{
- 			await Task.Run(() => oIncripcionBiz.Insert(inscripcionModel.Inscripciones));
-		}
-		catch (WebException ex) 
-		{
-			_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
-			return ValidationProblem("Error", "Get", 500, ex.Message);
-		}
-		catch (Exception ex)
-		{
-			_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
-			return ValidationProblem("Error", "Get ", 500, ex.Message);
-		}
+        public async Task<ActionResult> Insert([FromBody] List<InscripcionInsertModel> inscripcionModel)
+        {
+			InscripcionBiz oIncripcionBiz = new InscripcionBiz(_ConectionString);
+			string sXml = string.Empty;
+            try
+			{
+                sXml = Inscripcion.ToXml(inscripcionModel);
+                await Task.Run(() => oIncripcionBiz.Insert(sXml));
+			}
+			catch (WebException ex)
+			{
+				_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+				return ValidationProblem("Error", "Get", 500, ex.Message);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+				return ValidationProblem("Error", "Get ", 500, ex.Message);
+			}
 			return Created(); //OK 201);
 		}
 

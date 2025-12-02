@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System;
 using WebApi.Entity;
+using System.Data;
+using System.Linq;
 
 namespace WebApi.Data
 {
@@ -36,9 +38,11 @@ namespace WebApi.Data
 		{
 			IRepository<HeadSlide> HeadSlideRepository = new ContextSQL<HeadSlide>(_ConnectionString);
 			HeadSlide oHeadSlide;
+			DataTable dt;
 			try
 			{
-				oHeadSlide = HeadSlideRepository.Insert(headslide);
+				dt = HeadSlideRepository.Fill("Insert", headslide.ToDictionary());
+				oHeadSlide = HeadSlide.ToList<HeadSlide>(dt).SingleOrDefault();
 			}
 			catch (Exception)
 			{

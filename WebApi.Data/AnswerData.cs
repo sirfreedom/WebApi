@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System;
 using WebApi.Entity;
+using System.Data;
+using System.Linq;
 
 namespace WebApi.Data
 {
@@ -34,15 +36,15 @@ namespace WebApi.Data
 
 		public void Update(Answer answer)
 		{
-		IRepository<Answer> AnswerRepository = new ContextSQL<Answer>(_ConnectionString);
-		try
-		{
-			AnswerRepository.Update(answer); 
-		}
-		catch (Exception) 
-		{
-			throw;
-		}
+			IRepository<Answer> AnswerRepository = new ContextSQL<Answer>(_ConnectionString);
+			try
+			{
+				AnswerRepository.Update(answer);
+			}
+			catch (Exception)
+			{
+				throw;
+			}
 		}
 
 
@@ -50,9 +52,11 @@ namespace WebApi.Data
 		{
 			IRepository<Answer> AnswerRepository = new ContextSQL<Answer>(_ConnectionString);
 			Answer oAnswer;
+			DataTable dt;
 			try
 			{
-				oAnswer = AnswerRepository.Insert(answer);
+				dt = AnswerRepository.Fill("Insert", answer.ToDictionary());
+				oAnswer = Answer.ToList<Answer>(dt).SingleOrDefault();
 			}
 			catch (Exception)
 			{

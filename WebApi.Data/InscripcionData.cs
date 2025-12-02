@@ -32,15 +32,31 @@ namespace WebApi.Data
 		}
 
 
-		public void Insert(List<Inscripcion> Inscripciones)
+        public List<dynamic> Find(Dictionary<string,string> lParam)
+        {
+            IRepository<Inscripcion> InscripcionRepository = new ContextSQL<Inscripcion>(_ConnectionString);
+            List<dynamic> lInscripcion;
+            try
+            {
+				lInscripcion = InscripcionRepository.Find(lParam);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return lInscripcion;
+        }
+
+
+
+        public void Insert(string InscripcionXml)
 		{
 			IRepository<Inscripcion> InscripcionRepository = new ContextSQL<Inscripcion>(_ConnectionString);
 			Dictionary<string, string> lParam = new Dictionary<string, string>();
 			string sXmlInsert = string.Empty;
 			try
 			{
-				sXmlInsert = Inscripcion.ToXml<Inscripcion>(Inscripciones);
-                lParam.Add("XmlInsert", sXmlInsert);
+                lParam.Add("XmlInsert", InscripcionXml);
 				InscripcionRepository.ExecuteNonQuery("Insert", lParam);
 			}
 			catch (Exception)

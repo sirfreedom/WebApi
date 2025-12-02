@@ -32,12 +32,28 @@ namespace WebApi.Biz
 		}
 
 
-		public void Insert(List<Inscripcion> Incripciones)
+		public List<dynamic> Find(Dictionary<string,string> lParam)
+		{
+			InscripcionData oIncripcionData = new InscripcionData(_ConnectionString);
+			List<dynamic> lIncripcion;
+			try
+			{
+				lIncripcion = oIncripcionData.Find(lParam);
+			}
+			catch (Exception)
+			{
+				throw;
+			}
+			return lIncripcion;
+        }
+
+
+        public void Insert(string InscripcionXml)
 		{
 			InscripcionData oIncripcionData = new InscripcionData(_ConnectionString);
 			try
 			{
-				oIncripcionData.Insert(Incripciones);
+				oIncripcionData.Insert(InscripcionXml);
 			}
 			catch (Exception)
 			{

@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System;
 using WebApi.Entity;
+using System.Data;
+using System.Linq;
 
 namespace WebApi.Data
 {
@@ -65,9 +67,11 @@ namespace WebApi.Data
 		public BestProduct Insert(BestProduct bestproduct)
 		{
 			IRepository<BestProduct> BestProductRepository = new ContextSQL<BestProduct>(_ConnectionString);
+			DataTable dt;
 			try
 			{
-				bestproduct = BestProductRepository.Insert(bestproduct);
+				dt = BestProductRepository.Fill("Insert", bestproduct.ToDictionary());
+				bestproduct = BestProduct.ToList<BestProduct>(dt).SingleOrDefault();
 			}
 			catch (Exception)
 			{

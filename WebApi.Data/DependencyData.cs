@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System;
 using WebApi.Entity;
+using System.Data;
+using System.Linq;
 
 namespace WebApi.Data
 {
@@ -66,10 +68,12 @@ namespace WebApi.Data
 		{
 			IRepository<Dependency> DependencyRepository = new ContextSQL<Dependency>(_ConnectionString);
 			Dependency oDependency;
+			DataTable dt;
 			try
 			{
-				oDependency = DependencyRepository.Insert(dependency);
-			}
+				dt = DependencyRepository.Fill("Insert", dependency.ToDictionary());
+                oDependency = Dependency.ToList<Dependency>(dt).SingleOrDefault();
+            }
 			catch (Exception)
 			{
 				throw;
