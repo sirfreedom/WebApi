@@ -1002,7 +1002,7 @@ namespace WebApi.Entity
         /// <exception cref="Exception">
         /// puede generar una excepcion y ser devuelta 
         /// </exception>
-        public static List<T> Merge<T>(List<dynamic> odynamic)
+        public static List<T> ToList<T>(List<dynamic> odynamic)
         {
             List<T> lReturn = new();
             PropertyInfo[] TipoConcretoProperties = typeof(T).GetProperties();
