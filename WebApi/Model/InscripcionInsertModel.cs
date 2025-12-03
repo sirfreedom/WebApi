@@ -12,5 +12,7 @@ namespace WebApi.Model
 
         public string Fecha { get; set; }
 
+        public int IdTipoInscripcion { get; set; } = 0;
+
     }
 }

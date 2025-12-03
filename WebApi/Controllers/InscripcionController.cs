@@ -61,7 +61,7 @@ namespace WebApi.Controllers
         /// <summary>
         /// Find 
         /// </summary>
-        /// <param name="inscripcionFindModel">
+        /// <param name="IdTipoContacto">
         /// Filtros
         /// </param>
         /// <returns>
@@ -69,15 +69,17 @@ namespace WebApi.Controllers
         /// </returns>
         [HttpGet("Find")]
         [AllowAnonymous]
-        public async Task<ActionResult> Find(InscripcionFindModel inscripcionFindModel)
+        public async Task<ActionResult> Find(int IdTipoContacto)
         {
             InscripcionBiz oIncripcionBiz = new InscripcionBiz(_ConectionString);
             List<dynamic> lIncripcion;
-			Dictionary<string, string> lParam = new Dictionary<string, string>();
+			List<InscripcionFindModel> lIncripcionFindModel = new List<InscripcionFindModel>();
+            Dictionary<string, string> lParam = new Dictionary<string, string>();
             try
             {
-				lParam = Inscripcion.ToDictionary<InscripcionFindModel>(inscripcionFindModel);
+				lParam.Add("IdTipoContacto", IdTipoContacto.ToString());
                 lIncripcion = await Task.Run(() => oIncripcionBiz.Find(lParam));
+				lIncripcionFindModel = Inscripcion.ToList<InscripcionFindModel>(lIncripcion);
             }
             catch (WebException ex)
             {
@@ -89,7 +91,7 @@ namespace WebApi.Controllers
                 _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
                 return ValidationProblem("Error", "Get ", 500, ex.Message);
             }
-            return Ok(new { incripcion = lIncripcion }); //OK 200);
+            return Ok(new { inscripciones = lIncripcionFindModel }); //OK 200);
         }
 
 
