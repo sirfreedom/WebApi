@@ -54,7 +54,7 @@ namespace WebApi.Controllers
 				_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
 				return ValidationProblem("Error", "Get ", 500, ex.Message);
 			}
-			return Ok(new { incripcion = lIncripcion }); //OK 200);
+			return Ok(new { inscripciones = lIncripcion }); //OK 200);
 		}
 
 
