@@ -17,7 +17,7 @@ namespace WebApi.Biz
 
         public List<QuestionLevel> List(int IdDependency) 
         {
-            QuestionLevelData Serv = new QuestionLevelData(_ConnectionString);
+            QuestionLevelData Serv = new (_ConnectionString);
             List<QuestionLevel> lQuestionLevel;
             try
             {
@@ -33,7 +33,7 @@ namespace WebApi.Biz
 
         public QuestionLevel Get(int Id)
         {
-            QuestionLevelData oQuestionLevelData = new QuestionLevelData(_ConnectionString);
+            QuestionLevelData oQuestionLevelData = new (_ConnectionString);
             QuestionLevel oQuestionLevel;
             try
             {
@@ -49,7 +49,7 @@ namespace WebApi.Biz
 
         public void Update(QuestionLevel questionlevel)
         {
-            QuestionLevelData oQuestionLevelData = new QuestionLevelData(_ConnectionString);
+            QuestionLevelData oQuestionLevelData = new (_ConnectionString);
             try
             {
                 oQuestionLevelData.Update(questionlevel);
@@ -63,7 +63,7 @@ namespace WebApi.Biz
 
         public QuestionLevel Insert(QuestionLevel questionlevel)
         {
-            QuestionLevelData oQuestionLevelData = new QuestionLevelData(_ConnectionString);
+            QuestionLevelData oQuestionLevelData = new (_ConnectionString);
             QuestionLevel oQuestionLevel;
             try
             {
@@ -79,7 +79,7 @@ namespace WebApi.Biz
 
         public void Delete(int Id)
         {
-            QuestionLevelData oQuestionLevelData = new QuestionLevelData(_ConnectionString);
+            QuestionLevelData oQuestionLevelData = new (_ConnectionString);
             try
             {
                 oQuestionLevelData.Delete(Id);
@@ -93,7 +93,7 @@ namespace WebApi.Biz
 
         public void Disabled(int Id, bool Disabled)
         {
-            QuestionLevelData oQuestionLevelData = new QuestionLevelData(_ConnectionString);
+            QuestionLevelData oQuestionLevelData = new (_ConnectionString);
             try
             {
                 oQuestionLevelData.Disabled(Id, Disabled);

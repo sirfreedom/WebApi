@@ -18,7 +18,7 @@ namespace WebApi.Biz
 
 		public List<HeadSlide> List()
 		{
-			HeadSlideData oHeadSlideData = new HeadSlideData(_ConnectionString);
+			HeadSlideData oHeadSlideData = new (_ConnectionString);
 			List<HeadSlide> lHeadSlide;
 			try
 			{
@@ -34,7 +34,7 @@ namespace WebApi.Biz
 
 		public HeadSlide Insert(HeadSlide headslide)
 		{
-			HeadSlideData oHeadSlideData = new HeadSlideData(_ConnectionString);
+			HeadSlideData oHeadSlideData = new (_ConnectionString);
 			HeadSlide oHeadSlide;
 			try
 			{
@@ -50,7 +50,7 @@ namespace WebApi.Biz
 
 		public void Delete(int Id)
 		{
-			HeadSlideData oHeadSlideData = new HeadSlideData(_ConnectionString);
+			HeadSlideData oHeadSlideData = new (_ConnectionString);
 			try
 			{
 				oHeadSlideData.Delete(Id);

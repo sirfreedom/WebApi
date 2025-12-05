@@ -18,7 +18,7 @@ namespace WebApi.Biz
 
 		public List<Inscripcion> List()
 		{
-			InscripcionData oIncripcionData = new InscripcionData(_ConnectionString);
+			InscripcionData oIncripcionData = new (_ConnectionString);
 			List<Inscripcion> lIncripcion;
 			try
 			{
@@ -34,7 +34,7 @@ namespace WebApi.Biz
 
 		public List<dynamic> Find(Dictionary<string,string> lParam)
 		{
-			InscripcionData oIncripcionData = new InscripcionData(_ConnectionString);
+			InscripcionData oIncripcionData = new (_ConnectionString);
 			List<dynamic> lIncripcion;
 			try
 			{
@@ -50,7 +50,7 @@ namespace WebApi.Biz
 
         public void Insert(string InscripcionXml)
 		{
-			InscripcionData oIncripcionData = new InscripcionData(_ConnectionString);
+			InscripcionData oIncripcionData = new (_ConnectionString);
 			try
 			{
 				oIncripcionData.Insert(InscripcionXml);
@@ -64,7 +64,7 @@ namespace WebApi.Biz
 
 		public void Delete(int Id)
 		{
-			InscripcionData oIncripcionData = new InscripcionData(_ConnectionString);
+			InscripcionData oIncripcionData = new (_ConnectionString);
 			try
 			{
 				oIncripcionData.Delete(Id);

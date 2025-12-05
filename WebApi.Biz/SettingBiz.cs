@@ -17,13 +17,13 @@ namespace WebApi.Biz
 
         public Setting GetByDependency(int IdDependency) 
         {
-            SettingData Serv = new SettingData(_ConnectionString);
+            SettingData Serv = new (_ConnectionString);
             return Serv.GetByDependency(IdDependency);
         }
 
         public List<dynamic> Find(Dictionary<string, string> lParam)
         {
-            SettingData oSettingData = new SettingData(_ConnectionString);
+            SettingData oSettingData = new (_ConnectionString);
             List<dynamic> ldynamic;
             try
             {
@@ -39,7 +39,7 @@ namespace WebApi.Biz
 
         public Setting Get(int Id)
         {
-            SettingData oSettingData = new SettingData(_ConnectionString);
+            SettingData oSettingData = new (_ConnectionString);
             Setting oSetting;
             try
             {
@@ -55,7 +55,7 @@ namespace WebApi.Biz
 
         public void Update(Setting setting)
         {
-            SettingData oSettingData = new SettingData(_ConnectionString);
+            SettingData oSettingData = new (_ConnectionString);
             try
             {
                 oSettingData.Update(setting);
@@ -69,7 +69,7 @@ namespace WebApi.Biz
 
         public Setting Insert(Setting setting)
         {
-            SettingData oSettingData = new SettingData(_ConnectionString);
+            SettingData oSettingData = new (_ConnectionString);
             Setting oSetting;
             try
             {
@@ -85,7 +85,7 @@ namespace WebApi.Biz
 
         public void Delete(int Id)
         {
-            SettingData oSettingData = new SettingData(_ConnectionString);
+            SettingData oSettingData = new (_ConnectionString);
             try
             {
                 oSettingData.Delete(Id);
@@ -98,7 +98,7 @@ namespace WebApi.Biz
 
         public void Disabled(int Id,bool Disabled)
         {
-            SettingData oSettingData = new SettingData(_ConnectionString);
+            SettingData oSettingData = new (_ConnectionString);
             try
             {
                 oSettingData.Disabled(Id,Disabled);

@@ -38,7 +38,7 @@ namespace WebApi.Controllers
 		[AllowAnonymous]
 		public async Task<ActionResult> List()
 		{
-			InscripcionBiz oIncripcionBiz = new InscripcionBiz(_ConectionString);
+			InscripcionBiz oIncripcionBiz = new (_ConectionString);
 			List<Inscripcion> lIncripcion;
 			try
 			{
@@ -61,23 +61,46 @@ namespace WebApi.Controllers
         /// <summary>
         /// Find 
         /// </summary>
-        /// <param name="IdTipoContacto">
-        /// Filtros
+        /// <param name="IdTipoContacto"></param>
+        /// <param name="Carrera"></param>
+        /// <param name="DDIni">
+        /// day inicio
         /// </param>
-        /// <returns>
-        /// Retorna las filas de Inscripcion segun los filtros enviados
-        /// </returns>
+        /// <param name="MMIni">
+        /// month inicio
+        /// </param>
+        /// <param name="YYini">
+        /// year inicio
+        /// </param>
+        /// <param name="DDfin">
+		/// day fin
+		/// </param>
+        /// <param name="MMfin">
+		/// month fin
+		/// </param>
+        /// <param name="YYfin">
+		/// year fin
+		/// </param>
+        /// <returns></returns>
         [HttpGet("Find")]
         [AllowAnonymous]
-        public async Task<ActionResult> Find(int IdTipoContacto)
+        public async Task<ActionResult> Find(int IdTipoContacto, string Carrera = "", int DDIni = 0, int MMIni= 0,int YYini=0,int DDfin=0,int MMfin = 0,int YYfin = 0)
         {
-            InscripcionBiz oIncripcionBiz = new InscripcionBiz(_ConectionString);
+            InscripcionBiz oIncripcionBiz = new (_ConectionString);
             List<dynamic> lIncripcion;
 			List<InscripcionFindModel> lIncripcionFindModel = new List<InscripcionFindModel>();
             Dictionary<string, string> lParam = new Dictionary<string, string>();
             try
             {
 				lParam.Add("IdTipoContacto", IdTipoContacto.ToString());
+                lParam.Add("Carrera", Carrera);
+                lParam.Add("DDIni",DDIni.ToString());
+                lParam.Add("MMIni",MMIni.ToString());
+                lParam.Add("YYini",YYini.ToString());
+                lParam.Add("DDfin", DDfin.ToString());
+                lParam.Add("MMfin", MMfin.ToString());
+                lParam.Add("YYfin", YYfin.ToString());
+
                 lIncripcion = await Task.Run(() => oIncripcionBiz.Find(lParam));
 				lIncripcionFindModel = Inscripcion.ToList<InscripcionFindModel>(lIncripcion);
             }
@@ -108,7 +131,7 @@ namespace WebApi.Controllers
 		[AllowAnonymous]
         public async Task<ActionResult> Insert([FromBody] List<InscripcionInsertModel> inscripcionModel)
         {
-			InscripcionBiz oIncripcionBiz = new InscripcionBiz(_ConectionString);
+			InscripcionBiz oIncripcionBiz = new (_ConectionString);
 			string sXml = string.Empty;
             try
 			{
@@ -143,7 +166,7 @@ namespace WebApi.Controllers
 		[AllowAnonymous]
 		public ActionResult Delete(int Id)
 		{
-		InscripcionBiz oIncripcionBiz = new InscripcionBiz(_ConectionString); 
+		InscripcionBiz oIncripcionBiz = new (_ConectionString); 
 		try
 		{
 			oIncripcionBiz.Delete(Id);

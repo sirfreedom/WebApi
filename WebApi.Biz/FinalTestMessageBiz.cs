@@ -16,7 +16,7 @@ namespace WebApi.Biz
 
         public List<FinalTestMessage> List(int IdDependency) 
         { 
-            FinalTestMessageData Serv = new FinalTestMessageData(_ConnectionString);
+            FinalTestMessageData Serv = new (_ConnectionString);
             List<FinalTestMessage> lFinalTestMessage;
             try
             {
@@ -31,7 +31,7 @@ namespace WebApi.Biz
 
         public FinalTestMessage Get(int Id)
         {
-            FinalTestMessageData oFinalTestMessageData = new FinalTestMessageData(_ConnectionString);
+            FinalTestMessageData oFinalTestMessageData = new (_ConnectionString);
             FinalTestMessage oFinalTestMessage;
             try
             {
@@ -47,7 +47,7 @@ namespace WebApi.Biz
 
         public void Update(FinalTestMessage finaltestmessage)
         {
-            FinalTestMessageData oFinalTestMessageData = new FinalTestMessageData(_ConnectionString);
+            FinalTestMessageData oFinalTestMessageData = new (_ConnectionString);
             try
             {
                 oFinalTestMessageData.Update(finaltestmessage);
@@ -61,7 +61,7 @@ namespace WebApi.Biz
 
         public FinalTestMessage Insert(FinalTestMessage finaltestmessage)
         {
-            FinalTestMessageData oFinalTestMessageData = new FinalTestMessageData(_ConnectionString);
+            FinalTestMessageData oFinalTestMessageData = new (_ConnectionString);
             FinalTestMessage oFinalTestMessage;
             try
             {
@@ -77,7 +77,7 @@ namespace WebApi.Biz
 
         public void Delete(int Id)
         {
-            FinalTestMessageData oFinalTestMessageData = new FinalTestMessageData(_ConnectionString);
+            FinalTestMessageData oFinalTestMessageData = new (_ConnectionString);
             try
             {
                 oFinalTestMessageData.Delete(Id);
@@ -90,7 +90,7 @@ namespace WebApi.Biz
 
         public void Disabled(int Id, bool Disabled)
         {
-            FinalTestMessageData oFinalTestMessageData = new FinalTestMessageData(_ConnectionString);
+            FinalTestMessageData oFinalTestMessageData = new (_ConnectionString);
             try
             {
                 oFinalTestMessageData.Disabled(Id, Disabled);

@@ -17,7 +17,7 @@ namespace WebApi.Biz
 
         public List<Question> List(int IdDependency, int CodLevel) 
         { 
-            QuestionData Serv = new QuestionData(_ConnectionString);
+            QuestionData Serv = new (_ConnectionString);
             List<Question> lQuestion;
             try
             {
@@ -33,7 +33,7 @@ namespace WebApi.Biz
 
         public Question Get(int Id)
         {
-            QuestionData oQuestionData = new QuestionData(_ConnectionString);
+            QuestionData oQuestionData = new (_ConnectionString);
             Question oQuestion;
             try
             {
@@ -49,7 +49,7 @@ namespace WebApi.Biz
 
         public void Update(Question question)
         {
-            QuestionData oQuestionData = new QuestionData(_ConnectionString);
+            QuestionData oQuestionData = new (_ConnectionString);
             try
             {
                 oQuestionData.Update(question);
@@ -63,7 +63,7 @@ namespace WebApi.Biz
 
         public Question Insert(Question question)
         {
-            QuestionData oQuestionData = new QuestionData(_ConnectionString);
+            QuestionData oQuestionData = new (_ConnectionString);
             Question oQuestion;
             try
             {
@@ -79,7 +79,7 @@ namespace WebApi.Biz
 
         public void Delete(int Id)
         {
-            QuestionData oQuestionData = new QuestionData(_ConnectionString);
+            QuestionData oQuestionData = new (_ConnectionString);
             try
             {
                 oQuestionData.Delete(Id);
@@ -92,7 +92,7 @@ namespace WebApi.Biz
 
         public void Disabled(int Id, bool Disabled)
         {
-            QuestionData oQuestionData = new QuestionData(_ConnectionString);
+            QuestionData oQuestionData = new (_ConnectionString);
             try
             {
                 oQuestionData.Disabled(Id, Disabled);

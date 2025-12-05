@@ -12,7 +12,7 @@ namespace WebApi.Biz
             UserApp oUser;
 			try
 			{
-				UserData u = new UserData();
+				UserData u = new ();
 				oUser = u.Get(Name, Pass);
 			}
 			catch (Exception)

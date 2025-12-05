@@ -19,7 +19,7 @@ namespace WebApi.Biz
 
 		public List<UsuarioDependency> List() 
 		{
-		UsuarioDependencyData oUsuarioDependencyData = new UsuarioDependencyData(_ConnectionString); 
+		UsuarioDependencyData oUsuarioDependencyData = new (_ConnectionString); 
 		List<UsuarioDependency> lUsuarioDependency;
 		try 
 		{
@@ -36,7 +36,7 @@ namespace WebApi.Biz
 
 		public void Insert(List<UsuarioDependency> lusuariodependency)
 		{
-		UsuarioDependencyData oUsuarioDependencyData = new UsuarioDependencyData(_ConnectionString); 
+		UsuarioDependencyData oUsuarioDependencyData = new (_ConnectionString); 
 		try
 		{
 			oUsuarioDependencyData.Insert(lusuariodependency);
