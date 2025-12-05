@@ -15,16 +15,16 @@ namespace WebApi.Biz
 
         public Quini Get(Byte dd, Byte mm, int yyyy)
         {
-            HtmlWeb web = new HtmlWeb();
-            HtmlDocument oDoc = new HtmlDocument();
+            HtmlWeb web = new ();
+            HtmlDocument oDoc = new ();
             const string LINK = "http://www.quini6.net/resultados/";
-            StringBuilder sbFecha = new StringBuilder();
-            StringBuilder sbLink = new StringBuilder();
+            StringBuilder sbFecha = new ();
+            StringBuilder sbLink = new ();
             string s = string.Empty;
             string sId = string.Empty;
             HtmlNodeCollection hc;
             string[] ls;
-            Quini q = new Quini();
+            Quini q = new ();
             try
             {
                 sbLink.Append(LINK);

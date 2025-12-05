@@ -18,7 +18,7 @@ namespace WebApi.Biz
 
 		public List<ExamResult> List ()
 		{
-		ExamResultData oExamResultData = new ExamResultData(_ConnectionString);
+		ExamResultData oExamResultData = new (_ConnectionString);
 			List<ExamResult> examResults;
 		try
 		{
@@ -34,7 +34,7 @@ namespace WebApi.Biz
 
 		public void Insert(ExamResult examresult)
 		{
-		ExamResultData oExamResultData = new ExamResultData(_ConnectionString); 
+		ExamResultData oExamResultData = new (_ConnectionString); 
 		try
 		{
 			oExamResultData.Insert(examresult);

@@ -81,9 +81,11 @@ namespace WebApi.Data
         {
             IRepository<Setting> SettingRepository = new ContextSQL<Setting>(_ConnectionString);
             Setting oSetting;
+            DataTable dt;
             try
             {
-                oSetting = SettingRepository.Insert(setting);
+                dt = SettingRepository.Fill("Insert", setting.ToDictionary());
+                oSetting = Setting.ToList<Setting>(dt).SingleOrDefault();
             }
             catch (Exception)
             {

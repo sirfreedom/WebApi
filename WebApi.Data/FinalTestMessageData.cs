@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using WebApi.Entity;
 
 namespace WebApi.Data
@@ -59,9 +60,11 @@ namespace WebApi.Data
         {
             IRepository<FinalTestMessage> FinalTestMessageRepository = new ContextSQL<FinalTestMessage>(_ConnectionString);
             FinalTestMessage oFinalTestMessage;
+            DataTable dt;
             try
             {
-                oFinalTestMessage = FinalTestMessageRepository.Insert(finaltestmessage);
+                dt = FinalTestMessageRepository.Fill("Insert", finaltestmessage.ToDictionary());
+                oFinalTestMessage = FinalTestMessage.ToList<FinalTestMessage>(dt).SingleOrDefault();
             }
             catch (Exception)
             {

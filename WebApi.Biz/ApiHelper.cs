@@ -17,7 +17,7 @@ namespace WebApi.Biz
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 
-            using (HttpClient client = new HttpClient())
+            using (HttpClient client = new ())
             {
                 try
                 {
@@ -49,7 +49,7 @@ namespace WebApi.Biz
             Reply oReply = new Reply();
             try
             {
-                using (HttpClient client = new HttpClient())
+                using (HttpClient client = new ())
                 {
 
                     var myContent = JsonConvert.SerializeObject(objectRequest);

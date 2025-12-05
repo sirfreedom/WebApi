@@ -156,20 +156,18 @@ namespace WebApi.Data
             }
         }
 
-        public TEntity Insert(TEntity oEntity)
+        public void Insert(TEntity oEntity)
         {
             Dictionary<string, string> lParam = [];
-            DataTable dt;
             try
             {
                 lParam = EntityBase.ToDictionary(oEntity);
-                dt = Fill("Insert", lParam);
+                ExecuteNonQuery("Insert", lParam);
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
-            return EntityBase.ToList<TEntity>(dt).SingleOrDefault();
         }
 
         public void Update(TEntity oEntity)

@@ -19,7 +19,7 @@ namespace WebApi.Biz
 
 		public List<Dependency> List() 
 		{
-		DependencyData oDependencyData = new DependencyData(_ConnectionString); 
+		DependencyData oDependencyData = new (_ConnectionString); 
 		List<Dependency> lDependency;
 		try 
 		{
@@ -35,7 +35,7 @@ namespace WebApi.Biz
 
 		public Dependency Get(int Id) 
 		{
-		DependencyData oDependencyData = new DependencyData(_ConnectionString); 
+		DependencyData oDependencyData = new (_ConnectionString); 
 		Dependency oDependency;
 		try
 		{
@@ -51,7 +51,7 @@ namespace WebApi.Biz
 
 		public void Update(Dependency dependency)
 		{
-		DependencyData oDependencyData = new DependencyData(_ConnectionString); 
+		DependencyData oDependencyData = new (_ConnectionString); 
 		try
 		{
 			oDependencyData.Update(dependency); 
@@ -65,7 +65,7 @@ namespace WebApi.Biz
 
 		public Dependency Insert(Dependency dependency)
 		{
-			DependencyData oDependencyData = new DependencyData(_ConnectionString);
+			DependencyData oDependencyData = new (_ConnectionString);
 			Dependency oDependency;
 			try
 			{
@@ -81,7 +81,7 @@ namespace WebApi.Biz
 
 		public void Delete(int Id)
 		{
-		DependencyData oDependencyData = new DependencyData(_ConnectionString); 
+		DependencyData oDependencyData = new (_ConnectionString); 
 		try
 		{
 			oDependencyData.Delete(Id);
@@ -94,7 +94,7 @@ namespace WebApi.Biz
 
         public void Disabled(int Id, bool Disabled)
         {
-            DependencyData oDependencyData = new DependencyData(_ConnectionString);
+            DependencyData oDependencyData = new (_ConnectionString);
             try
             {
                 oDependencyData.Disabled(Id, Disabled);

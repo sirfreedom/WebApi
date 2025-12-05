@@ -17,7 +17,7 @@ namespace WebApi.Biz
 
 		public List<BestProduct> List() 
 		{
-		BestProductData oBestProductData = new BestProductData(_ConnectionString); 
+		BestProductData oBestProductData = new (_ConnectionString); 
 		List<BestProduct> lProduct;
 		try 
 		{
@@ -33,7 +33,7 @@ namespace WebApi.Biz
 
 		public BestProduct Get(int Id)
 		{
-			BestProductData oBestProductData = new BestProductData(_ConnectionString);
+			BestProductData oBestProductData = new (_ConnectionString);
 			BestProduct oBestProduct;
 			try
 			{
@@ -49,7 +49,7 @@ namespace WebApi.Biz
 
 		public void Update(BestProduct product)
 		{
-			BestProductData oBestProductData = new BestProductData(_ConnectionString);
+			BestProductData oBestProductData = new (_ConnectionString);
 			try
 			{
 				oBestProductData.Update(product);
@@ -63,7 +63,7 @@ namespace WebApi.Biz
 
 		public BestProduct Insert(BestProduct bestproduct)
 		{
-			BestProductData oBestProductData = new BestProductData(_ConnectionString);
+			BestProductData oBestProductData = new (_ConnectionString);
             try
 			{
 				bestproduct = oBestProductData.Insert(bestproduct);
@@ -78,7 +78,7 @@ namespace WebApi.Biz
 
 		public void Delete(int Id)
 		{
-			BestProductData oProductData = new BestProductData(_ConnectionString);
+			BestProductData oProductData = new (_ConnectionString);
 			try
 			{
 				oProductData.Delete(Id);

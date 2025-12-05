@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using WebApi.Entity;
 
 namespace WebApi.Data
@@ -68,9 +69,11 @@ namespace WebApi.Data
         {
             IRepository<QuestionLevel> QuestionLevelRepository = new ContextSQL<QuestionLevel>(_ConnectionString);
             QuestionLevel oQuestionLevel;
+            DataTable dt;
             try
             {
-                oQuestionLevel = QuestionLevelRepository.Insert(questionlevel);
+                dt = QuestionLevelRepository.Fill("Insert", questionlevel.ToDictionary());
+                oQuestionLevel = QuestionLevel.ToList<QuestionLevel>(dt).SingleOrDefault();
             }
             catch (Exception)
             {

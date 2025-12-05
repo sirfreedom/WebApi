@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 using WebApi.Entity;
 
 namespace WebApi.Data
@@ -22,8 +25,16 @@ namespace WebApi.Data
         {
             IRepository<ImagenTest> Serv = new ContextSQL<ImagenTest>(_ConnectionString);
             ImagenTest oImagenTest;
-            oImagenTest = Serv.Insert(entity);
-
+            DataTable dt;
+            try
+            {
+                dt = Serv.Fill("Insert", entity.ToDictionary());
+                oImagenTest = ImagenTest.ToList<ImagenTest>(dt).SingleOrDefault();
+            }
+            catch (Exception)
+            {
+                throw;
+            }  
             return oImagenTest;
         }
 

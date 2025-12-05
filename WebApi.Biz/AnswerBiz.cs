@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System;
+﻿using System;
 using WebApi.Entity;
 using WebApi.Data;
 
@@ -19,7 +18,7 @@ namespace WebApi.Biz
 
 		public Answer Get(int Id) 
 		{
-		AnswerData oAnswerData = new AnswerData(_ConnectionString); 
+		AnswerData oAnswerData = new (_ConnectionString); 
 		Answer oAnswer;
 		try
 		{
@@ -35,7 +34,7 @@ namespace WebApi.Biz
 
 		public void Update(Answer answer)
 		{
-		AnswerData oAnswerData = new AnswerData(_ConnectionString); 
+		AnswerData oAnswerData = new (_ConnectionString); 
 		try
 		{
 			oAnswerData.Update(answer); 
@@ -49,7 +48,7 @@ namespace WebApi.Biz
 
 		public Answer Insert(Answer answer)
 		{
-			AnswerData oAnswerData = new AnswerData(_ConnectionString);
+			AnswerData oAnswerData = new (_ConnectionString);
 			Answer oAnswer;
 			try
 			{
@@ -65,7 +64,7 @@ namespace WebApi.Biz
 
 		public void Delete(int Id)
 		{
-		AnswerData oAnswerData = new AnswerData(_ConnectionString); 
+		AnswerData oAnswerData = new (_ConnectionString); 
 		try
 		{
 			oAnswerData.Delete(Id);
@@ -78,7 +77,7 @@ namespace WebApi.Biz
 
         public void Disabled(int Id, bool Disabled)
         {
-            AnswerData oAnswerData = new AnswerData(_ConnectionString);
+            AnswerData oAnswerData = new (_ConnectionString);
             try
             {
                 oAnswerData.Disabled(Id, Disabled);
