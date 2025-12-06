@@ -66,13 +66,13 @@ namespace WebApi.Data
 		}
 
 
-		public void Delete(int Id)
+		public void DeleteAll()
 		{
 			IRepository<Inscripcion> InscripcionRepository = new ContextSQL<Inscripcion>(_ConnectionString);
 			try
 			{
-				InscripcionRepository.Delete(Id);
-			}
+				InscripcionRepository.ExecuteNonQuery("Delete",new Dictionary<string, string>());
+            }
 			catch (Exception)
 			{
 				throw;

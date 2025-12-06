@@ -62,12 +62,12 @@ namespace WebApi.Biz
 		}
 
 
-		public void Delete(int Id)
+		public void DeleteAll()
 		{
 			InscripcionData oIncripcionData = new (_ConnectionString);
 			try
 			{
-				oIncripcionData.Delete(Id);
+				oIncripcionData.DeleteAll();
 			}
 			catch (Exception)
 			{

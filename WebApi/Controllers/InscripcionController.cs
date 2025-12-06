@@ -153,23 +153,20 @@ namespace WebApi.Controllers
 
 
 
-		/// <summary>
-		/// Elimina un registro de  Inscripcion
-		/// </summary>
-		/// <param name="Id">
-		/// El Id es la clave unica PK de la entidad Incripcion.
-		/// </param>
-		/// <returns>
-		/// devuelve Status: 200 en caso de haber eliminado correctamente 
-		/// </returns>
-		[HttpDelete("Delete")]
+        /// <summary>
+        /// Elimina todos los registros de la tabla Inscripcion
+        /// </summary>
+        /// <returns>
+        /// devuelve Status: 200 en caso de haber eliminado correctamente 
+        /// </returns>
+        [HttpDelete("Delete")]
 		[AllowAnonymous]
-		public ActionResult Delete(int Id)
+		public ActionResult Delete()
 		{
 		InscripcionBiz oIncripcionBiz = new (_ConectionString); 
 		try
 		{
-			oIncripcionBiz.Delete(Id);
+			oIncripcionBiz.DeleteAll();
 		}
 		catch (WebException ex) 
 		{
