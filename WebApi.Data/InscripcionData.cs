@@ -66,13 +66,13 @@ namespace WebApi.Data
 		}
 
 
-		public void Delete(int Id)
+		public void DeleteAll()
 		{
 			IRepository<Inscripcion> InscripcionRepository = new ContextSQL<Inscripcion>(_ConnectionString);
 			try
 			{
-				InscripcionRepository.Delete(Id);
-			}
+				InscripcionRepository.ExecuteNonQuery("Delete",new Dictionary<string, string>());
+            }
 			catch (Exception)
 			{
 				throw;
@@ -80,9 +80,40 @@ namespace WebApi.Data
 		}
 
 
+		public void Contacted(int Id, bool IsContacted)
+		{
+			IRepository<Inscripcion> InscripcionRepository = new ContextSQL<Inscripcion>(_ConnectionString);
+			Dictionary<string, string> lParam = new Dictionary<string, string>();
+			try
+			{
+				lParam.Add("Id", Id.ToString());
+				lParam.Add("IsContacted", IsContacted ? "1" : "0");
+				InscripcionRepository.ExecuteNonQuery("Contacted", lParam);
+			}
+			catch (Exception)
+			{
+				throw;
+			}
+        }
 
 
+        public void Error(int Id, bool IsError)
+        {
+            IRepository<Inscripcion> InscripcionRepository = new ContextSQL<Inscripcion>(_ConnectionString);
+            Dictionary<string, string> lParam = new Dictionary<string, string>();
+            try
+            {
+                lParam.Add("Id", Id.ToString());
+                lParam.Add("IsError", IsError ? "1" : "0");
+                InscripcionRepository.ExecuteNonQuery("Error", lParam);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
-	}
+
+    }
 
 }

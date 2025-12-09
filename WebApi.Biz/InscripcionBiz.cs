@@ -2,6 +2,7 @@
 using System;
 using WebApi.Entity;
 using WebApi.Data;
+using System.Diagnostics.Metrics;
 
 namespace WebApi.Biz
 {
@@ -62,12 +63,12 @@ namespace WebApi.Biz
 		}
 
 
-		public void Delete(int Id)
+		public void DeleteAll()
 		{
 			InscripcionData oIncripcionData = new (_ConnectionString);
 			try
 			{
-				oIncripcionData.Delete(Id);
+				oIncripcionData.DeleteAll();
 			}
 			catch (Exception)
 			{
@@ -76,7 +77,33 @@ namespace WebApi.Biz
 		}
 
 
+		public void Conected(int Id, bool IsConected) 
+		{
+            InscripcionData oIncripcionData = new(_ConnectionString);
+            try
+            {
+				oIncripcionData.Contacted(Id, IsConected);
+			}
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
-	}
+        public void Error(int Id, bool IsError)
+        {
+            InscripcionData oIncripcionData = new(_ConnectionString);
+            try
+            {
+                oIncripcionData.Error(Id, IsError);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+
+    }
 
 }
