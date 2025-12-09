@@ -181,10 +181,54 @@ namespace WebApi.Controllers
 		return Ok(); //OK 200
 		}
 
-	}
+
+        [HttpPatch("Contacted")]
+        [AllowAnonymous]
+        public ActionResult Contacted(int Id, bool IsContacted)
+        {
+            InscripcionBiz oIncripcionBiz = new(_ConectionString);
+            try
+            {
+                oIncripcionBiz.Conected(Id, IsContacted);
+            }
+            catch (WebException ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get", 500, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get ", 500, ex.Message);
+            }
+            return Ok(); //OK 200
+        }
+
+
+        [HttpPatch("Error")]
+        [AllowAnonymous]
+        public ActionResult Error(int Id, bool IsError)
+        {
+            InscripcionBiz oIncripcionBiz = new(_ConectionString);
+            try
+            {
+                oIncripcionBiz.Error(Id, IsError);
+            }
+            catch (WebException ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get", 500, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get ", 500, ex.Message);
+            }
+            return Ok(); //OK 200
+        }
 
 
 
 
-
+    }
 }
