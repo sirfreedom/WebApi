@@ -160,8 +160,8 @@ namespace WebApi.Controllers
         /// devuelve Status: 200 en caso de haber eliminado correctamente 
         /// </returns>
         [HttpDelete("Delete")]
-		[AllowAnonymous]
-		public ActionResult Delete()
+        [Authorize(Policy = "Admin")]
+        public ActionResult Delete()
 		{
 		InscripcionBiz oIncripcionBiz = new (_ConectionString); 
 		try

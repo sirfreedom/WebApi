@@ -94,6 +94,10 @@ namespace WebApi.Data
             {
                 dt = Fill("List");
             }
+            catch (SqlException ex)
+            {
+                throw new Exception(ex.Message);
+            }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
@@ -109,6 +113,10 @@ namespace WebApi.Data
             try
             {
                 dt = Fill("Get", lDictionary);
+            }
+            catch (SqlException ex)
+            {
+                throw new Exception(ex.Message);
             }
             catch (Exception ex)
             {
@@ -128,6 +136,10 @@ namespace WebApi.Data
                 {
                     lDynamic = EntityBase.ToDynamic(dt);
                 }
+            }
+            catch (SqlException ex)
+            {
+                throw new Exception(ex.Message);
             }
             catch (Exception ex)
             {
@@ -150,6 +162,10 @@ namespace WebApi.Data
                 }
                 ExecuteNonQuery("Delete", lDictionary);
             }
+            catch(SqlException ex)
+            {
+                throw new Exception(ex.Message);
+            }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
@@ -164,6 +180,10 @@ namespace WebApi.Data
                 lParam = EntityBase.ToDictionary(oEntity);
                 ExecuteNonQuery("Insert", lParam);
             }
+            catch (SqlException ex)
+            {
+                throw new Exception(ex.Message);
+            }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
@@ -177,6 +197,10 @@ namespace WebApi.Data
             {
                 lParam = EntityBase.ToDictionary(oEntity,true);
                 ExecuteNonQuery("Update", lParam);
+            }
+            catch (SqlException ex)
+            {
+                throw new Exception(ex.Message);
             }
             catch (Exception ex)
             {
@@ -261,6 +285,7 @@ namespace WebApi.Data
             SqlCommand cmd;
             MessageError = string.Empty;
             StringBuilder sbKey = new ();
+            int iRowAffected = 0;
             try
             {
                 cmd = _connectionCommandPool.GetCommand();
@@ -282,7 +307,12 @@ namespace WebApi.Data
                 {
                     cn.InfoMessage += cn_InfoMessage;
                     cmd.Connection = cn;
-                    cmd.ExecuteNonQuery();
+                    iRowAffected = cmd.ExecuteNonQuery();
+                }
+
+                if (iRowAffected == 0)
+                {
+                    throw new Exception("No rows were affected by the operation.");
                 }
 
                 if (MessageError.Length > 0)
