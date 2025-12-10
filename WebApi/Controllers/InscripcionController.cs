@@ -83,7 +83,7 @@ namespace WebApi.Controllers
 		/// </param>
         /// <returns></returns>
         [HttpGet("Find")]
-        [AllowAnonymous]
+        [Authorize(Policy = "Admin")]
         public async Task<ActionResult> Find(int IdTipoContacto, string Carrera = "", int DDIni = 0, int MMIni= 0,int YYini=0,int DDfin=0,int MMfin = 0,int YYfin = 0)
         {
             InscripcionBiz oIncripcionBiz = new (_ConectionString);
