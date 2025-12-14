@@ -7,7 +7,7 @@
         public string carrera { get; set; }
         public bool iscontacted { get; set; }
         public bool iserror { get; set; }
-        public string Fecha { get; set; }
+        public string fecha { get; set; }
         public string nombre { get; set; }
         public string telefono { get; set; }
         public string tiponumero { get; set; }

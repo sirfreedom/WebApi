@@ -28,35 +28,6 @@ namespace WebApi.Controllers
 			_ConectionString = _configuration.GetConnectionString("DefaultConnection");
 		}
 
-		/// <summary>
-		/// Lista Inscripcion
-		/// </summary>
-		/// <returns>
-		/// devuelve la lista de Inscripcion. generalmente usado para combos y lugares donde no necesitarias un filtro
-		/// </returns>
-		[HttpGet("List")]
-		[AllowAnonymous]
-		public async Task<ActionResult> List()
-		{
-			InscripcionBiz oIncripcionBiz = new (_ConectionString);
-			List<Inscripcion> lIncripcion;
-			try
-			{
-				lIncripcion = await Task.Run(() => oIncripcionBiz.List());
-			}
-			catch (WebException ex)
-			{
-				_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
-				return ValidationProblem("Error", "Get", 500, ex.Message);
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
-				return ValidationProblem("Error", "Get ", 500, ex.Message);
-			}
-			return Ok(new { inscripciones = lIncripcion }); //OK 200);
-		}
-
 
         /// <summary>
         /// Find 
@@ -128,7 +99,7 @@ namespace WebApi.Controllers
         /// devuelve un status: 201/204 si inserto correctamente 
         /// </returns>
         [HttpPost("Insert")]
-		[AllowAnonymous]
+        [AllowAnonymous]
         public async Task<ActionResult> Insert([FromBody] List<InscripcionInsertModel> inscripcionModel)
         {
 			InscripcionBiz oIncripcionBiz = new (_ConectionString);
@@ -149,36 +120,6 @@ namespace WebApi.Controllers
 				return ValidationProblem("Error", "Get ", 500, ex.Message);
 			}
 			return Created(); //OK 201);
-		}
-
-
-
-        /// <summary>
-        /// Elimina todos los registros de la tabla Inscripcion
-        /// </summary>
-        /// <returns>
-        /// devuelve Status: 200 en caso de haber eliminado correctamente 
-        /// </returns>
-        [HttpDelete("Delete")]
-        [Authorize(Policy = "Admin")]
-        public ActionResult Delete()
-		{
-		InscripcionBiz oIncripcionBiz = new (_ConectionString); 
-		try
-		{
-			oIncripcionBiz.DeleteAll();
-		}
-		catch (WebException ex) 
-		{
-			_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
-			return ValidationProblem("Error", "Get", 500, ex.Message);
-		}
-		catch (Exception ex)
-		{
-			_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
-			return ValidationProblem("Error", "Get ", 500, ex.Message);
-		}
-		return Ok(); //OK 200
 		}
 
 
