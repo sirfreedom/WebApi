@@ -30,33 +30,6 @@ namespace WebApi.Controllers
 
 
 
-        /// <summary>
-        /// List all Inscripciones
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("List")]
-        [Authorize(Policy = "Admin")]
-        public async Task<ActionResult> List()
-        {
-            InscripcionBiz oIncripcionBiz = new(_ConectionString);
-            List<Inscripcion> lIncripcion;
-            try
-            {
-                lIncripcion = await Task.Run(() => oIncripcionBiz.List());
-            }
-            catch (WebException ex)
-            {
-                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
-                return ValidationProblem("Error", "Get", 500, ex.Message);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
-                return ValidationProblem("Error", "Get ", 500, ex.Message);
-            }
-            return Ok(new { inscripciones = lIncripcion }); //OK 200);
-        }
-
 
         /// <summary>
         /// Find 
