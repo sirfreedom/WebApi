@@ -274,7 +274,7 @@ namespace WebApi.Entity
 
         #region ToDatable
 
-        public static DataSet ToDatatable(string Json)
+        public static DataSet ToDataTable(string Json)
         {
             DataSet ds = new DataSet("ds");
             List<string> childTokens = new List<string>();
@@ -282,6 +282,7 @@ namespace WebApi.Entity
             jsonObject = JObject.Parse(Json);
             try
             {
+
                 foreach (JProperty jTable in jsonObject.Children<JProperty>())
                 {
                     childTokens.Add(jTable.Name);
@@ -299,6 +300,7 @@ namespace WebApi.Entity
                                 jTableRowResult.Add(column.Name, column.Value);
                             }
                         }
+
                         jArrayResult.Add(jTableRowResult);
                     }
 
@@ -314,7 +316,7 @@ namespace WebApi.Entity
             return ds;
         }
 
-        public static DataTable ToDatatable<T>(List<T> lista)
+        public static DataTable ToDataTable<T>(List<T> lista)
         {
             DataTable dataTable = new DataTable();
             try
@@ -346,8 +348,7 @@ namespace WebApi.Entity
             return dataTable;
         }
 
-
-        public static DataTable ToDatatable(DataTable dt, string Condicion)
+        public static DataTable ToDataTable(DataTable dt, string Condicion)
         {
             DataTable dtReturn = new DataTable();
             try
@@ -367,6 +368,38 @@ namespace WebApi.Entity
                 throw new Exception(ex.Message);
             }
             return dtReturn;
+        }
+
+        public static DataTable ToDataTable(Dictionary<int, string> sourceDictionary, string keyColumnName = "Id", string valueColumnName = "Text")
+        {
+            DataTable dt = new DataTable();
+            dt.Columns.Add(keyColumnName, typeof(int));
+            dt.Columns.Add(valueColumnName, typeof(string));
+
+            foreach (KeyValuePair<int, string> pair in sourceDictionary)
+            {
+                DataRow dr = dt.NewRow();
+                dr[keyColumnName] = pair.Key;
+                dr[valueColumnName] = pair.Value;
+                dt.Rows.Add(dr);
+            }
+            return dt;
+        }
+
+        public static DataTable ToDataTable(Dictionary<string, string> sourceDictionary, string keyColumnName = "Id", string valueColumnName = "Text")
+        {
+            DataTable dt = new DataTable();
+            dt.Columns.Add(keyColumnName, typeof(int));
+            dt.Columns.Add(valueColumnName, typeof(string));
+
+            foreach (KeyValuePair<string, string> pair in sourceDictionary)
+            {
+                DataRow dr = dt.NewRow();
+                dr[keyColumnName] = pair.Key;
+                dr[valueColumnName] = pair.Value;
+                dt.Rows.Add(dr);
+            }
+            return dt;
         }
 
         #endregion

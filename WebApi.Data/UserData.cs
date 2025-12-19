@@ -19,7 +19,7 @@ namespace WebApi.Data
                 lUser.Add(new UserApp(2, "admin", "2223", "1"));
                 lUser.Add(new UserApp(3, "admin", "0000", "3"));
                 lUser.Add(new UserApp(4, "rodrigo", "rodrigo", "3"));
-                oUser = lUser.FirstOrDefault(x => x.Name == Name && x.Pass == Pass);
+                oUser = lUser.FirstOrDefault(x => x.Name.ToLower() == Name.ToLower() && x.Pass.ToLower() == Pass.ToLower());
             }
             catch (Exception)
             {
