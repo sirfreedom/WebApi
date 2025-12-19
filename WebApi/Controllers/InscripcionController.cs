@@ -29,62 +29,21 @@ namespace WebApi.Controllers
 		}
 
 
-
-        /// <summary>
-        /// List all Inscripciones
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("List")]
-        [Authorize(Policy = "Admin")]
-        public async Task<ActionResult> List()
-        {
-            InscripcionBiz oIncripcionBiz = new(_ConectionString);
-            List<Inscripcion> lIncripcion;
-            try
-            {
-                lIncripcion = await Task.Run(() => oIncripcionBiz.List());
-            }
-            catch (WebException ex)
-            {
-                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
-                return ValidationProblem("Error", "Get", 500, ex.Message);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
-                return ValidationProblem("Error", "Get ", 500, ex.Message);
-            }
-            return Ok(new { inscripciones = lIncripcion }); //OK 200);
-        }
-
-
         /// <summary>
         /// Find 
         /// </summary>
         /// <param name="IdTipoContacto"></param>
         /// <param name="Carrera"></param>
-        /// <param name="DDIni">
-        /// day inicio
-        /// </param>
-        /// <param name="MMIni">
+        /// <param name="MM">
         /// month inicio
         /// </param>
-        /// <param name="YYini">
+        /// <param name="YY">
         /// year inicio
         /// </param>
-        /// <param name="DDfin">
-		/// day fin
-		/// </param>
-        /// <param name="MMfin">
-		/// month fin
-		/// </param>
-        /// <param name="YYfin">
-		/// year fin
-		/// </param>
         /// <returns></returns>
         [HttpGet("Find")]
         [Authorize(Policy = "Admin")]
-        public async Task<ActionResult> Find(int IdTipoContacto, string Carrera = "", int DDIni = 0, int MMIni= 0,int YYini=0,int DDfin=0,int MMfin = 0,int YYfin = 0)
+        public async Task<ActionResult> Find(int IdTipoContacto, string Carrera = "", int MM= 0,int YY=0)
         {
             InscripcionBiz oIncripcionBiz = new (_ConectionString);
             List<dynamic> lIncripcion;
@@ -94,12 +53,8 @@ namespace WebApi.Controllers
             {
 				lParam.Add("IdTipoContacto", IdTipoContacto.ToString());
                 lParam.Add("Carrera", Carrera);
-                lParam.Add("DDIni",DDIni.ToString());
-                lParam.Add("MMIni",MMIni.ToString());
-                lParam.Add("YYini",YYini.ToString());
-                lParam.Add("DDfin", DDfin.ToString());
-                lParam.Add("MMfin", MMfin.ToString());
-                lParam.Add("YYfin", YYfin.ToString());
+                lParam.Add("MM",MM.ToString());
+                lParam.Add("YY",YY.ToString());
 
                 lIncripcion = await Task.Run(() => oIncripcionBiz.Find(lParam));
 				lIncripcionFindModel = Inscripcion.ToList<InscripcionFindModel>(lIncripcion);
@@ -128,7 +83,7 @@ namespace WebApi.Controllers
         /// devuelve un status: 201/204 si inserto correctamente 
         /// </returns>
         [HttpPost("Insert")]
-        [AllowAnonymous]
+        [Authorize(Policy = "Admin")]
         public async Task<ActionResult> Insert([FromBody] List<InscripcionInsertModel> inscripcionModel)
         {
 			InscripcionBiz oIncripcionBiz = new (_ConectionString);
