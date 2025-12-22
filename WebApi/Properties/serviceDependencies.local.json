@@ -1,17 +1,31 @@
 {
   "dependencies": {
-    "secrets1": {
-      "type": "secrets.user",
-      "dynamicId": null
-    },
     "mssql1": {
       "containerPorts": "1433:1433",
       "secretStore": "LocalSecretsFile",
-      "containerName": "mssql",
+      "containerName": "localhost",
       "containerImage": "mcr.microsoft.com/mssql/server:2019-latest",
       "resourceId": null,
       "type": "mssql.container",
       "connectionId": "ConnectionStrings:DefaultConnection1"
+    },
+    "mssql2": {
+      "secretStore": "LocalSecretsFile",
+      "type": "mssql.onprem",
+      "connectionId": "ConnectionStrings:Local1",
+      "dynamicId": null
+    },
+    "mssql3": {
+      "secretStore": "LocalSecretsFile",
+      "type": "mssql.onprem",
+      "connectionId": "ConnectionStrings:DefaultConnection2",
+      "dynamicId": null
+    },
+    "secrets1": {
+      "secretStore": null,
+      "resourceId": null,
+      "type": "secrets.user",
+      "connectionId": null
     }
   }
 }
