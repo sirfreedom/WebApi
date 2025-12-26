@@ -107,6 +107,14 @@ namespace WebApi.Controllers
 		}
 
 
+
+        /// <summary>
+        /// Contacted 
+        /// </summary>
+        /// <param name="Id">
+        /// </param>
+        /// <param name="IsContacted"></param>
+        /// <returns></returns>
         [HttpPatch("Contacted")]
         [AllowAnonymous]
         public ActionResult Contacted(int Id, bool IsContacted)
@@ -130,6 +138,13 @@ namespace WebApi.Controllers
         }
 
 
+
+        /// <summary>
+        /// Error
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <param name="IsError"></param>
+        /// <returns></returns>
         [HttpPatch("Error")]
         [AllowAnonymous]
         public ActionResult Error(int Id, bool IsError)
