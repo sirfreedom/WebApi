@@ -5,9 +5,11 @@ services:
       context: .
       dockerfile: WebApi/Dockerfile
     ports:
-      - "8080:8080"
+      - "8080:8080"  # Cambiado de 5002:5003 a 8080:8080
     environment:
       - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=WebApiBase;User Id=sa;Password=Alejandro22#;TrustServerCertificate=True;
+      - ASPNETCORE_URLS=http://+:8080  # Cambiado para que coincida con el puerto interno
+      - ASPNETCORE_ENVIRONMENT=Development
     depends_on:
       - database
 
@@ -16,8 +18,7 @@ services:
     container_name: sqlserver
     environment:
       - ACCEPT_EULA=Y
-      - SA_PASSWORD=Alejandro22#
+      - MSSQL_SA_PASSWORD=Alejandro22#
       - MSSQL_PID=Developer
     ports:
       - "1433:1433"
-

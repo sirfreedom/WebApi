@@ -43,21 +43,21 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [HttpGet("Find")]
         [Authorize(Policy = "Admin")]
-        public async Task<ActionResult> Find(int IdTipoContacto, string Carrera = "", int MM= 0,int YY=0)
+        public async Task<ActionResult> Find(int IdTipoContacto, string Carrera = "", int MM = 0, int YY = 0)
         {
-            InscripcionBiz oIncripcionBiz = new (_ConectionString);
+            InscripcionBiz oIncripcionBiz = new(_ConectionString);
             List<dynamic> lIncripcion;
-			List<InscripcionFindModel> lIncripcionFindModel = new List<InscripcionFindModel>();
+            List<InscripcionFindModel> lIncripcionFindModel = new List<InscripcionFindModel>();
             Dictionary<string, string> lParam = new Dictionary<string, string>();
             try
             {
-				lParam.Add("IdTipoContacto", IdTipoContacto.ToString());
+                lParam.Add("IdTipoContacto", IdTipoContacto.ToString());
                 lParam.Add("Carrera", Carrera);
-                lParam.Add("MM",MM.ToString());
-                lParam.Add("YY",YY.ToString());
+                lParam.Add("MM", MM.ToString());
+                lParam.Add("YY", YY.ToString());
 
                 lIncripcion = await Task.Run(() => oIncripcionBiz.Find(lParam));
-				lIncripcionFindModel = Inscripcion.ToList<InscripcionFindModel>(lIncripcion);
+                lIncripcionFindModel = Inscripcion.ToList<InscripcionFindModel>(lIncripcion);
             }
             catch (WebException ex)
             {
@@ -86,25 +86,25 @@ namespace WebApi.Controllers
         [Authorize(Policy = "Admin")]
         public async Task<ActionResult> Insert([FromBody] List<InscripcionInsertModel> inscripcionModel)
         {
-			InscripcionBiz oIncripcionBiz = new (_ConectionString);
-			string sXml = string.Empty;
+            InscripcionBiz oIncripcionBiz = new(_ConectionString);
+            string sXml = string.Empty;
             try
-			{
+            {
                 sXml = Inscripcion.ToXml(inscripcionModel);
                 await Task.Run(() => oIncripcionBiz.Insert(sXml));
-			}
-			catch (WebException ex)
-			{
-				_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
-				return ValidationProblem("Error", "Get", 500, ex.Message);
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
-				return ValidationProblem("Error", "Get ", 500, ex.Message);
-			}
-			return Created(); //OK 201);
-		}
+            }
+            catch (WebException ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get", 500, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get ", 500, ex.Message);
+            }
+            return Created(); //OK 201);
+        }
 
 
 
