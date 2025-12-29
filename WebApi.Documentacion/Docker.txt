@@ -1,2 +1,11 @@
 
 docker network create appmaker
+docker network connect appmaker webapi
+
+
+-- exportar
+docker save -o C:\download\webapi.tar webapi
+
+
+--importar
+docker load -i C:\download\webapi.tar
