@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Text.RegularExpressions;
 using WebApi.Entity;
 
 namespace WebApi.Data
@@ -20,7 +18,7 @@ namespace WebApi.Data
         public List<Question> List(int IdDependency, int CodLevel = 0) 
         {
             Dictionary<string, string> lParam = new Dictionary<string, string>();
-            DataTable dt = new DataTable();
+            DataTable dt;
             List<Question> lQuestion;
             try
             {
