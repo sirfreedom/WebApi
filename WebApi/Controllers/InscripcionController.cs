@@ -107,6 +107,12 @@ namespace WebApi.Controllers
 		}
 
 
+        /// <summary>
+        /// Chequea que un registro fue contactado
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <param name="IsContacted"></param>
+        /// <returns></returns>
         [HttpPatch("Contacted")]
         [AllowAnonymous]
         public ActionResult Contacted(int Id, bool IsContacted)
@@ -130,6 +136,13 @@ namespace WebApi.Controllers
         }
 
 
+
+        /// <summary>
+        /// Actualiza el estado de error de una inscripcion
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <param name="IsError"></param>
+        /// <returns></returns>
         [HttpPatch("Error")]
         [AllowAnonymous]
         public ActionResult Error(int Id, bool IsError)
@@ -152,6 +165,37 @@ namespace WebApi.Controllers
             return Ok(); //OK 200
         }
 
+
+        /// <summary>
+        /// Cambia el tipo de inscripcion de una lista de inscripciones
+        /// </summary>
+        /// <param name="updatetipoinscripcionModel"></param>
+        /// <returns>
+        /// 201 si se actualizo correctamente
+        /// </returns>
+        [HttpPatch("UpdateTipoInscripcion")]
+        [Authorize(Policy = "Admin")]
+        public async Task<ActionResult> UpdateTipoInscripcion([FromBody] List<UpdateTipoInscripcionModel> updatetipoinscripcionModel)
+        {
+            InscripcionBiz oIncripcionBiz = new(_ConectionString);
+            string sXml = string.Empty;
+            try
+            {
+                sXml = Inscripcion.ToXml(updatetipoinscripcionModel);
+                await Task.Run(() => oIncripcionBiz.UpdateTipoInscripcion(sXml));
+            }
+            catch (WebException ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get", 500, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get ", 500, ex.Message);
+            }
+            return Created(); //OK 201);
+        }
 
 
 

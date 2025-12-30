@@ -2,7 +2,6 @@
 using System;
 using WebApi.Entity;
 using WebApi.Data;
-using System.Diagnostics.Metrics;
 
 namespace WebApi.Biz
 {
@@ -90,6 +89,7 @@ namespace WebApi.Biz
             }
         }
 
+
         public void Error(int Id, bool IsError)
         {
             InscripcionData oIncripcionData = new(_ConnectionString);
@@ -102,6 +102,20 @@ namespace WebApi.Biz
                 throw;
             }
         }
+
+        public void UpdateTipoInscripcion(string InscripcionXml)
+        {
+            InscripcionData oIncripcionData = new(_ConnectionString);
+            try
+            {
+                oIncripcionData.UpdateTipoInscripcion(InscripcionXml);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
 
 
     }

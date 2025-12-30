@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
-using System;
+﻿using System;
+using System.Buffers.Text;
+using System.Collections.Generic;
 using WebApi.Entity;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace WebApi.Data
 {
@@ -112,6 +114,24 @@ namespace WebApi.Data
                 throw;
             }
         }
+
+
+		public void UpdateTipoInscripcion(string InscripcionXml) 
+		{
+            IRepository<Inscripcion> InscripcionRepository = new ContextSQL<Inscripcion>(_ConnectionString);
+            Dictionary<string, string> lParam = new Dictionary<string, string>();
+            try
+            {
+                lParam.Add("XmlInsert", InscripcionXml);
+                InscripcionRepository.ExecuteNonQuery("UpdateTipoInscripcion", lParam);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+
 
 
     }
