@@ -62,18 +62,6 @@ namespace WebApi.Biz
 		}
 
 
-		public void DeleteAll()
-		{
-			InscripcionData oIncripcionData = new (_ConnectionString);
-			try
-			{
-				oIncripcionData.DeleteAll();
-			}
-			catch (Exception)
-			{
-				throw;
-			}
-		}
 
 
 		public void Conected(int Id, bool IsConected) 
@@ -103,18 +91,6 @@ namespace WebApi.Biz
             }
         }
 
-        public void UpdateTipoInscripcion(string InscripcionXml)
-        {
-            InscripcionData oIncripcionData = new(_ConnectionString);
-            try
-            {
-                oIncripcionData.UpdateTipoInscripcion(InscripcionXml);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
 
 
 
