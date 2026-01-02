@@ -1,6 +1,7 @@
 
 docker network create appmaker
 docker network connect appmaker webapi
+docker network connect appmaker sqlserver
 
 
 -- exportar
