@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
-using System;
-using WebApi.Entity;
+﻿using System;
+using System.Collections.Generic;
 using WebApi.Data;
+using WebApi.Entity;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace WebApi.Biz
 {
@@ -62,20 +63,6 @@ namespace WebApi.Biz
 		}
 
 
-		public void DeleteAll()
-		{
-			InscripcionData oIncripcionData = new (_ConnectionString);
-			try
-			{
-				oIncripcionData.DeleteAll();
-			}
-			catch (Exception)
-			{
-				throw;
-			}
-		}
-
-
 		public void Conected(int Id, bool IsConected) 
 		{
             InscripcionData oIncripcionData = new(_ConnectionString);
@@ -103,18 +90,20 @@ namespace WebApi.Biz
             }
         }
 
-        public void UpdateTipoInscripcion(string InscripcionXml)
-        {
+
+		public void ChangeTipoInscripcion(string InscripcionXml, int IdTipoInscripcion) 
+		{
             InscripcionData oIncripcionData = new(_ConnectionString);
             try
             {
-                oIncripcionData.UpdateTipoInscripcion(InscripcionXml);
+                oIncripcionData.ChangeTipoInscripcion(InscripcionXml, IdTipoInscripcion);
             }
             catch (Exception)
             {
                 throw;
             }
         }
+
 
 
 

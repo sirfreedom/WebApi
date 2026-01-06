@@ -108,6 +108,44 @@ namespace WebApi.Controllers
 
 
         /// <summary>
+        /// ChangeTipoInscripcion : Funcion para cambiar el tipo de inscripcion mediante el telefono
+        /// </summary>
+        /// <param name="ChangeTipoInscripcionModel">
+        /// Array de telefonos a cambiar
+        /// </param>
+        /// <param name="IdTipoInscripcion">
+        /// IdtipoInscripcion al que se quiere cambiar
+        /// </param>
+        /// <returns>
+        /// Devuelve ok 200 si se realizo correctamente
+        /// </returns>
+        [HttpPatch("ChangeTipoInscripcion")]
+        [Authorize(Policy = "Admin")]
+        public async Task<ActionResult> ChangeTipoInscripcion([FromBody] List<ChangeTipoInscripcionModel> ChangeTipoInscripcionModel, int IdTipoInscripcion)
+        {
+            InscripcionBiz oIncripcionBiz = new(_ConectionString);
+            string sXml = string.Empty;
+            try
+            {
+                sXml = Inscripcion.ToXml(ChangeTipoInscripcionModel);
+                await Task.Run(() => oIncripcionBiz.ChangeTipoInscripcion(sXml,IdTipoInscripcion));
+            }
+            catch (WebException ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get", 500, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get ", 500, ex.Message);
+            }
+            return Ok(); //OK 200);
+        }
+
+
+
+        /// <summary>
         /// Chequea que un registro fue contactado
         /// </summary>
         /// <param name="Id"></param>
@@ -166,37 +204,7 @@ namespace WebApi.Controllers
         }
 
 
-        /// <summary>
-        /// Cambia el tipo de inscripcion de una lista de inscripciones
-        /// </summary>
-        /// <param name="updatetipoinscripcionModel"></param>
-        /// <returns>
-        /// 201 si se actualizo correctamente
-        /// </returns>
-        [HttpPatch("UpdateTipoInscripcion")]
-        [Authorize(Policy = "Admin")]
-        public async Task<ActionResult> UpdateTipoInscripcion([FromBody] List<UpdateTipoInscripcionModel> updatetipoinscripcionModel)
-        {
-            InscripcionBiz oIncripcionBiz = new(_ConectionString);
-            string sXml = string.Empty;
-            try
-            {
-                sXml = Inscripcion.ToXml(updatetipoinscripcionModel);
-                await Task.Run(() => oIncripcionBiz.UpdateTipoInscripcion(sXml));
-            }
-            catch (WebException ex)
-            {
-                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
-                return ValidationProblem("Error", "Get", 500, ex.Message);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
-                return ValidationProblem("Error", "Get ", 500, ex.Message);
-            }
-            return Created(); //OK 201);
-        }
-
+  
 
 
     }

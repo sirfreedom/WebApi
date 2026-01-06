@@ -52,7 +52,7 @@ namespace WebApi.Controllers
                 _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
                 return ValidationProblem("Error", "Get ", 500, ex.Message);
             }
-            return Ok(new { tiopinscripciones = lTipoInscripcion }); //OK 200);
+            return Ok(new { tipoinscripciones = lTipoInscripcion }); //OK 200);
         }
 
 

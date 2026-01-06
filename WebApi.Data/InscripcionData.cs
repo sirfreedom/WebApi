@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Buffers.Text;
 using System.Collections.Generic;
 using WebApi.Entity;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -67,21 +66,7 @@ namespace WebApi.Data
 			}
 		}
 
-
-		public void DeleteAll()
-		{
-			IRepository<Inscripcion> InscripcionRepository = new ContextSQL<Inscripcion>(_ConnectionString);
-			try
-			{
-				InscripcionRepository.ExecuteNonQuery("Delete",new Dictionary<string, string>());
-            }
-			catch (Exception)
-			{
-				throw;
-			}
-		}
-
-
+	
 		public void Contacted(int Id, bool IsContacted)
 		{
 			IRepository<Inscripcion> InscripcionRepository = new ContextSQL<Inscripcion>(_ConnectionString);
@@ -116,20 +101,24 @@ namespace WebApi.Data
         }
 
 
-		public void UpdateTipoInscripcion(string InscripcionXml) 
+		public void ChangeTipoInscripcion(string InscripcionXml, int IdTipoInscripcion) 
 		{
             IRepository<Inscripcion> InscripcionRepository = new ContextSQL<Inscripcion>(_ConnectionString);
             Dictionary<string, string> lParam = new Dictionary<string, string>();
             try
             {
                 lParam.Add("XmlInsert", InscripcionXml);
-                InscripcionRepository.ExecuteNonQuery("UpdateTipoInscripcion", lParam);
+                lParam.Add("IdTipoInscripcion", IdTipoInscripcion.ToString());
+                InscripcionRepository.ExecuteNonQuery("ChangeTipoInscripcion", lParam);
             }
             catch (Exception)
             {
                 throw;
             }
         }
+
+        
+
 
 
 
