@@ -108,6 +108,44 @@ namespace WebApi.Controllers
 
 
         /// <summary>
+        /// ChangeTipoInscripcion : Funcion para cambiar el tipo de inscripcion mediante el telefono
+        /// </summary>
+        /// <param name="ChangeTipoInscripcionModel">
+        /// Array de telefonos a cambiar
+        /// </param>
+        /// <param name="IdTipoInscripcion">
+        /// IdtipoInscripcion al que se quiere cambiar
+        /// </param>
+        /// <returns>
+        /// Devuelve ok 200 si se realizo correctamente
+        /// </returns>
+        [HttpPatch("ChangeTipoInscripcion")]
+        [Authorize(Policy = "Admin")]
+        public async Task<ActionResult> ChangeTipoInscripcion([FromBody] List<ChangeTipoInscripcionModel> ChangeTipoInscripcionModel, int IdTipoInscripcion)
+        {
+            InscripcionBiz oIncripcionBiz = new(_ConectionString);
+            string sXml = string.Empty;
+            try
+            {
+                sXml = Inscripcion.ToXml(ChangeTipoInscripcionModel);
+                await Task.Run(() => oIncripcionBiz.ChangeTipoInscripcion(sXml,IdTipoInscripcion));
+            }
+            catch (WebException ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get", 500, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get ", 500, ex.Message);
+            }
+            return Ok(); //OK 200);
+        }
+
+
+
+        /// <summary>
         /// Chequea que un registro fue contactado
         /// </summary>
         /// <param name="Id"></param>
