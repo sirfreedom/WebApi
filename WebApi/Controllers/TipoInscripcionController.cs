@@ -55,6 +55,35 @@ namespace WebApi.Controllers
             return Ok(new { tipoinscripciones = lTipoInscripcion }); //OK 200);
         }
 
+        /// <summary>
+        /// Lista los tipos de inscripcion en el menu
+        /// </summary>
+        /// <returns>
+        /// 200 ok - Devuelve la lista de tipos de inscripcion
+        /// </returns>
+        [HttpGet("ListMenu")]
+        [Authorize(Policy = "Admin")]
+        public async Task<ActionResult> ListMenu()
+        {
+            TipoInscripcionBiz oInscripcionBiz = new(_ConectionString);
+            List<TipoInscripcion> lTipoInscripcion = new List<TipoInscripcion>();
+            try
+            {
+                lTipoInscripcion = await Task.Run(() => oInscripcionBiz.ListMenu());
+            }
+            catch (WebException ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get", 500, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get ", 500, ex.Message);
+            }
+            return Ok(new { tipoinscripciones = lTipoInscripcion }); //OK 200);
+        }
+
 
         /// <summary>
         /// Lista los tipos de inscripcion
