@@ -58,6 +58,21 @@ namespace WebApi.Data
             return oTipoInscripcion;
         }
 
+        public List<TipoInscripcion> ListMenu() 
+        {
+            IRepository<TipoInscripcion> TipoInscripcionRepository = new ContextSQL<TipoInscripcion>(_ConnectionString);
+            List<TipoInscripcion> lTipoInscripcion;
+            try
+            {
+                lTipoInscripcion = TipoInscripcion.ToList<TipoInscripcion>(TipoInscripcionRepository.Fill("Menu",new Dictionary<string, string>()));
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return lTipoInscripcion;
+        }
+
 
 
     }

@@ -4,10 +4,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using WebApi.Entity;
 using WebApi.Biz;
+using WebApi.Entity;
 using WebApi.Model;
 
 namespace WebApi.Controllers
@@ -90,8 +91,12 @@ namespace WebApi.Controllers
 			string sXml = string.Empty;
             try
 			{
+                if (inscripcionModel.Count == 0 || !inscripcionModel.Any()) return BadRequest();
+
+                await Task.Run(() => {
                 sXml = Inscripcion.ToXml(inscripcionModel);
-                await Task.Run(() => oIncripcionBiz.Insert(sXml));
+                oIncripcionBiz.Insert(sXml);
+                });
 			}
 			catch (WebException ex)
 			{
