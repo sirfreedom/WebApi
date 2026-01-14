@@ -60,8 +60,20 @@ namespace WebApi.Biz
         }
 
 
-
-
+        public List<TipoInscripcion> ListMenu() 
+        {
+            TipoInscripcionData oIncripcionData = new(_ConnectionString);
+            List<TipoInscripcion> lTipoInscripcion = new List<TipoInscripcion>();
+            try
+            {
+                lTipoInscripcion = oIncripcionData.ListMenu();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return lTipoInscripcion;
+        }
 
 
 
