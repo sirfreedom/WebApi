@@ -34,6 +34,7 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [HttpGet("List")]
         [Authorize(Policy = "Admin")]
+        //[AllowAnonymous]
         public async Task<ActionResult> List()
         {
             TipoInscripcionBiz oInscripcionBiz = new(_ConectionString);
