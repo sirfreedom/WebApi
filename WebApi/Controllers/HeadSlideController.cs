@@ -75,7 +75,7 @@ namespace WebApi.Controllers
 			HeadSlide oHeadSlide;
 			try
 			{
-				oHeadSlide = HeadSlide.Merge<HeadSlideModel, HeadSlide>(HeadSlideModel);
+		        oHeadSlide = HeadSlide.Merge<HeadSlideModel, HeadSlide>(HeadSlideModel);
 				oHeadSlide = await Task.Run(() => oHeadSlideBiz.Insert(oHeadSlide));
 			}
 			catch (WebException ex)
@@ -102,12 +102,12 @@ namespace WebApi.Controllers
 		/// </returns>
 		[HttpDelete("Delete")]
 		[AllowAnonymous]
-		public ActionResult Delete(int Id)
+		public async Task<ActionResult> Delete(int Id)
 		{
 			HeadSlideBiz oHeadSlideBiz = new HeadSlideBiz(_ConectionString);
 			try
 			{
-				oHeadSlideBiz.Delete(Id);
+                await Task.Run(async () => oHeadSlideBiz.Delete(Id));
 			}
 			catch (WebException ex)
 			{

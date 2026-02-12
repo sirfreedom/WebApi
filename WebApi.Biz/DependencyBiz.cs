@@ -2,6 +2,7 @@
 using System;
 using WebApi.Entity;
 using WebApi.Data;
+using System.Threading.Tasks;
 
 namespace WebApi.Biz
 {
@@ -17,13 +18,13 @@ namespace WebApi.Biz
 			_ConnectionString = ConnectionString;
 		}
 
-		public List<Dependency> List() 
+		public async Task<List<Dependency>> List() 
 		{
 		DependencyData oDependencyData = new (_ConnectionString); 
 		List<Dependency> lDependency;
 		try 
 		{
-			lDependency = oDependencyData.List();
+			lDependency = await oDependencyData.List();
 		}
 		catch (Exception) 
 		{
@@ -33,43 +34,13 @@ namespace WebApi.Biz
 		}
 
 
-		public Dependency Get(int Id) 
+		public async Task<Dependency> Get(int Id)
 		{
-		DependencyData oDependencyData = new (_ConnectionString); 
-		Dependency oDependency;
-		try
-		{
-			oDependency = oDependencyData.Get(Id);
-		}
-		catch (Exception) 
-		{
-			throw;
-		}
-		return oDependency;
-		}
-
-
-		public void Update(Dependency dependency)
-		{
-		DependencyData oDependencyData = new (_ConnectionString); 
-		try
-		{
-			oDependencyData.Update(dependency); 
-		}
-		catch (Exception) 
-		{
-			throw;
-		}
-		}
-
-
-		public Dependency Insert(Dependency dependency)
-		{
-			DependencyData oDependencyData = new (_ConnectionString);
+			DependencyData oDependencyData = new(_ConnectionString);
 			Dependency oDependency;
 			try
 			{
-				oDependency = oDependencyData.Insert(dependency);
+				oDependency = await oDependencyData.Get(Id);
 			}
 			catch (Exception)
 			{
@@ -79,31 +50,63 @@ namespace WebApi.Biz
 		}
 
 
-		public void Delete(int Id)
+		public async Task Update(Dependency dependency)
 		{
-		DependencyData oDependencyData = new (_ConnectionString); 
-		try
-		{
-			oDependencyData.Delete(Id);
-		}
-		catch (Exception) 
-		{
-			throw;
-		}
+			DependencyData oDependencyData = new(_ConnectionString);
+			try
+			{
+				await oDependencyData.Update(dependency);
+			}
+			catch (Exception)
+			{
+				throw;
+			}
 		}
 
-        public void Disabled(int Id, bool Disabled)
+
+		public async Task<Dependency> Insert(Dependency dependency)
+		{
+			DependencyData oDependencyData = new (_ConnectionString);
+			Dependency oDependency;
+			try
+			{
+				oDependency = await oDependencyData.Insert(dependency);
+			}
+			catch (Exception)
+			{
+				throw;
+			}
+			return oDependency;
+		}
+
+
+		public async Task Delete(int Id)
+		{
+			DependencyData oDependencyData = new(_ConnectionString);
+			try
+			{
+				await oDependencyData.Delete(Id);
+			}
+			catch (Exception)
+			{
+				throw;
+			}
+		}
+
+        public async Task Disabled(int Id, bool Disabled)
         {
             DependencyData oDependencyData = new (_ConnectionString);
             try
             {
-                oDependencyData.Disabled(Id, Disabled);
+                await oDependencyData.Disabled(Id, Disabled);
             }
             catch (Exception)
             {
                 throw;
             }
         }
+
+
 
     }
 

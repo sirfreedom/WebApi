@@ -57,8 +57,10 @@ namespace WebApi.Controllers
                 lParam.Add("MM",MM.ToString());
                 lParam.Add("YY",YY.ToString());
 
-                lIncripcion = await Task.Run(() => oIncripcionBiz.Find(lParam));
+                await Task.Run(async () => {
+                lIncripcion = await oIncripcionBiz.Find(lParam);
 				lIncripcionFindModel = Inscripcion.ToList<InscripcionFindModel>(lIncripcion);
+                });
             }
             catch (WebException ex)
             {
@@ -93,9 +95,9 @@ namespace WebApi.Controllers
 			{
                 if (inscripcionModel.Count == 0 || !inscripcionModel.Any()) return BadRequest();
 
-                await Task.Run(() => {
+                await Task.Run(async () => {
                 sXml = Inscripcion.ToXml(inscripcionModel);
-                oIncripcionBiz.Insert(sXml);
+                await oIncripcionBiz.Insert(sXml);
                 });
 			}
 			catch (WebException ex)
@@ -132,8 +134,11 @@ namespace WebApi.Controllers
             string sXml = string.Empty;
             try
             {
+                await Task.Run(async () => 
+                {
                 sXml = Inscripcion.ToXml(ChangeTipoInscripcionModel);
                 await Task.Run(() => oIncripcionBiz.ChangeTipoInscripcion(sXml,IdTipoInscripcion));
+                });
             }
             catch (WebException ex)
             {
@@ -158,12 +163,12 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [HttpPatch("Contacted")]
         [AllowAnonymous]
-        public ActionResult Contacted(int Id, bool IsContacted)
+        public async Task<ActionResult> Contacted(int Id, bool IsContacted)
         {
             InscripcionBiz oIncripcionBiz = new(_ConectionString);
             try
             {
-                oIncripcionBiz.Conected(Id, IsContacted);
+                await Task.Run(async () => oIncripcionBiz.Conected(Id, IsContacted));
             }
             catch (WebException ex)
             {
@@ -188,12 +193,12 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [HttpPatch("Error")]
         [AllowAnonymous]
-        public ActionResult Error(int Id, bool IsError)
+        public async Task<ActionResult> Error(int Id, bool IsError)
         {
             InscripcionBiz oIncripcionBiz = new(_ConectionString);
             try
             {
-                oIncripcionBiz.Error(Id, IsError);
+                await Task.Run(async () => oIncripcionBiz.Error(Id, IsError));
             }
             catch (WebException ex)
             {

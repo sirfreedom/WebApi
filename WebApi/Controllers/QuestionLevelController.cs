@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
@@ -44,7 +43,7 @@ namespace WebApi.Controllers
         public async Task<ActionResult> List(int IdDependency)
         {
             List<QuestionLevel> lq;
-            QuestionLevelBiz questionLevelBiz = new QuestionLevelBiz(_ConnectionString);
+            QuestionLevelBiz questionLevelBiz = new (_ConnectionString);
             try
             {
                 lq = await Task.Run(() => questionLevelBiz.List(IdDependency));
@@ -76,8 +75,8 @@ namespace WebApi.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> Get(int Id)
         {
-            QuestionLevelBiz oQuestionLevelBiz = new QuestionLevelBiz(_ConnectionString);
-            QuestionLevel oQuestionLevel = new QuestionLevel();
+            QuestionLevelBiz oQuestionLevelBiz = new (_ConnectionString);
+            QuestionLevel oQuestionLevel = new ();
             try
             {
                 oQuestionLevel = await Task.Run(() => oQuestionLevelBiz.Get(Id));
@@ -109,7 +108,7 @@ namespace WebApi.Controllers
         [Authorize(Policy = "Admin")]
         public async Task<ActionResult> Update([FromBody] QuestionLevel questionlevel)
         {
-            QuestionLevelBiz oQuestionLevelBiz = new QuestionLevelBiz(_ConnectionString);
+            QuestionLevelBiz oQuestionLevelBiz = new (_ConnectionString);
             try
             {
                 await Task.Run(() => oQuestionLevelBiz.Update(questionlevel));
@@ -141,7 +140,7 @@ namespace WebApi.Controllers
         [Authorize(Policy = "Admin")]
         public async Task<ActionResult> Insert([FromBody] QuestionLevelModel questionlevelModel)
         {
-            QuestionLevelBiz oQuestionLevelBiz = new QuestionLevelBiz(_ConnectionString);
+            QuestionLevelBiz oQuestionLevelBiz = new (_ConnectionString);
             QuestionLevel oQuestionLevel;
             try
             {
@@ -175,7 +174,7 @@ namespace WebApi.Controllers
         [Authorize(Policy = "SuperAdmin")]
         public async Task<ActionResult> Delete(int Id)
         {
-            QuestionLevelBiz oQuestionLevelBiz = new QuestionLevelBiz(_ConnectionString);
+            QuestionLevelBiz oQuestionLevelBiz = new (_ConnectionString);
             try
             {
                 await Task.Run(() => oQuestionLevelBiz.Delete(Id));
@@ -206,7 +205,7 @@ namespace WebApi.Controllers
         [Authorize(Policy = "Admin")]
         public async Task<ActionResult> Disabled(int Id, bool Disabled)
         {
-            QuestionLevelBiz oQuestionLevelBiz = new QuestionLevelBiz(_ConnectionString);
+            QuestionLevelBiz oQuestionLevelBiz = new (_ConnectionString);
             try
             {
                 await Task.Run(() => oQuestionLevelBiz.Disabled(Id,Disabled));

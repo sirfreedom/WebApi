@@ -143,7 +143,7 @@ namespace WebApi.Controllers
 		AnswerBiz oAnswerBiz = new (_ConectionString); 
 		try
 		{
-                await Task.Run(() => oAnswerBiz.Delete(Id));
+             await Task.Run(() => oAnswerBiz.Delete(Id));
 		}
 		catch (WebException ex) 
 		{

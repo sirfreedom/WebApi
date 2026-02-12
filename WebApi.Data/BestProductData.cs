@@ -3,6 +3,7 @@ using System;
 using WebApi.Entity;
 using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace WebApi.Data
 {
@@ -18,13 +19,13 @@ namespace WebApi.Data
 			_ConnectionString = ConnectionString;
 		}
 
-		public List<BestProduct> List()
+		public async Task<List<BestProduct>> List()
 		{
 			IRepository<BestProduct> ProductRepository = new ContextSQL<BestProduct>(_ConnectionString);
 			List<BestProduct> lBestProduct;
 			try
 			{
-				lBestProduct = ProductRepository.List();
+				lBestProduct = await ProductRepository.List();
 			}
 			catch (Exception)
 			{
@@ -34,13 +35,13 @@ namespace WebApi.Data
 		}
 
 
-		public BestProduct Get(int Id)
+		public async Task<BestProduct> Get(int Id)
 		{
 			IRepository<BestProduct> ProductRepository = new ContextSQL<BestProduct>(_ConnectionString);
 			BestProduct oProduct;
 			try
 			{
-				oProduct = ProductRepository.Get(Id);
+				oProduct = await ProductRepository.Get(Id);
 			}
 			catch (Exception)
 			{
@@ -50,12 +51,12 @@ namespace WebApi.Data
 		}
 
 
-		public void Update(BestProduct bestproduct)
+		public async Task Update(BestProduct bestproduct)
 		{
 			IRepository<BestProduct> BestProductRepository = new ContextSQL<BestProduct>(_ConnectionString);
 			try
 			{
-				BestProductRepository.Update(bestproduct);
+				await BestProductRepository.Update(bestproduct);
 			}
 			catch (Exception)
 			{
@@ -64,13 +65,13 @@ namespace WebApi.Data
 		}
 
 
-		public BestProduct Insert(BestProduct bestproduct)
+		public async Task<BestProduct> Insert(BestProduct bestproduct)
 		{
 			IRepository<BestProduct> BestProductRepository = new ContextSQL<BestProduct>(_ConnectionString);
 			DataTable dt;
 			try
 			{
-				dt = BestProductRepository.Fill("Insert", bestproduct.ToDictionary());
+				dt = await BestProductRepository.Fill("Insert", bestproduct.ToDictionary());
 				bestproduct = BestProduct.ToList<BestProduct>(dt).SingleOrDefault();
 			}
 			catch (Exception)
@@ -81,12 +82,12 @@ namespace WebApi.Data
 		}
 
 
-		public void Delete(int Id)
+		public async Task Delete(int Id)
 		{
 			IRepository<BestProduct> BestProductRepository = new ContextSQL<BestProduct>(_ConnectionString);
 			try
 			{
-				BestProductRepository.Delete(Id);
+				await BestProductRepository.Delete(Id);
 			}
 			catch (Exception)
 			{

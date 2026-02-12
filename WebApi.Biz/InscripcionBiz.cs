@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using WebApi.Data;
 using WebApi.Entity;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+
 
 namespace WebApi.Biz
 {
@@ -17,13 +18,13 @@ namespace WebApi.Biz
 			_ConnectionString = ConnectionString;
 		}
 
-		public List<Inscripcion> List()
+		public async Task<List<Inscripcion>> List()
 		{
 			InscripcionData oIncripcionData = new (_ConnectionString);
 			List<Inscripcion> lIncripcion;
 			try
 			{
-				lIncripcion = oIncripcionData.List();
+				lIncripcion = await oIncripcionData.List();
 			}
 			catch (Exception)
 			{
@@ -33,13 +34,13 @@ namespace WebApi.Biz
 		}
 
 
-		public List<dynamic> Find(Dictionary<string,string> lParam)
+		public async Task<List<dynamic>> Find(Dictionary<string,string> lParam)
 		{
 			InscripcionData oIncripcionData = new (_ConnectionString);
 			List<dynamic> lIncripcion;
 			try
 			{
-				lIncripcion = oIncripcionData.Find(lParam);
+				lIncripcion = await oIncripcionData.Find(lParam);
 			}
 			catch (Exception)
 			{
@@ -49,12 +50,12 @@ namespace WebApi.Biz
         }
 
 
-        public void Insert(string InscripcionXml)
+        public async Task Insert(string InscripcionXml)
 		{
 			InscripcionData oIncripcionData = new (_ConnectionString);
 			try
 			{
-				oIncripcionData.Insert(InscripcionXml);
+				await oIncripcionData.Insert(InscripcionXml);
 			}
 			catch (Exception)
 			{
@@ -63,12 +64,12 @@ namespace WebApi.Biz
 		}
 
 
-		public void Conected(int Id, bool IsConected) 
+		public async Task Conected(int Id, bool IsConected) 
 		{
             InscripcionData oIncripcionData = new(_ConnectionString);
             try
             {
-				oIncripcionData.Contacted(Id, IsConected);
+				await oIncripcionData.Contacted(Id, IsConected);
 			}
             catch (Exception)
             {
@@ -77,12 +78,12 @@ namespace WebApi.Biz
         }
 
 
-        public void Error(int Id, bool IsError)
+        public async Task Error(int Id, bool IsError)
         {
             InscripcionData oIncripcionData = new(_ConnectionString);
             try
             {
-                oIncripcionData.Error(Id, IsError);
+                await oIncripcionData.Error(Id, IsError);
             }
             catch (Exception)
             {
@@ -91,12 +92,12 @@ namespace WebApi.Biz
         }
 
 
-		public void ChangeTipoInscripcion(string InscripcionXml, int IdTipoInscripcion) 
+		public async Task ChangeTipoInscripcion(string InscripcionXml, int IdTipoInscripcion) 
 		{
             InscripcionData oIncripcionData = new(_ConnectionString);
             try
             {
-                oIncripcionData.ChangeTipoInscripcion(InscripcionXml, IdTipoInscripcion);
+                await oIncripcionData.ChangeTipoInscripcion(InscripcionXml, IdTipoInscripcion);
             }
             catch (Exception)
             {

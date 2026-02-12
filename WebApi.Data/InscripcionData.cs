@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using WebApi.Entity;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+
 
 namespace WebApi.Data
 {
@@ -17,13 +18,13 @@ namespace WebApi.Data
 		}
 
 
-		public List<Inscripcion> List()
+		public async Task<List<Inscripcion>> List()
 		{
 			IRepository<Inscripcion> InscripcionRepository = new ContextSQL<Inscripcion>(_ConnectionString);
 			List<Inscripcion> lInscripcion;
 			try
 			{
-				lInscripcion = InscripcionRepository.List();
+				lInscripcion = await InscripcionRepository.List();
 			}
 			catch (Exception)
 			{
@@ -33,13 +34,13 @@ namespace WebApi.Data
 		}
 
 
-        public List<dynamic> Find(Dictionary<string,string> lParam)
+        public async Task<List<dynamic>> Find(Dictionary<string,string> lParam)
         {
             IRepository<Inscripcion> InscripcionRepository = new ContextSQL<Inscripcion>(_ConnectionString);
             List<dynamic> lInscripcion;
             try
             {
-				lInscripcion = InscripcionRepository.Find(lParam);
+				lInscripcion = await InscripcionRepository.Find(lParam);
             }
             catch (Exception)
             {
@@ -50,7 +51,7 @@ namespace WebApi.Data
 
 
 
-        public void Insert(string InscripcionXml)
+        public async Task Insert(string InscripcionXml)
 		{
 			IRepository<Inscripcion> InscripcionRepository = new ContextSQL<Inscripcion>(_ConnectionString);
 			Dictionary<string, string> lParam = new Dictionary<string, string>();
@@ -58,7 +59,7 @@ namespace WebApi.Data
 			try
 			{
                 lParam.Add("XmlInsert", InscripcionXml);
-				InscripcionRepository.ExecuteNonQuery("Insert", lParam);
+				await InscripcionRepository.ExecuteNonQuery("Insert", lParam);
 			}
 			catch (Exception)
 			{
@@ -67,7 +68,7 @@ namespace WebApi.Data
 		}
 
 	
-		public void Contacted(int Id, bool IsContacted)
+		public async Task Contacted(int Id, bool IsContacted)
 		{
 			IRepository<Inscripcion> InscripcionRepository = new ContextSQL<Inscripcion>(_ConnectionString);
 			Dictionary<string, string> lParam = new Dictionary<string, string>();
@@ -75,7 +76,7 @@ namespace WebApi.Data
 			{
 				lParam.Add("Id", Id.ToString());
 				lParam.Add("IsContacted", IsContacted ? "1" : "0");
-				InscripcionRepository.ExecuteNonQuery("Contacted", lParam);
+				await InscripcionRepository.ExecuteNonQuery("Contacted", lParam);
 			}
 			catch (Exception)
 			{
@@ -84,7 +85,7 @@ namespace WebApi.Data
         }
 
 
-        public void Error(int Id, bool IsError)
+        public async Task Error(int Id, bool IsError)
         {
             IRepository<Inscripcion> InscripcionRepository = new ContextSQL<Inscripcion>(_ConnectionString);
             Dictionary<string, string> lParam = new Dictionary<string, string>();
@@ -92,7 +93,7 @@ namespace WebApi.Data
             {
                 lParam.Add("Id", Id.ToString());
                 lParam.Add("IsError", IsError ? "1" : "0");
-                InscripcionRepository.ExecuteNonQuery("Error", lParam);
+                await InscripcionRepository.ExecuteNonQuery("Error", lParam);
             }
             catch (Exception)
             {
@@ -101,7 +102,7 @@ namespace WebApi.Data
         }
 
 
-		public void ChangeTipoInscripcion(string InscripcionXml, int IdTipoInscripcion) 
+		public async Task ChangeTipoInscripcion(string InscripcionXml, int IdTipoInscripcion) 
 		{
             IRepository<Inscripcion> InscripcionRepository = new ContextSQL<Inscripcion>(_ConnectionString);
             Dictionary<string, string> lParam = new Dictionary<string, string>();
@@ -109,7 +110,7 @@ namespace WebApi.Data
             {
                 lParam.Add("XmlInsert", InscripcionXml);
                 lParam.Add("IdTipoInscripcion", IdTipoInscripcion.ToString());
-                InscripcionRepository.ExecuteNonQuery("ChangeTipoInscripcion", lParam);
+                await InscripcionRepository.ExecuteNonQuery("ChangeTipoInscripcion", lParam);
             }
             catch (Exception)
             {

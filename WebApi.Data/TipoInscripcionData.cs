@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Threading.Tasks;
 using WebApi.Entity;
 
 namespace WebApi.Data
@@ -14,13 +16,13 @@ namespace WebApi.Data
             _ConnectionString = ConnectionString;
         }
 
-        public List<TipoInscripcion> List()
+        public async Task<List<TipoInscripcion>> List()
         {
             IRepository<TipoInscripcion> TipoInscripcionRepository = new ContextSQL<TipoInscripcion>(_ConnectionString);
             List<TipoInscripcion> lTipoInscripcion;
             try
             {
-                lTipoInscripcion = TipoInscripcionRepository.List();
+                lTipoInscripcion = await TipoInscripcionRepository.List();
             }
             catch (Exception)
             {
@@ -30,12 +32,12 @@ namespace WebApi.Data
         }
 
 
-        public void Update(TipoInscripcion tipoInscripcion)
+        public async Task Update(TipoInscripcion tipoInscripcion)
         {
             IRepository<TipoInscripcion> TipoInscripcionRepository = new ContextSQL<TipoInscripcion>(_ConnectionString);
             try
             {
-                TipoInscripcionRepository.Update(tipoInscripcion);
+                await TipoInscripcionRepository.Update(tipoInscripcion);
             }
             catch (Exception)
             {
@@ -43,13 +45,13 @@ namespace WebApi.Data
             }
         }
 
-        public TipoInscripcion Get(int Id)
+        public async Task<TipoInscripcion> Get(int Id)
         {
             IRepository<TipoInscripcion> TipoInscripcionRepository = new ContextSQL<TipoInscripcion>(_ConnectionString);
             TipoInscripcion oTipoInscripcion;
             try
             {
-                oTipoInscripcion = TipoInscripcionRepository.Get(Id);
+                oTipoInscripcion = await TipoInscripcionRepository.Get(Id);
             }
             catch (Exception)
             {
@@ -58,13 +60,15 @@ namespace WebApi.Data
             return oTipoInscripcion;
         }
 
-        public List<TipoInscripcion> ListMenu() 
+        public async Task<List<TipoInscripcion>> ListMenu() 
         {
             IRepository<TipoInscripcion> TipoInscripcionRepository = new ContextSQL<TipoInscripcion>(_ConnectionString);
             List<TipoInscripcion> lTipoInscripcion;
+            DataTable dt;
             try
             {
-                lTipoInscripcion = TipoInscripcion.ToList<TipoInscripcion>(TipoInscripcionRepository.Fill("Menu",new Dictionary<string, string>()));
+                dt = await TipoInscripcionRepository.Fill("Menu", new Dictionary<string, string>());
+                lTipoInscripcion = TipoInscripcion.ToList<TipoInscripcion>(dt);
             }
             catch (Exception)
             {
