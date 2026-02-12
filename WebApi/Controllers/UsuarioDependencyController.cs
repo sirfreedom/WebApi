@@ -8,6 +8,7 @@ using System;
 using WebApi.Entity;
 using WebApi.Biz;
 using WebApi.Model;
+using System.Threading.Tasks;
 
 namespace WebApi.Controllers
 {
@@ -35,13 +36,13 @@ namespace WebApi.Controllers
 		/// </returns>
 		[HttpGet("List")]
 		[AllowAnonymous]
-		public ActionResult List()
+		public async Task<ActionResult> List()
 		{
 		UsuarioDependencyBiz oUsuarioDependencyBiz = new UsuarioDependencyBiz(_ConectionString); 
 		List<UsuarioDependency> lUsuarioDependency;
 		try 
 		{
-			lUsuarioDependency = oUsuarioDependencyBiz.List();
+			lUsuarioDependency = await Task.Run(() => oUsuarioDependencyBiz.List());
 		}
 		catch (WebException ex) 
 		{
@@ -69,12 +70,12 @@ namespace WebApi.Controllers
 		/// </returns>
 		[HttpPost("Insert")]
 		[AllowAnonymous]
-		public ActionResult Insert([FromBody] UsuarioDependencyModel usuariodependencyModel)
+		public async Task<ActionResult> Insert([FromBody] UsuarioDependencyModel usuariodependencyModel)
 		{
 			UsuarioDependencyBiz oUsuarioDependencyBiz = new UsuarioDependencyBiz(_ConectionString);
 			try
 			{
-				oUsuarioDependencyBiz.Insert(usuariodependencyModel.lUsuarioDependency);
+                await Task.Run(() => oUsuarioDependencyBiz.Insert(usuariodependencyModel.lUsuarioDependency));
 			}
 			catch (WebException ex)
 			{

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using WebApi.Data;
 using WebApi.Entity;
 
@@ -15,13 +16,13 @@ namespace WebApi.Biz
             _ConnectionString = ConnectionString;
         }
 
-        public List<Question> List(int IdDependency, int CodLevel) 
+        public async Task<List<Question>> List(int IdDependency, int CodLevel) 
         { 
             QuestionData Serv = new (_ConnectionString);
             List<Question> lQuestion;
             try
             {
-                lQuestion = Serv.List(IdDependency, CodLevel);
+                lQuestion = await Serv.List(IdDependency, CodLevel);
             }
             catch (Exception) 
             {
@@ -31,13 +32,13 @@ namespace WebApi.Biz
         }
 
 
-        public Question Get(int Id)
+        public async Task<Question> Get(int Id)
         {
             QuestionData oQuestionData = new (_ConnectionString);
             Question oQuestion;
             try
             {
-                oQuestion = oQuestionData.Get(Id);
+                oQuestion = await oQuestionData.Get(Id);
             }
             catch (Exception)
             {
@@ -47,12 +48,12 @@ namespace WebApi.Biz
         }
 
 
-        public void Update(Question question)
+        public async Task Update(Question question)
         {
             QuestionData oQuestionData = new (_ConnectionString);
             try
             {
-                oQuestionData.Update(question);
+                await oQuestionData.Update(question);
             }
             catch (Exception)
             {
@@ -61,13 +62,13 @@ namespace WebApi.Biz
         }
 
 
-        public Question Insert(Question question)
+        public async Task<Question> Insert(Question question)
         {
             QuestionData oQuestionData = new (_ConnectionString);
             Question oQuestion;
             try
             {
-                 oQuestion = oQuestionData.Insert(question);
+                 oQuestion = await oQuestionData.Insert(question);
             }
             catch (Exception)
             {
@@ -77,12 +78,12 @@ namespace WebApi.Biz
         }
 
 
-        public void Delete(int Id)
+        public async Task Delete(int Id)
         {
             QuestionData oQuestionData = new (_ConnectionString);
             try
             {
-                oQuestionData.Delete(Id);
+                await oQuestionData.Delete(Id);
             }
             catch (Exception)
             {
@@ -90,12 +91,12 @@ namespace WebApi.Biz
             }
         }
 
-        public void Disabled(int Id, bool Disabled)
+        public async Task Disabled(int Id, bool Disabled)
         {
             QuestionData oQuestionData = new (_ConnectionString);
             try
             {
-                oQuestionData.Disabled(Id, Disabled);
+                await oQuestionData.Disabled(Id, Disabled);
             }
             catch (Exception)
             {

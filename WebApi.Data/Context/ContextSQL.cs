@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using WebApi.Entity;
 
 namespace WebApi.Data
@@ -22,18 +23,17 @@ namespace WebApi.Data
 
         #region Declaration
 
-        private readonly ConnectionCommandPool _connectionCommandPool; // ObjectPooling maneja las conexiones
+        private readonly string _conectionString;
 
         #endregion
 
-        public ContextSQL(string ConnectionString)
+        public ContextSQL(string conectionString)
         {
-            _connectionCommandPool = new ConnectionCommandPool(ConnectionString,10); // Initialize the pool
+            _conectionString = conectionString;
         }
 
         public class ContextSQLException : Exception 
         {
-            public ContextSQLException() { }
             
             public ContextSQLException(string message) 
             { 
@@ -51,7 +51,6 @@ namespace WebApi.Data
             }
         }
 
-
         #region Properties
 
         public string EntityName
@@ -67,6 +66,7 @@ namespace WebApi.Data
         {
             get; private set;
         }
+
 
         #endregion
 
@@ -87,12 +87,12 @@ namespace WebApi.Data
 
         #region Interface Method
 
-        public List<TEntity> List()
+        public async Task<List<TEntity>> List()
         {
             DataTable dt;
             try
             {
-                dt = Fill("List");
+                dt = await Fill("List");
             }
             catch (SqlException ex)
             {
@@ -105,14 +105,14 @@ namespace WebApi.Data
             return EntityBase.ToList<TEntity>(dt);
         }
 
-        public TEntity Get(int Id)
+        public async Task<TEntity> Get(int Id)
         {
             Dictionary<string, string> lDictionary = [];
             DataTable dt;
             lDictionary.Add("Id", Id.ToString());
             try
             {
-                dt = Fill("Get", lDictionary);
+                dt = await Fill("Get", lDictionary);
             }
             catch (SqlException ex)
             {
@@ -125,13 +125,13 @@ namespace WebApi.Data
             return EntityBase.ToList<TEntity>(dt).SingleOrDefault();
         }
 
-        public List<dynamic> Find(Dictionary<string, string> lParam)
+        public async Task<List<dynamic>> Find(Dictionary<string, string> lParam)
         {
             List<dynamic> lDynamic = [];
             DataTable dt;
             try
             {
-                dt = Fill("Find", lParam);
+                dt = await Fill("Find", lParam);
                 if (dt.Rows.Count > 0)
                 {
                     lDynamic = EntityBase.ToDynamic(dt);
@@ -148,7 +148,7 @@ namespace WebApi.Data
             return lDynamic;
         }
 
-        public void Delete(int Id)
+        public async Task Delete(int Id)
         {
             Dictionary<string, string> lDictionary = new()
             {
@@ -160,51 +160,51 @@ namespace WebApi.Data
                 {
                     throw new Exception("This Id not be zero");
                 }
-                ExecuteNonQuery("Delete", lDictionary);
+                await ExecuteNonQuery("Delete", lDictionary);
             }
-            catch(SqlException ex)
+            catch(SqlException)
             {
-                throw new Exception(ex.Message);
+                throw;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw new Exception(ex.Message);
+                throw;
             }
         }
 
-        public void Insert(TEntity oEntity)
+        public async Task Insert(TEntity oEntity)
         {
             Dictionary<string, string> lParam = [];
             try
             {
                 lParam = EntityBase.ToDictionary(oEntity);
-                ExecuteNonQuery("Insert", lParam);
+                await ExecuteNonQuery("Insert", lParam);
             }
-            catch (SqlException ex)
+            catch (SqlException)
             {
-                throw new Exception(ex.Message);
+                throw;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw new Exception(ex.Message);
+                throw;
             }
         }
 
-        public void Update(TEntity oEntity)
+        public async Task Update(TEntity oEntity)
         {
             Dictionary<string, string> lParam = [];
             try
             {
                 lParam = EntityBase.ToDictionary(oEntity,true);
-                ExecuteNonQuery("Update", lParam);
+                await ExecuteNonQuery("Update", lParam);
             }
-            catch (SqlException ex)
+            catch (SqlException)
             {
-                throw new Exception(ex.Message);
+                throw;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw new Exception(ex.Message);
+                throw;
             }
         }
 
@@ -212,11 +212,11 @@ namespace WebApi.Data
 
         #region Store Procedures Common Function
 
-        public DataTable Fill(string FunctionName, Dictionary<string, string> Parameters = null)
+        public async Task<DataTable> Fill(string FunctionName, Dictionary<string, string> Parameters = null)
         {
+            SqlCommand cmd = new();
             DataSet ds = new();
-            DataTable dt = new DataTable();
-            SqlCommand cmd;
+            DataTable dt = new ();
             SqlDataAdapter da;
             StringBuilder sbKey = new();
             List<dynamic> lDynamic = [];
@@ -227,7 +227,6 @@ namespace WebApi.Data
             try
             {
                 Parameters = Parameters ?? [];
-                cmd = _connectionCommandPool.GetCommand();   // Get command from pool
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.CommandText = sb.ToString();
                 MessageError = string.Empty;
@@ -241,15 +240,16 @@ namespace WebApi.Data
                     cmd.Parameters.Add(new SqlParameter(sbKey.ToString(), d.Value));
                 }
 
-                using (SqlConnection cn = _connectionCommandPool.GetConnection())
+                using (SqlConnection cn = new SqlConnection(_conectionString))
                 {
                     cmd.Connection = cn;
                     cn.InfoMessage += cn_InfoMessage;
-                    da.Fill(ds);
+                    cn.Open();
+                    await Task.Run(() => da.Fill(dt));
                 }
 
-                if (ds.Tables.Count == 0) 
-                { 
+                if (ds.Tables.Count == 0)
+                {
                     dt = new DataTable();
                 }
                 if (ds.Tables.Count > 0)
@@ -261,39 +261,38 @@ namespace WebApi.Data
                     throw new ContextSQLException(MessageError);
                 }
             }
-            catch (ContextSQLException ex) 
+            catch (ContextSQLException)
             {
-                throw new ContextSQLException(ex.Message);
+                throw;
             }
-            catch (SqlException ex)
+            catch (SqlException)
             {
-                throw new Exception(ex.Message);
+                throw;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw new Exception(ex.Message);
+                throw ;
             }
             return dt;
         }
 
-        public void ExecuteNonQuery(string FunctionName, Dictionary<string, string> Parameters = null)
+
+        public async Task ExecuteNonQuery(string FunctionName, Dictionary<string, string> Parameters = null)
         {
+            SqlCommand cmd = new();
             StringBuilder sb = new();
             sb.Append(EntityName);
             sb.Append('_');
             sb.Append(FunctionName);
-            SqlCommand cmd;
             MessageError = string.Empty;
             StringBuilder sbKey = new ();
             int iRowAffected = 0;
             try
             {
-                cmd = _connectionCommandPool.GetCommand();
+                Parameters = Parameters == null ? [] : Parameters;
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.CommandText = sb.ToString();
                 cmd.CommandTimeout = 60;
-
-                Parameters = Parameters == null ? [] : Parameters;
 
                 foreach (var d in Parameters)
                 {
@@ -303,11 +302,12 @@ namespace WebApi.Data
                     cmd.Parameters.Add(new SqlParameter(sbKey.ToString(), d.Value));
                 }
 
-                using (SqlConnection cn = _connectionCommandPool.GetConnection())
+                using (SqlConnection cn = new(_conectionString))
                 {
-                    cn.InfoMessage += cn_InfoMessage;
                     cmd.Connection = cn;
-                    iRowAffected = cmd.ExecuteNonQuery();
+                    cn.InfoMessage += cn_InfoMessage;
+                    cn.Open();
+                    iRowAffected = await cmd.ExecuteNonQueryAsync();
                 }
 
                 if (iRowAffected == 0)
@@ -319,19 +319,18 @@ namespace WebApi.Data
                 {
                     throw new ContextSQLException(MessageError);
                 }
-
             }
-            catch (ContextSQLException ex)
+            catch (ContextSQLException)
             {
-                throw new ContextSQLException(ex.Message);
+                throw;
             }
-            catch (SqlException ex)
+            catch (SqlException)
             {
-                throw new Exception(ex.Message);
+                throw;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw new Exception(ex.Message);
+                throw;
             }
         }
 

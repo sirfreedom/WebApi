@@ -43,7 +43,7 @@ namespace WebApi.Controllers
 		List<ExamResult> examResults;
 		try
 		{
-                examResults = await Task.Run(() => oExamResultBiz.List());
+              examResults = await Task.Run(() => oExamResultBiz.List());
 		}
 		catch (WebException ex) 
 		{

@@ -2,6 +2,7 @@
 using System;
 using WebApi.Entity;
 using WebApi.Data;
+using System.Threading.Tasks;
 
 namespace WebApi.Biz
 {
@@ -16,13 +17,13 @@ namespace WebApi.Biz
 			_ConnectionString = ConnectionString;
 		}
 
-		public List<HeadSlide> List()
+		public async Task<List<HeadSlide>> List()
 		{
 			HeadSlideData oHeadSlideData = new (_ConnectionString);
 			List<HeadSlide> lHeadSlide;
 			try
 			{
-				lHeadSlide = oHeadSlideData.List();
+				lHeadSlide = await oHeadSlideData.List();
 			}
 			catch (Exception)
 			{
@@ -32,13 +33,13 @@ namespace WebApi.Biz
 		}
 
 
-		public HeadSlide Insert(HeadSlide headslide)
+		public async Task<HeadSlide> Insert(HeadSlide headslide)
 		{
 			HeadSlideData oHeadSlideData = new (_ConnectionString);
 			HeadSlide oHeadSlide;
 			try
 			{
-				oHeadSlide = oHeadSlideData.Insert(headslide);
+				oHeadSlide = await oHeadSlideData.Insert(headslide);
 			}
 			catch (Exception)
 			{
@@ -48,12 +49,12 @@ namespace WebApi.Biz
 		}
 
 
-		public void Delete(int Id)
+		public async Task Delete(int Id)
 		{
 			HeadSlideData oHeadSlideData = new (_ConnectionString);
 			try
 			{
-				oHeadSlideData.Delete(Id);
+				await oHeadSlideData.Delete(Id);
 			}
 			catch (Exception)
 			{

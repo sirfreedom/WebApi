@@ -3,6 +3,7 @@ using System;
 using WebApi.Entity;
 using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace WebApi.Data
 {
@@ -18,28 +19,28 @@ namespace WebApi.Data
 			_ConnectionString = ConnectionString;
 		}
 
-		public Answer Get(int Id) 
+		public async Task<Answer> Get(int Id)
 		{
-		IRepository<Answer> AnswerRepository = new ContextSQL<Answer>(_ConnectionString);
-		Answer oAnswer;
-		try
-		{
-			oAnswer = AnswerRepository.Get(Id);
-		}
-		catch (Exception) 
-		{
-			throw;
-		}
-		return oAnswer;
+			IRepository<Answer> AnswerRepository = new ContextSQL<Answer>(_ConnectionString);
+			Answer oAnswer;
+			try
+			{
+				oAnswer = await AnswerRepository.Get(Id);
+			}
+			catch (Exception)
+			{
+				throw;
+			}
+			return oAnswer;
 		}
 
 
-		public void Update(Answer answer)
+		public async Task Update(Answer answer)
 		{
 			IRepository<Answer> AnswerRepository = new ContextSQL<Answer>(_ConnectionString);
 			try
 			{
-				AnswerRepository.Update(answer);
+				await AnswerRepository.Update(answer);
 			}
 			catch (Exception)
 			{
@@ -48,14 +49,14 @@ namespace WebApi.Data
 		}
 
 
-		public Answer Insert(Answer answer)
+		public async Task<Answer> Insert(Answer answer)
 		{
 			IRepository<Answer> AnswerRepository = new ContextSQL<Answer>(_ConnectionString);
 			Answer oAnswer;
 			DataTable dt;
 			try
 			{
-				dt = AnswerRepository.Fill("Insert", answer.ToDictionary());
+				dt = await AnswerRepository.Fill("Insert", answer.ToDictionary());
 				oAnswer = Answer.ToList<Answer>(dt).SingleOrDefault();
 			}
 			catch (Exception)
@@ -66,20 +67,20 @@ namespace WebApi.Data
 		}
 
 
-		public void Delete(int Id)
+		public async Task Delete(int Id)
 		{
-		IRepository<Answer> AnswerRepository = new ContextSQL<Answer>(_ConnectionString);
-		try
-		{
-			AnswerRepository.Delete(Id);
-		}
-		catch (Exception) 
-		{
-			throw;
-		}
+			IRepository<Answer> AnswerRepository = new ContextSQL<Answer>(_ConnectionString);
+			try
+			{
+				await AnswerRepository.Delete(Id);
+			}
+			catch (Exception)
+			{
+				throw;
+			}
 		}
 
-        public void Disabled(int Id, bool Disabled)
+        public async Task Disabled(int Id, bool Disabled)
         {
             IRepository<Answer> SettingRepository = new ContextSQL<Answer>(_ConnectionString);
             Dictionary<string, string> lParam = new Dictionary<string, string>();
@@ -87,7 +88,7 @@ namespace WebApi.Data
             {
                 lParam.Add("Id", Id.ToString());
                 lParam.Add("Disabled", Disabled.ToString());
-                SettingRepository.ExecuteNonQuery("Disabled", lParam);
+                await SettingRepository.ExecuteNonQuery("Disabled", lParam);
             }
             catch (Exception)
             {

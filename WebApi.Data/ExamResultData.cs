@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System;
 using WebApi.Entity;
+using System.Threading.Tasks;
 
 namespace WebApi.Data
 {
@@ -15,33 +16,33 @@ namespace WebApi.Data
 			_ConnectionString = ConnectionString;
 		}
 
-		public List<ExamResult> List ()
+		public async Task<List<ExamResult>> List()
 		{
-		IRepository<ExamResult> ExamResultRepository = new ContextSQL<ExamResult>(_ConnectionString);
-		List<ExamResult> examResults;
-		try
-		{
-			examResults = ExamResultRepository.List();
-		}
-		catch (Exception) 
-		{
-			throw;
-		}
-		return examResults;
+			IRepository<ExamResult> ExamResultRepository = new ContextSQL<ExamResult>(_ConnectionString);
+			List<ExamResult> examResults;
+			try
+			{
+				examResults = await ExamResultRepository.List();
+			}
+			catch (Exception)
+			{
+				throw;
+			}
+			return examResults;
 		}
 
 
-		public void Insert(ExamResult examresult)
+		public async Task Insert(ExamResult examresult)
 		{
-		IRepository<ExamResult> ExamResultRepository = new ContextSQL<ExamResult>(_ConnectionString);
-		try
-		{
-			ExamResultRepository.Insert(examresult);
-		}
-		catch (Exception) 
-		{
-			throw;
-		}
+			IRepository<ExamResult> ExamResultRepository = new ContextSQL<ExamResult>(_ConnectionString);
+			try
+			{
+				await ExamResultRepository.Insert(examresult);
+			}
+			catch (Exception)
+			{
+				throw;
+			}
 		}
 
 

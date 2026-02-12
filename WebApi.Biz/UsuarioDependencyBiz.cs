@@ -2,6 +2,7 @@
 using System;
 using WebApi.Entity;
 using WebApi.Data;
+using System.Threading.Tasks;
 
 namespace WebApi.Biz
 {
@@ -17,34 +18,33 @@ namespace WebApi.Biz
 			_ConnectionString = ConnectionString;
 		}
 
-		public List<UsuarioDependency> List() 
+		public async Task<List<UsuarioDependency>> List()
 		{
-		UsuarioDependencyData oUsuarioDependencyData = new (_ConnectionString); 
-		List<UsuarioDependency> lUsuarioDependency;
-		try 
-		{
-			lUsuarioDependency = oUsuarioDependencyData.List();
-		}
-		catch (Exception) 
-		{
-			throw;
-		}
-		return lUsuarioDependency;
+			UsuarioDependencyData oUsuarioDependencyData = new(_ConnectionString);
+			List<UsuarioDependency> lUsuarioDependency;
+			try
+			{
+				lUsuarioDependency = await oUsuarioDependencyData.List();
+			}
+			catch (Exception)
+			{
+				throw;
+			}
+			return lUsuarioDependency;
 		}
 
 
-
-		public void Insert(List<UsuarioDependency> lusuariodependency)
+		public async Task Insert(List<UsuarioDependency> lusuariodependency)
 		{
-		UsuarioDependencyData oUsuarioDependencyData = new (_ConnectionString); 
-		try
-		{
-			oUsuarioDependencyData.Insert(lusuariodependency);
-		}
-		catch (Exception) 
-		{
-			throw;
-		}
+			UsuarioDependencyData oUsuarioDependencyData = new(_ConnectionString);
+			try
+			{
+				await oUsuarioDependencyData.Insert(lusuariodependency);
+			}
+			catch (Exception)
+			{
+				throw;
+			}
 		}
 
 

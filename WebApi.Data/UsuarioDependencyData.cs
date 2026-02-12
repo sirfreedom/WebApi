@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System;
 using WebApi.Entity;
+using System.Threading.Tasks;
 
 namespace WebApi.Data
 {
@@ -16,13 +17,13 @@ namespace WebApi.Data
 		}
 
 
-		public List<UsuarioDependency> List()
+		public async Task<List<UsuarioDependency>> List()
 		{
 			IRepository<UsuarioDependency> UsuarioDependencyRepository = new ContextSQL<UsuarioDependency>(_ConnectionString);
 			List<UsuarioDependency> lUsuarioDependency;
 			try
 			{
-				lUsuarioDependency = UsuarioDependencyRepository.List();
+				lUsuarioDependency = await UsuarioDependencyRepository.List();
 			}
 			catch (Exception)
 			{
@@ -32,7 +33,7 @@ namespace WebApi.Data
 		}
 
 
-		public void Insert(List<UsuarioDependency> usuariodependency)
+		public async Task Insert(List<UsuarioDependency> usuariodependency)
 		{
 			IRepository<UsuarioDependency> UsuarioDependencyRepository = new ContextSQL<UsuarioDependency>(_ConnectionString);
 			Dictionary<string,string> lParam = new();
@@ -41,7 +42,7 @@ namespace WebApi.Data
 			{
 				UsuarioDependency.ToJson(usuariodependency);
 				lParam.Add("JsonInsert", json);
-				UsuarioDependencyRepository.ExecuteNonQuery("Insert",lParam);
+				await UsuarioDependencyRepository.ExecuteNonQuery("Insert",lParam);
 			}
 			catch (Exception)
 			{
