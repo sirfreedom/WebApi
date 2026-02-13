@@ -36,9 +36,9 @@ namespace WebApi.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> List()
         {
-            ImagenBiz Serv = new ImagenBiz(_ConnectionString);
+            ImagenBiz Serv = new (_ConnectionString);
             List<ImagenTest> lImageTest;
-            Dictionary<string,string> lParam = new Dictionary<string,string>();
+            Dictionary<string,string> lParam = new ();
             ActionResult result;
             try
             {
@@ -69,8 +69,8 @@ namespace WebApi.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> Post([FromBody] FileModel imagentext)
         {
-            ImagenBiz Serv = new ImagenBiz(_ConnectionString);
-            ImagenTest oImagen = new ImagenTest();
+            ImagenBiz Serv = new (_ConnectionString);
+            ImagenTest oImagen = new ();
             try
             {
                 oImagen = ImagenTest.Merge<FileModel, ImagenTest>(imagentext);
@@ -99,8 +99,8 @@ namespace WebApi.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> Delete(int Id)
         {
-            ImagenBiz Serv = new ImagenBiz(_ConnectionString);
-            ImagenTest oImagen = new ImagenTest();
+            ImagenBiz Serv = new (_ConnectionString);
+            ImagenTest oImagen = new ();
             try
             {
                 await Task.Run(() => Serv.Delete(Id));

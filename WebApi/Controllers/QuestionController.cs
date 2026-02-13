@@ -45,8 +45,8 @@ namespace WebApi.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> List(int IdDependency, int CodLevel=0)
         {
-            List<Question> lq = new List<Question>();
-            QuestionBiz questionBiz = new QuestionBiz(_ConnectionString);
+            List<Question> lq = new ();
+            QuestionBiz questionBiz = new (_ConnectionString);
             try
             {
                 lq = await Task.Run(() => questionBiz.List(IdDependency,CodLevel));
@@ -78,8 +78,8 @@ namespace WebApi.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> Get(int Id)
         {
-            QuestionBiz oQuestionBiz = new QuestionBiz(_ConnectionString);
-            Question oQuestion = new Question();
+            QuestionBiz oQuestionBiz = new (_ConnectionString);
+            Question oQuestion;
             try
             {
                 oQuestion = await Task.Run(() => oQuestionBiz.Get(Id));

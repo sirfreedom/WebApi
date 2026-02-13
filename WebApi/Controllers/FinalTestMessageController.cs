@@ -44,11 +44,11 @@ namespace WebApi.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> List(int IdDependency)
         {
-            List<FinalTestMessage> lf;
-            FinalTestMessageBiz finalTestMessageBiz = new FinalTestMessageBiz(_ConnectionString);
+            List<FinalTestMessage> lFinalTestMessage;
+            FinalTestMessageBiz finalTestMessageBiz = new (_ConnectionString);
             try
             {
-                lf = await Task.Run(() => finalTestMessageBiz.List(IdDependency));
+                lFinalTestMessage = await Task.Run(() => finalTestMessageBiz.List(IdDependency));
             }
             catch (WebException ex)
             {
@@ -60,7 +60,7 @@ namespace WebApi.Controllers
                 _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
                 return ValidationProblem("Error", "List", 500, ex.Message);
             }
-            return Ok(new { finaltestmessage = lf }); //OK 200
+            return Ok(new { finaltestmessage = lFinalTestMessage }); //OK 200
         }
 
 
@@ -77,8 +77,8 @@ namespace WebApi.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> Get(int Id)
         {
-            FinalTestMessageBiz oFinalTestMessageBiz = new FinalTestMessageBiz(_ConnectionString);
-            FinalTestMessage oFinalTestMessage = new FinalTestMessage();
+            FinalTestMessageBiz oFinalTestMessageBiz = new (_ConnectionString);
+            FinalTestMessage oFinalTestMessage;
             try
             {
                 oFinalTestMessage = await Task.Run(() => oFinalTestMessageBiz.Get(Id));
