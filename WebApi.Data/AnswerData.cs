@@ -83,7 +83,7 @@ namespace WebApi.Data
         public async Task Disabled(int Id, bool Disabled)
         {
             IRepository<Answer> SettingRepository = new ContextSQL<Answer>(_ConnectionString);
-            Dictionary<string, string> lParam = new Dictionary<string, string>();
+            Dictionary<string, string> lParam = new ();
             try
             {
                 lParam.Add("Id", Id.ToString());

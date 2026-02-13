@@ -48,8 +48,8 @@ namespace WebApi.Controllers
         {
             InscripcionBiz oIncripcionBiz = new (_ConectionString);
             List<dynamic> lIncripcion;
-			List<InscripcionFindModel> lIncripcionFindModel = new List<InscripcionFindModel>();
-            Dictionary<string, string> lParam = new Dictionary<string, string>();
+			List<InscripcionFindModel> lIncripcionFindModel = new ();
+            Dictionary<string, string> lParam = new ();
             try
             {
 				lParam.Add("IdTipoContacto", IdTipoContacto.ToString());

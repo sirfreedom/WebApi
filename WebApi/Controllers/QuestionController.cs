@@ -111,7 +111,7 @@ namespace WebApi.Controllers
         [Authorize(Policy = "Admin")]
         public async Task<ActionResult> Update([FromBody] Question question)
         {
-            QuestionBiz oQuestionBiz = new QuestionBiz(_ConnectionString);
+            QuestionBiz oQuestionBiz = new (_ConnectionString);
             try
             {
                 await Task.Run(() => oQuestionBiz.Update(question));
@@ -143,7 +143,7 @@ namespace WebApi.Controllers
         [Authorize(Policy = "Admin")]
         public async Task<ActionResult> Insert([FromBody] QuestionModel questionModel)
         {
-            QuestionBiz oQuestionBiz = new QuestionBiz(_ConnectionString);
+            QuestionBiz oQuestionBiz = new (_ConnectionString);
             Question oQuestion;
             try
             {
@@ -177,7 +177,7 @@ namespace WebApi.Controllers
         [Authorize(Policy = "SuperAdmin")]
         public async Task<ActionResult> Delete(int Id)
         {
-            QuestionBiz oQuestionBiz = new QuestionBiz(_ConnectionString);
+            QuestionBiz oQuestionBiz = new (_ConnectionString);
             try
             {
                 await Task.Run(() => oQuestionBiz.Delete(Id));

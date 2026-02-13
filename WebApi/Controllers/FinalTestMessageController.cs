@@ -110,7 +110,7 @@ namespace WebApi.Controllers
         [Authorize(Policy = "Admin")]
         public async Task<ActionResult> Update([FromBody] FinalTestMessage finaltestmessage)
         {
-            FinalTestMessageBiz oFinalTestMessageBiz = new FinalTestMessageBiz(_ConnectionString);
+            FinalTestMessageBiz oFinalTestMessageBiz = new (_ConnectionString);
             try
             {
                 await Task.Run(() => oFinalTestMessageBiz.Update(finaltestmessage));
@@ -142,7 +142,7 @@ namespace WebApi.Controllers
         [Authorize(Policy = "Admin")]
         public async Task<ActionResult> Insert([FromBody] FinalTestMessageModel finaltestmessageModel)
         {
-            FinalTestMessageBiz oFinalTestMessageBiz = new FinalTestMessageBiz(_ConnectionString);
+            FinalTestMessageBiz oFinalTestMessageBiz = new (_ConnectionString);
             FinalTestMessage oFinalTestMessage;
             try
             {
@@ -176,7 +176,7 @@ namespace WebApi.Controllers
         [Authorize(Policy = "SuperAdmin")]
         public async Task<ActionResult> Delete(int Id)
         {
-            FinalTestMessageBiz oFinalTestMessageBiz = new FinalTestMessageBiz(_ConnectionString);
+            FinalTestMessageBiz oFinalTestMessageBiz = new (_ConnectionString);
             try
             {
                 await Task.Run(() => oFinalTestMessageBiz.Delete(Id));
@@ -207,7 +207,7 @@ namespace WebApi.Controllers
         [Authorize(Policy = "Admin")]
         public async Task<ActionResult> Disabled(int Id, bool Disabled)
         {
-            FinalTestMessageBiz oFinalTestMessageBiz = new FinalTestMessageBiz(_ConnectionString);
+            FinalTestMessageBiz oFinalTestMessageBiz = new (_ConnectionString);
             try
             {
                 await Task.Run(() => oFinalTestMessageBiz.Disabled(Id,Disabled));

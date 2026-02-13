@@ -245,7 +245,7 @@ namespace WebApi.Data
                     cmd.Connection = cn;
                     cn.InfoMessage += cn_InfoMessage;
                     cn.Open();
-                    await Task.Run(() => da.Fill(dt));
+                    await Task.Run(() => da.Fill(ds));
                 }
 
                 if (ds.Tables.Count == 0)
