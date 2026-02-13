@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 using WebApi.Entity;
 
 namespace WebApi.Data
@@ -15,20 +16,27 @@ namespace WebApi.Data
             _ConnectionString = ConnectionString;
         }
 
-        public void Delete(int Id)
+        public async Task Delete(int Id)
         {
             IRepository<ImagenTest> Serv = new ContextSQL<ImagenTest>(_ConnectionString);
-            Serv.Delete(Id);
+            try
+            {
+                await Serv.Delete(Id);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
-        public ImagenTest Insert(ImagenTest entity)
+        public async Task<ImagenTest> Insert(ImagenTest entity)
         {
             IRepository<ImagenTest> Serv = new ContextSQL<ImagenTest>(_ConnectionString);
             ImagenTest oImagenTest;
             DataTable dt;
             try
             {
-                dt = Serv.Fill("Insert", entity.ToDictionary());
+                dt = await Serv.Fill("Insert", entity.ToDictionary());
                 oImagenTest = ImagenTest.ToList<ImagenTest>(dt).SingleOrDefault();
             }
             catch (Exception)
@@ -38,11 +46,22 @@ namespace WebApi.Data
             return oImagenTest;
         }
 
-        public List<ImagenTest> List()
+        public async Task<List<ImagenTest>> List()
         {
             IRepository<ImagenTest> Serv = new ContextSQL<ImagenTest>(_ConnectionString);
-            return Serv.List();
+            List<ImagenTest> lImagenTest;
+            try
+            {
+                lImagenTest = await Serv.List();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return lImagenTest;
         }
+
+
     }
 
 }

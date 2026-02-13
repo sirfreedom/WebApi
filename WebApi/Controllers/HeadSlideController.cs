@@ -38,7 +38,7 @@ namespace WebApi.Controllers
 		[AllowAnonymous]
 		public async Task<ActionResult> List()
 		{
-			HeadSlideBiz oHeadSlideBiz = new HeadSlideBiz(_ConectionString);
+			HeadSlideBiz oHeadSlideBiz = new (_ConectionString);
 			List<HeadSlide> lHeadSlide;
 			try
 			{
@@ -71,11 +71,11 @@ namespace WebApi.Controllers
 		[AllowAnonymous]
 		public async Task<ActionResult> Insert([FromBody] HeadSlideModel HeadSlideModel)
 		{
-			HeadSlideBiz oHeadSlideBiz = new HeadSlideBiz(_ConectionString);
+			HeadSlideBiz oHeadSlideBiz = new (_ConectionString);
 			HeadSlide oHeadSlide;
 			try
 			{
-				oHeadSlide = HeadSlide.Merge<HeadSlideModel, HeadSlide>(HeadSlideModel);
+		        oHeadSlide = HeadSlide.Merge<HeadSlideModel, HeadSlide>(HeadSlideModel);
 				oHeadSlide = await Task.Run(() => oHeadSlideBiz.Insert(oHeadSlide));
 			}
 			catch (WebException ex)
@@ -102,12 +102,12 @@ namespace WebApi.Controllers
 		/// </returns>
 		[HttpDelete("Delete")]
 		[AllowAnonymous]
-		public ActionResult Delete(int Id)
+		public async Task<ActionResult> Delete(int Id)
 		{
-			HeadSlideBiz oHeadSlideBiz = new HeadSlideBiz(_ConectionString);
+			HeadSlideBiz oHeadSlideBiz = new (_ConectionString);
 			try
 			{
-				oHeadSlideBiz.Delete(Id);
+                await Task.Run(async () => oHeadSlideBiz.Delete(Id));
 			}
 			catch (WebException ex)
 			{

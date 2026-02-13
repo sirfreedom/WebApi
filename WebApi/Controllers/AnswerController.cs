@@ -41,7 +41,7 @@ namespace WebApi.Controllers
 		[AllowAnonymous]
 		public async Task<ActionResult> Get(int Id) 
 		{
-		AnswerBiz oAnswerBiz = new AnswerBiz(_ConectionString); 
+		AnswerBiz oAnswerBiz = new (_ConectionString); 
 		Answer oAnswer = new ();
 		try
 		{
@@ -143,7 +143,7 @@ namespace WebApi.Controllers
 		AnswerBiz oAnswerBiz = new (_ConectionString); 
 		try
 		{
-                await Task.Run(() => oAnswerBiz.Delete(Id));
+             await Task.Run(() => oAnswerBiz.Delete(Id));
 		}
 		catch (WebException ex) 
 		{
@@ -171,7 +171,7 @@ namespace WebApi.Controllers
         [Authorize(Policy = "Admin")]
         public async Task<ActionResult> Disabled(int Id, bool Disabled)
         {
-            AnswerBiz oAnswerBiz = new AnswerBiz(_ConectionString);
+            AnswerBiz oAnswerBiz = new (_ConectionString);
             try
             {
                 await Task.Run(() => oAnswerBiz.Disabled(Id, Disabled));

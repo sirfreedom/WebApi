@@ -17,11 +17,25 @@ namespace WebApi.Data
         private readonly int _maxPoolSize;
         private int _currentConnectionCount = 0;
         private bool _disposed = false;
+        private static ConnectionCommandPool _instance;
+        private static readonly object _lock = new object();
 
         public ConnectionCommandPool(string connectionString, int maxPoolSize = 10)
         {
             _connectionString = connectionString;
             _maxPoolSize = maxPoolSize;
+        }
+
+        public static ConnectionCommandPool Instance(string connectionString, int maxPoolSize = 10)
+        {
+            lock (_lock)
+            {
+                if (_instance == null)
+                {
+                    _instance = new ConnectionCommandPool(connectionString, maxPoolSize);
+                }
+                return _instance;
+            }
         }
 
         public SqlConnection GetConnection()

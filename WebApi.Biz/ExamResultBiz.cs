@@ -2,6 +2,7 @@
 using System;
 using WebApi.Entity;
 using WebApi.Data;
+using System.Threading.Tasks;
 
 namespace WebApi.Biz
 {
@@ -16,34 +17,36 @@ namespace WebApi.Biz
 			_ConnectionString = ConnectionString;
 		}
 
-		public List<ExamResult> List ()
+		public async Task<List<ExamResult>> List()
 		{
-		ExamResultData oExamResultData = new (_ConnectionString);
+			ExamResultData oExamResultData = new(_ConnectionString);
 			List<ExamResult> examResults;
-		try
-		{
-			examResults = oExamResultData.List();
-		}
-		catch (Exception) 
-		{
-			throw;
-		}
-		return examResults;
+			try
+			{
+				examResults = await oExamResultData.List();
+			}
+			catch (Exception)
+			{
+				throw;
+			}
+			return examResults;
 		}
 
 
-		public void Insert(ExamResult examresult)
+		public async Task Insert(ExamResult examresult)
 		{
-		ExamResultData oExamResultData = new (_ConnectionString); 
-		try
-		{
-			oExamResultData.Insert(examresult);
+			ExamResultData oExamResultData = new(_ConnectionString);
+			try
+			{
+				await oExamResultData.Insert(examresult);
+			}
+			catch (Exception)
+			{
+				throw;
+			}
 		}
-		catch (Exception) 
-		{
-			throw;
-		}
-		}
+
+
 
 
 	}

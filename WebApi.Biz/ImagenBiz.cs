@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using WebApi.Data;
 using WebApi.Entity;
 
@@ -13,27 +15,47 @@ namespace WebApi.Biz
             _ConnectionString = ConnectionString;
         }
 
-        public List<ImagenTest> List() 
+        public async Task<List<ImagenTest>> List() 
         {
             ImagenTestData Serv = new (_ConnectionString);
-            return Serv.List();
+            List<ImagenTest> lImagenTest;
+            try
+            {
+                lImagenTest = await Serv.List();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return lImagenTest;
         }
 
-        public ImagenTest Insert(ImagenTest imagenTest) 
+        public async Task<ImagenTest> Insert(ImagenTest imagenTest) 
         {
             ImagenTestData Serv = new (_ConnectionString);
             ImagenTest oImagenTest;
-
-            oImagenTest = Serv.Insert(imagenTest);
-
-
+            try
+            {
+                oImagenTest = await Serv.Insert(imagenTest);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
             return oImagenTest;
         }
 
-        public void Delete(int Id) 
+        public async Task Delete(int Id) 
         {
             ImagenTestData Serv = new (_ConnectionString);
-            Serv.Delete(Id);
+            try
+            {
+                await Serv.Delete(Id);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
    

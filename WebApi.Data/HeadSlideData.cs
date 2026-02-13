@@ -3,6 +3,7 @@ using System;
 using WebApi.Entity;
 using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace WebApi.Data
 {
@@ -18,13 +19,13 @@ namespace WebApi.Data
 			_ConnectionString = ConnectionString;
 		}
 
-		public List<HeadSlide> List()
+		public async Task<List<HeadSlide>> List()
 		{
 			IRepository<HeadSlide> HeadSlideRepository = new ContextSQL<HeadSlide>(_ConnectionString);
 			List<HeadSlide> lHeadSlide;
 			try
 			{
-				lHeadSlide = HeadSlideRepository.List();
+				lHeadSlide = await HeadSlideRepository.List();
 			}
 			catch (Exception)
 			{
@@ -34,14 +35,14 @@ namespace WebApi.Data
 		}
 
 
-		public HeadSlide Insert(HeadSlide headslide)
+		public async Task<HeadSlide> Insert(HeadSlide headslide)
 		{
 			IRepository<HeadSlide> HeadSlideRepository = new ContextSQL<HeadSlide>(_ConnectionString);
 			HeadSlide oHeadSlide;
 			DataTable dt;
 			try
 			{
-				dt = HeadSlideRepository.Fill("Insert", headslide.ToDictionary());
+				dt = await HeadSlideRepository.Fill("Insert", headslide.ToDictionary());
 				oHeadSlide = HeadSlide.ToList<HeadSlide>(dt).SingleOrDefault();
 			}
 			catch (Exception)
@@ -52,12 +53,12 @@ namespace WebApi.Data
 		}
 
 
-		public void Delete(int Id)
+		public async Task Delete(int Id)
 		{
 			IRepository<HeadSlide> HeadSlideRepository = new ContextSQL<HeadSlide>(_ConnectionString);
 			try
 			{
-				HeadSlideRepository.Delete(Id);
+				 await HeadSlideRepository.Delete(Id);
 			}
 			catch (Exception)
 			{

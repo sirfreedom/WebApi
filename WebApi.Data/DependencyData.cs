@@ -3,6 +3,7 @@ using System;
 using WebApi.Entity;
 using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace WebApi.Data
 {
@@ -18,44 +19,44 @@ namespace WebApi.Data
 			_ConnectionString = ConnectionString;
 		}
 
-		public List<Dependency> List() 
+		public async Task<List<Dependency>> List()
 		{
-		IRepository<Dependency> DependencyRepository = new ContextSQL<Dependency>(_ConnectionString);
-		List<Dependency> lDependency;
-		try 
-		{
-			lDependency = DependencyRepository.List(); 
-		}
-		catch (Exception) 
-		{
-			throw;
-		}
-		return lDependency;
-		}
-
-
-		public Dependency Get(int Id) 
-		{
-		IRepository<Dependency> DependencyRepository = new ContextSQL<Dependency>(_ConnectionString);
-		Dependency oDependency;
-		try
-		{
-			oDependency = DependencyRepository.Get(Id);
-		}
-		catch (Exception) 
-		{
-			throw;
-		}
-		return oDependency;
+			IRepository<Dependency> DependencyRepository = new ContextSQL<Dependency>(_ConnectionString);
+			List<Dependency> lDependency;
+			try
+			{
+				lDependency = await DependencyRepository.List();
+			}
+			catch (Exception)
+			{
+				throw;
+			}
+			return lDependency;
 		}
 
 
-		public void Update(Dependency dependency)
+		public async Task<Dependency> Get(int Id)
+		{
+			IRepository<Dependency> DependencyRepository = new ContextSQL<Dependency>(_ConnectionString);
+			Dependency oDependency;
+			try
+			{
+				oDependency = await DependencyRepository.Get(Id);
+			}
+			catch (Exception)
+			{
+				throw;
+			}
+			return oDependency;
+		}
+
+
+		public async Task Update(Dependency dependency)
 		{
 			IRepository<Dependency> DependencyRepository = new ContextSQL<Dependency>(_ConnectionString);
 			try
 			{
-				DependencyRepository.Update(dependency);
+				await DependencyRepository.Update(dependency);
 			}
 			catch (Exception)
 			{
@@ -64,14 +65,14 @@ namespace WebApi.Data
 		}
 
 
-		public Dependency Insert(Dependency dependency)
+		public async Task<Dependency> Insert(Dependency dependency)
 		{
 			IRepository<Dependency> DependencyRepository = new ContextSQL<Dependency>(_ConnectionString);
 			Dependency oDependency;
 			DataTable dt;
 			try
 			{
-				dt = DependencyRepository.Fill("Insert", dependency.ToDictionary());
+				dt = await DependencyRepository.Fill("Insert", dependency.ToDictionary());
                 oDependency = Dependency.ToList<Dependency>(dt).SingleOrDefault();
             }
 			catch (Exception)
@@ -82,20 +83,21 @@ namespace WebApi.Data
 		}
 
 
-		public void Delete(int Id)
+		public async Task Delete(int Id)
 		{
-		IRepository<Dependency> DependencyRepository = new ContextSQL<Dependency>(_ConnectionString);
-		try
-		{
-			DependencyRepository.Delete(Id);
-		}
-		catch (Exception) 
-		{
-			throw;
-		}
+			IRepository<Dependency> DependencyRepository = new ContextSQL<Dependency>(_ConnectionString);
+			try
+			{
+				await DependencyRepository.Delete(Id);
+			}
+			catch (Exception)
+			{
+				throw;
+			}
 		}
 
-        public void Disabled(int Id, bool Disabled)
+
+        public async Task Disabled(int Id, bool Disabled)
         {
             IRepository<Dependency> SettingRepository = new ContextSQL<Dependency>(_ConnectionString);
             Dictionary<string, string> lParam = new Dictionary<string, string>();
@@ -103,13 +105,14 @@ namespace WebApi.Data
             {
                 lParam.Add("Id", Id.ToString());
                 lParam.Add("Disabled", Disabled.ToString());
-                SettingRepository.ExecuteNonQuery("Disabled", lParam);
+                await SettingRepository.ExecuteNonQuery("Disabled", lParam);
             }
             catch (Exception)
             {
                 throw;
             }
         }
+
 
 
     }

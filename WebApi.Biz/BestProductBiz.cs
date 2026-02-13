@@ -2,6 +2,7 @@
 using System;
 using WebApi.Entity;
 using WebApi.Data;
+using System.Threading.Tasks;
 
 namespace WebApi.Biz
 {
@@ -15,29 +16,29 @@ namespace WebApi.Biz
 			_ConnectionString = ConnectionString;
 		}
 
-		public List<BestProduct> List() 
+		public async Task<List<BestProduct>> List()
 		{
-		BestProductData oBestProductData = new (_ConnectionString); 
-		List<BestProduct> lProduct;
-		try 
-		{
-			lProduct = oBestProductData.List();
-		}
-		catch (Exception) 
-		{
-			throw;
-		}
-		return lProduct;
+			BestProductData oBestProductData = new(_ConnectionString);
+			List<BestProduct> lProduct;
+			try
+			{
+				lProduct = await oBestProductData.List();
+			}
+			catch (Exception)
+			{
+				throw;
+			}
+			return lProduct;
 		}
 
 
-		public BestProduct Get(int Id)
+		public async Task<BestProduct> Get(int Id)
 		{
 			BestProductData oBestProductData = new (_ConnectionString);
 			BestProduct oBestProduct;
 			try
 			{
-				oBestProduct = oBestProductData.Get(Id);
+				oBestProduct = await oBestProductData.Get(Id);
 			}
 			catch (Exception)
 			{
@@ -47,12 +48,12 @@ namespace WebApi.Biz
 		}
 
 
-		public void Update(BestProduct product)
+		public async Task Update(BestProduct product)
 		{
 			BestProductData oBestProductData = new (_ConnectionString);
 			try
 			{
-				oBestProductData.Update(product);
+				await oBestProductData.Update(product);
 			}
 			catch (Exception)
 			{
@@ -61,12 +62,12 @@ namespace WebApi.Biz
 		}
 
 
-		public BestProduct Insert(BestProduct bestproduct)
+		public async Task<BestProduct> Insert(BestProduct bestproduct)
 		{
 			BestProductData oBestProductData = new (_ConnectionString);
             try
 			{
-				bestproduct = oBestProductData.Insert(bestproduct);
+				bestproduct = await oBestProductData.Insert(bestproduct);
 			}
 			catch (Exception)
 			{
@@ -76,12 +77,12 @@ namespace WebApi.Biz
 		}
 
 
-		public void Delete(int Id)
+		public async Task Delete(int Id)
 		{
 			BestProductData oProductData = new (_ConnectionString);
 			try
 			{
-				oProductData.Delete(Id);
+				await oProductData.Delete(Id);
 			}
 			catch (Exception)
 			{

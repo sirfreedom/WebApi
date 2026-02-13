@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 using WebApi.Entity;
 
 namespace WebApi.Data
@@ -16,23 +17,32 @@ namespace WebApi.Data
             _ConnectionString = ConnectionString;
         }
 
-        public List<FinalTestMessage> List(int IdDependency) 
+        public async Task<List<FinalTestMessage>> List(int IdDependency) 
         {
-            Dictionary<string,string> lParam = new Dictionary<string, string>();
-            DataTable dt = new DataTable();
+            Dictionary<string,string> lParam = new ();
+            DataTable dt;
             IRepository<FinalTestMessage> Serv = new ContextSQL<FinalTestMessage>(_ConnectionString);
-            lParam.Add("IdDependency",IdDependency.ToString());
-            dt = Serv.Fill("ListByDependency", lParam);
-            return FinalTestMessage.ToList<FinalTestMessage>(dt);
+            List<FinalTestMessage> lFinalMessage;
+            try
+            {
+                lParam.Add("IdDependency", IdDependency.ToString());
+                dt = await Serv.Fill("ListByDependency", lParam);
+                lFinalMessage = FinalTestMessage.ToList<FinalTestMessage>(dt);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return lFinalMessage;
         }
 
-        public FinalTestMessage Get(int Id)
+        public async Task<FinalTestMessage> Get(int Id)
         {
             IRepository<FinalTestMessage> FinalTestMessageRepository = new ContextSQL<FinalTestMessage>(_ConnectionString);
             FinalTestMessage oFinalTestMessage;
             try
             {
-                oFinalTestMessage = FinalTestMessageRepository.Get(Id);
+                oFinalTestMessage = await FinalTestMessageRepository.Get(Id);
             }
             catch (Exception)
             {
@@ -42,12 +52,12 @@ namespace WebApi.Data
         }
 
 
-        public void Update(FinalTestMessage finaltestmessage)
+        public async Task Update(FinalTestMessage finaltestmessage)
         {
             IRepository<FinalTestMessage> FinalTestMessageRepository = new ContextSQL<FinalTestMessage>(_ConnectionString);
             try
             {
-                FinalTestMessageRepository.Update(finaltestmessage);
+                await FinalTestMessageRepository.Update(finaltestmessage);
             }
             catch (Exception)
             {
@@ -56,14 +66,14 @@ namespace WebApi.Data
         }
 
 
-        public FinalTestMessage Insert(FinalTestMessage finaltestmessage)
+        public async Task<FinalTestMessage> Insert(FinalTestMessage finaltestmessage)
         {
             IRepository<FinalTestMessage> FinalTestMessageRepository = new ContextSQL<FinalTestMessage>(_ConnectionString);
             FinalTestMessage oFinalTestMessage;
             DataTable dt;
             try
             {
-                dt = FinalTestMessageRepository.Fill("Insert", finaltestmessage.ToDictionary());
+                dt = await FinalTestMessageRepository.Fill("Insert", finaltestmessage.ToDictionary());
                 oFinalTestMessage = FinalTestMessage.ToList<FinalTestMessage>(dt).SingleOrDefault();
             }
             catch (Exception)
@@ -74,12 +84,12 @@ namespace WebApi.Data
         }
 
 
-        public void Delete(int Id)
+        public async Task Delete(int Id)
         {
             IRepository<FinalTestMessage> FinalTestMessageRepository = new ContextSQL<FinalTestMessage>(_ConnectionString);
             try
             {
-                FinalTestMessageRepository.Delete(Id);
+                await FinalTestMessageRepository.Delete(Id);
             }
             catch (Exception)
             {
@@ -87,7 +97,7 @@ namespace WebApi.Data
             }
         }
 
-        public void Disabled(int Id, bool Disabled)
+        public async Task Disabled(int Id, bool Disabled)
         {
             IRepository<FinalTestMessage> SettingRepository = new ContextSQL<FinalTestMessage>(_ConnectionString);
             Dictionary<string, string> lParam = new Dictionary<string, string>();
@@ -95,7 +105,7 @@ namespace WebApi.Data
             {
                 lParam.Add("Id", Id.ToString());
                 lParam.Add("Disabled", Disabled.ToString());
-                SettingRepository.ExecuteNonQuery("Disabled", lParam);
+                await SettingRepository.ExecuteNonQuery("Disabled", lParam);
             }
             catch (Exception)
             {

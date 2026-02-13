@@ -1,6 +1,7 @@
 ﻿using System;
-using WebApi.Entity;
+using System.Threading.Tasks;
 using WebApi.Data;
+using WebApi.Entity;
 
 namespace WebApi.Biz
 {
@@ -16,13 +17,13 @@ namespace WebApi.Biz
 			_ConnectionString = ConnectionString;
 		}
 
-		public Answer Get(int Id) 
+		public async Task<Answer> Get(int Id) 
 		{
 		AnswerData oAnswerData = new (_ConnectionString); 
 		Answer oAnswer;
 		try
 		{
-			oAnswer = oAnswerData.Get(Id);
+			oAnswer = await oAnswerData.Get(Id);
 		}
 		catch (Exception) 
 		{
@@ -32,12 +33,12 @@ namespace WebApi.Biz
 		}
 
 
-		public void Update(Answer answer)
+		public async Task Update(Answer answer)
 		{
 		AnswerData oAnswerData = new (_ConnectionString); 
 		try
 		{
-			oAnswerData.Update(answer); 
+		 	await oAnswerData.Update(answer); 
 		}
 		catch (Exception) 
 		{
@@ -46,13 +47,13 @@ namespace WebApi.Biz
 		}
 
 
-		public Answer Insert(Answer answer)
+		public async Task<Answer> Insert(Answer answer)
 		{
 			AnswerData oAnswerData = new (_ConnectionString);
 			Answer oAnswer;
 			try
 			{
-			 	oAnswer = oAnswerData.Insert(answer);
+			 	oAnswer = await oAnswerData.Insert(answer);
 			}
 			catch (Exception)
 			{
@@ -62,25 +63,25 @@ namespace WebApi.Biz
 		}
 
 
-		public void Delete(int Id)
+		public async Task Delete(int Id)
 		{
-		AnswerData oAnswerData = new (_ConnectionString); 
-		try
-		{
-			oAnswerData.Delete(Id);
-		}
-		catch (Exception) 
-		{
-			throw;
-		}
+			AnswerData oAnswerData = new(_ConnectionString);
+			try
+			{
+				await oAnswerData.Delete(Id);
+			}
+			catch (Exception)
+			{
+				throw;
+			}
 		}
 
-        public void Disabled(int Id, bool Disabled)
+        public async Task Disabled(int Id, bool Disabled)
         {
             AnswerData oAnswerData = new (_ConnectionString);
             try
             {
-                oAnswerData.Disabled(Id, Disabled);
+                await oAnswerData.Disabled(Id, Disabled);
             }
             catch (Exception)
             {
