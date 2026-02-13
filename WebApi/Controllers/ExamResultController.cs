@@ -39,7 +39,7 @@ namespace WebApi.Controllers
 		[AllowAnonymous]
 		public async Task<ActionResult> List ()
 		{
-		ExamResultBiz oExamResultBiz = new ExamResultBiz(_ConectionString); 
+		ExamResultBiz oExamResultBiz = new (_ConectionString); 
 		List<ExamResult> examResults;
 		try
 		{
@@ -72,8 +72,8 @@ namespace WebApi.Controllers
 		[AllowAnonymous]
 		public async Task<ActionResult> Insert([FromBody] ExamResultModel examresultModel)
 		{
-		ExamResultBiz oExamResultBiz = new ExamResultBiz(_ConectionString); 
-		ExamResult examresult = new ExamResult();
+		ExamResultBiz oExamResultBiz = new (_ConectionString); 
+		ExamResult examresult = new ();
 		try
 		{
 			examresult = ExamResult.Merge<ExamResultModel, ExamResult>(examresultModel);

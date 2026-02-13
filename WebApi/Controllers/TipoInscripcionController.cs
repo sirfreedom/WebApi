@@ -38,7 +38,7 @@ namespace WebApi.Controllers
         public async Task<ActionResult> List()
         {
             TipoInscripcionBiz oInscripcionBiz = new(_ConectionString);
-            List<TipoInscripcion> lTipoInscripcion = new List<TipoInscripcion>();
+            List<TipoInscripcion> lTipoInscripcion;
             try
             {
                 lTipoInscripcion = await Task.Run(() => oInscripcionBiz.List());
@@ -67,7 +67,7 @@ namespace WebApi.Controllers
         public async Task<ActionResult> ListMenu()
         {
             TipoInscripcionBiz oInscripcionBiz = new(_ConectionString);
-            List<TipoInscripcion> lTipoInscripcion = new List<TipoInscripcion>();
+            List<TipoInscripcion> lTipoInscripcion;
             try
             {
                 lTipoInscripcion = await Task.Run(() => oInscripcionBiz.ListMenu());
@@ -95,7 +95,7 @@ namespace WebApi.Controllers
         public async Task<ActionResult> Get(int Id)
         {
             TipoInscripcionBiz oInscripcionBiz = new(_ConectionString);
-            TipoInscripcion tipoInscripcion = new TipoInscripcion();
+            TipoInscripcion tipoInscripcion;
             try
             {
                 tipoInscripcion = await Task.Run(() => oInscripcionBiz.Get(Id));

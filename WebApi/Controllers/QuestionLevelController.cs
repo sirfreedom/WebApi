@@ -76,7 +76,7 @@ namespace WebApi.Controllers
         public async Task<ActionResult> Get(int Id)
         {
             QuestionLevelBiz oQuestionLevelBiz = new (_ConnectionString);
-            QuestionLevel oQuestionLevel = new ();
+            QuestionLevel oQuestionLevel;
             try
             {
                 oQuestionLevel = await Task.Run(() => oQuestionLevelBiz.Get(Id));

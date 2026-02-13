@@ -38,7 +38,7 @@ namespace WebApi.Controllers
 		[AllowAnonymous]
 		public async Task<ActionResult> List()
 		{
-		UsuarioDependencyBiz oUsuarioDependencyBiz = new UsuarioDependencyBiz(_ConectionString); 
+		UsuarioDependencyBiz oUsuarioDependencyBiz = new (_ConectionString); 
 		List<UsuarioDependency> lUsuarioDependency;
 		try 
 		{
@@ -72,7 +72,7 @@ namespace WebApi.Controllers
 		[AllowAnonymous]
 		public async Task<ActionResult> Insert([FromBody] UsuarioDependencyModel usuariodependencyModel)
 		{
-			UsuarioDependencyBiz oUsuarioDependencyBiz = new UsuarioDependencyBiz(_ConectionString);
+			UsuarioDependencyBiz oUsuarioDependencyBiz = new (_ConectionString);
 			try
 			{
                 await Task.Run(() => oUsuarioDependencyBiz.Insert(usuariodependencyModel.lUsuarioDependency));

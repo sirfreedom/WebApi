@@ -71,7 +71,7 @@ namespace WebApi.Controllers
 		[AllowAnonymous]
 		public async Task<ActionResult> Get(int Id)
 		{
-			BestProductBiz oProductBiz = new BestProductBiz(_ConectionString);
+			BestProductBiz oProductBiz = new (_ConectionString);
 			BestProduct oBestProduct;
 			try
 			{
@@ -104,7 +104,7 @@ namespace WebApi.Controllers
 		[AllowAnonymous]
 		public async Task<ActionResult> Update([FromBody] BestProduct bestproduct)
 		{
-			BestProductBiz oBestProductBiz = new BestProductBiz(_ConectionString);
+			BestProductBiz oBestProductBiz = new (_ConectionString);
 			try
 			{
                 await Task.Run(() => oBestProductBiz.Update(bestproduct));
@@ -136,8 +136,8 @@ namespace WebApi.Controllers
 		[AllowAnonymous]
 		public async Task<ActionResult> Insert([FromBody] BestProductModel bestproductModel)
 		{
-			BestProductBiz oBestProductBiz = new BestProductBiz(_ConectionString);
-			BestProduct bestproduct = new BestProduct();
+			BestProductBiz oBestProductBiz = new (_ConectionString);
+			BestProduct bestproduct = new ();
 			try
 			{
 				bestproduct = BestProduct.Merge<BestProductModel, BestProduct>(bestproductModel);
@@ -170,7 +170,7 @@ namespace WebApi.Controllers
 		[AllowAnonymous]
 		public async Task<ActionResult> Delete(int Id)
 		{
-			BestProductBiz oProductBiz = new BestProductBiz(_ConectionString);
+			BestProductBiz oProductBiz = new (_ConectionString);
 			try
 			{
 				await Task.Run(() => oProductBiz.Delete(Id));

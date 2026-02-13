@@ -45,8 +45,8 @@ namespace WebApi.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> List(int IdDependency, int CodLevel=0)
         {
-            List<Question> lq = new List<Question>();
-            QuestionBiz questionBiz = new QuestionBiz(_ConnectionString);
+            List<Question> lq = new ();
+            QuestionBiz questionBiz = new (_ConnectionString);
             try
             {
                 lq = await Task.Run(() => questionBiz.List(IdDependency,CodLevel));
@@ -78,8 +78,8 @@ namespace WebApi.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> Get(int Id)
         {
-            QuestionBiz oQuestionBiz = new QuestionBiz(_ConnectionString);
-            Question oQuestion = new Question();
+            QuestionBiz oQuestionBiz = new (_ConnectionString);
+            Question oQuestion;
             try
             {
                 oQuestion = await Task.Run(() => oQuestionBiz.Get(Id));
@@ -111,7 +111,7 @@ namespace WebApi.Controllers
         [Authorize(Policy = "Admin")]
         public async Task<ActionResult> Update([FromBody] Question question)
         {
-            QuestionBiz oQuestionBiz = new QuestionBiz(_ConnectionString);
+            QuestionBiz oQuestionBiz = new (_ConnectionString);
             try
             {
                 await Task.Run(() => oQuestionBiz.Update(question));
@@ -143,7 +143,7 @@ namespace WebApi.Controllers
         [Authorize(Policy = "Admin")]
         public async Task<ActionResult> Insert([FromBody] QuestionModel questionModel)
         {
-            QuestionBiz oQuestionBiz = new QuestionBiz(_ConnectionString);
+            QuestionBiz oQuestionBiz = new (_ConnectionString);
             Question oQuestion;
             try
             {
@@ -177,7 +177,7 @@ namespace WebApi.Controllers
         [Authorize(Policy = "SuperAdmin")]
         public async Task<ActionResult> Delete(int Id)
         {
-            QuestionBiz oQuestionBiz = new QuestionBiz(_ConnectionString);
+            QuestionBiz oQuestionBiz = new (_ConnectionString);
             try
             {
                 await Task.Run(() => oQuestionBiz.Delete(Id));

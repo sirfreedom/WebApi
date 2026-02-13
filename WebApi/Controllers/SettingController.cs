@@ -39,7 +39,7 @@ namespace WebApi.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> Find()
         {
-            SettingBiz oSettingBiz = new SettingBiz(_ConnectionString);
+            SettingBiz oSettingBiz = new (_ConnectionString);
             List<dynamic> ldynamic;
             try
             {
@@ -73,7 +73,7 @@ namespace WebApi.Controllers
         public async Task<ActionResult> Get(int Id)
         {
             Setting oSetting;
-            SettingBiz settingBiz = new SettingBiz(_ConnectionString);
+            SettingBiz settingBiz = new (_ConnectionString);
             try
             {
                 oSetting = await Task.Run(() => settingBiz.Get(Id));
@@ -107,7 +107,7 @@ namespace WebApi.Controllers
         public async Task<ActionResult> GetByDependency(int IdDependency)
         {
             Setting oSetting;
-            SettingBiz settingBiz = new SettingBiz(_ConnectionString);
+            SettingBiz settingBiz = new (_ConnectionString);
             try
             {
                 oSetting = await Task.Run(() => settingBiz.GetByDependency(IdDependency));
@@ -136,7 +136,7 @@ namespace WebApi.Controllers
         [Authorize(Policy = "Admin")]
         public async Task<ActionResult> Update([FromBody] Setting setting)
         {
-            SettingBiz settingBiz = new SettingBiz(_ConnectionString);
+            SettingBiz settingBiz = new (_ConnectionString);
             try
             {
                 await Task.Run(() => settingBiz.Update(setting));
@@ -167,7 +167,7 @@ namespace WebApi.Controllers
         [Authorize(Policy = "Admin")]
         public async Task<ActionResult> Insert([FromBody] SettingModel setting)
         {
-            SettingBiz settingBiz = new SettingBiz(_ConnectionString);
+            SettingBiz settingBiz = new (_ConnectionString);
             Setting oSetting;
             try
             {
@@ -204,7 +204,7 @@ namespace WebApi.Controllers
         [Authorize(Policy = "SuperAdmin")]
         public async Task<ActionResult> Delete(int Id)
         {
-            SettingBiz settingBiz = new SettingBiz(_ConnectionString);
+            SettingBiz settingBiz = new (_ConnectionString);
             try
             {
                 await Task.Run(() => settingBiz.Delete(Id));
@@ -235,7 +235,7 @@ namespace WebApi.Controllers
         [Authorize(Policy = "Admin")]
         public async Task<ActionResult> Disabled(int Id, bool Disabled)
         {
-            SettingBiz settingBiz = new SettingBiz(_ConnectionString);
+            SettingBiz settingBiz = new (_ConnectionString);
             try
             {
                 await Task.Run(() => settingBiz.Disabled(Id,Disabled));

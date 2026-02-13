@@ -39,7 +39,7 @@ namespace WebApi.Controllers
 		[AllowAnonymous]
 		public async Task<ActionResult> List()
 		{
-			DependencyBiz oDependencyBiz = new DependencyBiz(_ConnectionString);
+			DependencyBiz oDependencyBiz = new (_ConnectionString);
 			List<Dependency> lDependency;
 			try
 			{
@@ -72,8 +72,8 @@ namespace WebApi.Controllers
 		[AllowAnonymous]
 		public async Task<ActionResult> Get(int Id) 
 		{
-		DependencyBiz oDependencyBiz = new DependencyBiz(_ConnectionString); 
-		Dependency oDependency = new Dependency();
+		DependencyBiz oDependencyBiz = new (_ConnectionString); 
+		Dependency oDependency = new ();
 		try
 		{
 			oDependency = await Task.Run(() => oDependencyBiz.Get(Id));
@@ -105,10 +105,10 @@ namespace WebApi.Controllers
         [Authorize(Policy = "Admin")]
         public async Task<ActionResult> Update([FromBody] Dependency dependency)
 		{
-		DependencyBiz oDependencyBiz = new DependencyBiz(_ConnectionString); 
+		DependencyBiz oDependencyBiz = new (_ConnectionString); 
 		try
 		{
-			await Task.Run(() =>oDependencyBiz.Update(dependency)); 
+			await Task.Run(() => oDependencyBiz.Update(dependency)); 
 		}
 		catch (WebException ex) 
 		{
@@ -136,25 +136,25 @@ namespace WebApi.Controllers
 		[HttpPost("Insert")]
 		[Authorize(Policy = "Admin")]
 		public async Task<ActionResult> Insert([FromBody] DependencyModel dependencyModel)
-		{ 
-		DependencyBiz oDependencyBiz = new DependencyBiz(_ConnectionString);
+		{
+			DependencyBiz oDependencyBiz = new(_ConnectionString);
 			Dependency oDependency;
-		try
-		{
-			oDependency = Dependency.Merge<DependencyModel, Dependency>(dependencyModel);
-			oDependency = await Task.Run(() => oDependencyBiz.Insert(oDependency));
-		}
-		catch (WebException ex) 
-		{
-			_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
-			return ValidationProblem("Error", "Insert", 500, ex.Message);
-		}
-		catch (Exception ex)
-		{
-			_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
-			return ValidationProblem("Error", "Insert", 500, ex.Message);
-		}
-		return Created("dependency",oDependency); //OK 201/204
+			try
+			{
+				oDependency = Dependency.Merge<DependencyModel, Dependency>(dependencyModel);
+				oDependency = await Task.Run(() => oDependencyBiz.Insert(oDependency));
+			}
+			catch (WebException ex)
+			{
+				_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+				return ValidationProblem("Error", "Insert", 500, ex.Message);
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+				return ValidationProblem("Error", "Insert", 500, ex.Message);
+			}
+			return Created("dependency", oDependency); //OK 201/204
 		}
 
 
@@ -171,7 +171,7 @@ namespace WebApi.Controllers
 		[Authorize(Policy = "SuperAdmin")]
 		public async Task<ActionResult> Delete(int Id)
 		{
-			DependencyBiz oDependencyBiz = new DependencyBiz(_ConnectionString);
+			DependencyBiz oDependencyBiz = new (_ConnectionString);
 			try
 			{
                 await Task.Run(() => oDependencyBiz.Delete(Id));
@@ -200,7 +200,7 @@ namespace WebApi.Controllers
         [Authorize(Policy = "Admin")]
         public async Task<ActionResult> Disabled(int Id, bool Disabled)
         {
-            DependencyBiz oDependencyBiz = new DependencyBiz(_ConnectionString);
+            DependencyBiz oDependencyBiz = new (_ConnectionString);
             try
             {
                 await Task.Run(() => oDependencyBiz.Disabled(Id, Disabled));
