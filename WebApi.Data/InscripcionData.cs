@@ -3,13 +3,10 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebApi.Entity;
 
-
 namespace WebApi.Data
 {
-
 	public class InscripcionData
 	{
-
 		private readonly string _ConnectionString = string.Empty;
 
 		public InscripcionData (string ConnectionString)
@@ -17,10 +14,9 @@ namespace WebApi.Data
 			_ConnectionString = ConnectionString;
 		}
 
-
 		public async Task<List<Inscripcion>> List()
 		{
-			IRepository<Inscripcion> InscripcionRepository = new ContextSQL<Inscripcion>(_ConnectionString);
+			IRead<Inscripcion> InscripcionRepository = new ContextSQL<Inscripcion>(_ConnectionString);
 			List<Inscripcion> lInscripcion;
 			try
 			{
@@ -33,10 +29,9 @@ namespace WebApi.Data
 			return lInscripcion;
 		}
 
-
         public async Task<List<dynamic>> Find(Dictionary<string,string> lParam)
         {
-            IRepository<Inscripcion> InscripcionRepository = new ContextSQL<Inscripcion>(_ConnectionString);
+            IRead<Inscripcion> InscripcionRepository = new ContextSQL<Inscripcion>(_ConnectionString);
             List<dynamic> lInscripcion;
             try
             {
@@ -49,11 +44,9 @@ namespace WebApi.Data
             return lInscripcion;
         }
 
-
-
         public async Task Insert(string InscripcionXml)
 		{
-			IRepository<Inscripcion> InscripcionRepository = new ContextSQL<Inscripcion>(_ConnectionString);
+			IWrite<Inscripcion> InscripcionRepository = new ContextSQL<Inscripcion>(_ConnectionString);
 			Dictionary<string, string> lParam = new Dictionary<string, string>();
 			string sXmlInsert = string.Empty;
 			try
@@ -66,11 +59,10 @@ namespace WebApi.Data
 				throw;
 			}
 		}
-
 	
 		public async Task Contacted(int Id, bool IsContacted)
 		{
-			IRepository<Inscripcion> InscripcionRepository = new ContextSQL<Inscripcion>(_ConnectionString);
+			IWrite<Inscripcion> InscripcionRepository = new ContextSQL<Inscripcion>(_ConnectionString);
 			Dictionary<string, string> lParam = new Dictionary<string, string>();
 			try
 			{
@@ -84,10 +76,9 @@ namespace WebApi.Data
 			}
         }
 
-
         public async Task Error(int Id, bool IsError)
         {
-            IRepository<Inscripcion> InscripcionRepository = new ContextSQL<Inscripcion>(_ConnectionString);
+            IWrite<Inscripcion> InscripcionRepository = new ContextSQL<Inscripcion>(_ConnectionString);
             Dictionary<string, string> lParam = new Dictionary<string, string>();
             try
             {
@@ -104,7 +95,7 @@ namespace WebApi.Data
 
 		public async Task ChangeTipoInscripcion(string InscripcionXml, int IdTipoInscripcion) 
 		{
-            IRepository<Inscripcion> InscripcionRepository = new ContextSQL<Inscripcion>(_ConnectionString);
+            IWrite<Inscripcion> InscripcionRepository = new ContextSQL<Inscripcion>(_ConnectionString);
             Dictionary<string, string> lParam = new Dictionary<string, string>();
             try
             {
@@ -117,11 +108,6 @@ namespace WebApi.Data
                 throw;
             }
         }
-
-        
-
-
-
 
 
     }

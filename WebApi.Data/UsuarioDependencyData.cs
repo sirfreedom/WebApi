@@ -5,10 +5,8 @@ using System.Threading.Tasks;
 
 namespace WebApi.Data
 {
-
 	public class UsuarioDependencyData
 	{
-
 		private readonly string _ConnectionString = string.Empty;
 
 		public UsuarioDependencyData (string ConnectionString)
@@ -16,10 +14,9 @@ namespace WebApi.Data
 			_ConnectionString = ConnectionString;
 		}
 
-
 		public async Task<List<UsuarioDependency>> List()
 		{
-			IRepository<UsuarioDependency> UsuarioDependencyRepository = new ContextSQL<UsuarioDependency>(_ConnectionString);
+			IRead<UsuarioDependency> UsuarioDependencyRepository = new ContextSQL<UsuarioDependency>(_ConnectionString);
 			List<UsuarioDependency> lUsuarioDependency;
 			try
 			{
@@ -32,10 +29,9 @@ namespace WebApi.Data
 			return lUsuarioDependency;
 		}
 
-
 		public async Task Insert(List<UsuarioDependency> usuariodependency)
 		{
-			IRepository<UsuarioDependency> UsuarioDependencyRepository = new ContextSQL<UsuarioDependency>(_ConnectionString);
+			IWrite<UsuarioDependency> UsuarioDependencyRepository = new ContextSQL<UsuarioDependency>(_ConnectionString);
 			Dictionary<string,string> lParam = new();
 			string json = string.Empty;
 			try

@@ -18,7 +18,7 @@ namespace WebApi.Data
 
 		public async Task<List<ExamResult>> List()
 		{
-			IRepository<ExamResult> ExamResultRepository = new ContextSQL<ExamResult>(_ConnectionString);
+			IRead<ExamResult> ExamResultRepository = new ContextSQL<ExamResult>(_ConnectionString);
 			List<ExamResult> examResults;
 			try
 			{
@@ -34,7 +34,7 @@ namespace WebApi.Data
 
 		public async Task Insert(ExamResult examresult)
 		{
-			IRepository<ExamResult> ExamResultRepository = new ContextSQL<ExamResult>(_ConnectionString);
+			IWrite<ExamResult> ExamResultRepository = new ContextSQL<ExamResult>(_ConnectionString);
 			try
 			{
 				await ExamResultRepository.Insert(examresult);

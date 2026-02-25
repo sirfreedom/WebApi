@@ -17,11 +17,9 @@ namespace WebApi.Data
             _ConnectionString = ConnectionString;
         }
 
-
-
         public async Task<List<dynamic>> Find(Dictionary<string, string> lParam)
         {
-            IRepository<Setting> SettingRepository = new ContextSQL<Setting>(_ConnectionString);
+            IRead<Setting> SettingRepository = new ContextSQL<Setting>(_ConnectionString);
             List<dynamic> ldynamic;
             try
             {
@@ -37,13 +35,13 @@ namespace WebApi.Data
 
         public async Task<Setting> GetByDependency(int IdDependency)
         {
-            DataTable dt = new ();
-            Setting oSetting = new ();
+            IRead<Setting> Serv = new ContextSQL<Setting>(_ConnectionString);
+            DataTable dt;
+            Setting oSetting;
             Dictionary<string, string> lParam = new();
             try
             {
                 lParam.Add("IdDependency", IdDependency.ToString());
-                IRepository<Setting> Serv = new ContextSQL<Setting>(_ConnectionString);
                 dt = await Serv.Fill("GetByDependency", lParam);
                 oSetting = Setting.ToList<Setting>(dt).SingleOrDefault();
             }
@@ -57,7 +55,7 @@ namespace WebApi.Data
 
         public async Task<Setting> Get(int Id)
         {
-            IRepository<Setting> SettingRepository = new ContextSQL<Setting>(_ConnectionString);
+            IRead<Setting> SettingRepository = new ContextSQL<Setting>(_ConnectionString);
             Setting oSetting;
             try
             {
@@ -73,7 +71,7 @@ namespace WebApi.Data
 
         public async Task Update(Setting setting)
         {
-            IRepository<Setting> SettingRepository = new ContextSQL<Setting>(_ConnectionString);
+            IWrite<Setting> SettingRepository = new ContextSQL<Setting>(_ConnectionString);
             try
             {
                await SettingRepository.Update(setting);
@@ -87,7 +85,7 @@ namespace WebApi.Data
 
         public async Task<Setting> Insert(Setting setting)
         {
-            IRepository<Setting> SettingRepository = new ContextSQL<Setting>(_ConnectionString);
+            IRead<Setting> SettingRepository = new ContextSQL<Setting>(_ConnectionString);
             Setting oSetting;
             DataTable dt;
             try
@@ -105,7 +103,7 @@ namespace WebApi.Data
 
         public async Task Delete(int Id)
         {
-            IRepository<Setting> SettingRepository = new ContextSQL<Setting>(_ConnectionString);
+            IWrite<Setting> SettingRepository = new ContextSQL<Setting>(_ConnectionString);
             try
             {
                await SettingRepository.Delete(Id);
@@ -118,8 +116,8 @@ namespace WebApi.Data
 
         public async Task Disabled(int Id, bool Disabled) 
         {
-            IRepository<Setting> SettingRepository = new ContextSQL<Setting>(_ConnectionString);
-            Dictionary<string, string> lParam = new Dictionary<string, string>();
+            IWrite<Setting> SettingRepository = new ContextSQL<Setting>(_ConnectionString);
+            Dictionary<string, string> lParam = new ();
             try
             {
                 lParam.Add("Id", Id.ToString());
