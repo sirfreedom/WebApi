@@ -10,9 +10,7 @@ namespace WebApi.Data
 
 	public class DependencyData
 	{
-
 		private readonly string _ConnectionString = string.Empty;
-
 
 		public DependencyData (string ConnectionString)
 		{
@@ -21,7 +19,7 @@ namespace WebApi.Data
 
 		public async Task<List<Dependency>> List()
 		{
-			IRepository<Dependency> DependencyRepository = new ContextSQL<Dependency>(_ConnectionString);
+			IRead<Dependency> DependencyRepository = new ContextSQL<Dependency>(_ConnectionString);
 			List<Dependency> lDependency;
 			try
 			{
@@ -37,7 +35,7 @@ namespace WebApi.Data
 
 		public async Task<Dependency> Get(int Id)
 		{
-			IRepository<Dependency> DependencyRepository = new ContextSQL<Dependency>(_ConnectionString);
+			IRead<Dependency> DependencyRepository = new ContextSQL<Dependency>(_ConnectionString);
 			Dependency oDependency;
 			try
 			{
@@ -53,7 +51,7 @@ namespace WebApi.Data
 
 		public async Task Update(Dependency dependency)
 		{
-			IRepository<Dependency> DependencyRepository = new ContextSQL<Dependency>(_ConnectionString);
+			IWrite<Dependency> DependencyRepository = new ContextSQL<Dependency>(_ConnectionString);
 			try
 			{
 				await DependencyRepository.Update(dependency);
@@ -67,7 +65,7 @@ namespace WebApi.Data
 
 		public async Task<Dependency> Insert(Dependency dependency)
 		{
-			IRepository<Dependency> DependencyRepository = new ContextSQL<Dependency>(_ConnectionString);
+			IRead<Dependency> DependencyRepository = new ContextSQL<Dependency>(_ConnectionString);
 			Dependency oDependency;
 			DataTable dt;
 			try
@@ -85,7 +83,7 @@ namespace WebApi.Data
 
 		public async Task Delete(int Id)
 		{
-			IRepository<Dependency> DependencyRepository = new ContextSQL<Dependency>(_ConnectionString);
+			IWrite<Dependency> DependencyRepository = new ContextSQL<Dependency>(_ConnectionString);
 			try
 			{
 				await DependencyRepository.Delete(Id);
@@ -99,7 +97,7 @@ namespace WebApi.Data
 
         public async Task Disabled(int Id, bool Disabled)
         {
-            IRepository<Dependency> SettingRepository = new ContextSQL<Dependency>(_ConnectionString);
+            IWrite<Dependency> SettingRepository = new ContextSQL<Dependency>(_ConnectionString);
             Dictionary<string, string> lParam = new Dictionary<string, string>();
             try
             {

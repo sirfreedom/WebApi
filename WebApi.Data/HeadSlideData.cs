@@ -7,12 +7,9 @@ using System.Threading.Tasks;
 
 namespace WebApi.Data
 {
-
 	public class HeadSlideData
 	{
-
 		private readonly string _ConnectionString = string.Empty;
-
 
 		public HeadSlideData (string ConnectionString)
 		{
@@ -21,7 +18,7 @@ namespace WebApi.Data
 
 		public async Task<List<HeadSlide>> List()
 		{
-			IRepository<HeadSlide> HeadSlideRepository = new ContextSQL<HeadSlide>(_ConnectionString);
+			IRead<HeadSlide> HeadSlideRepository = new ContextSQL<HeadSlide>(_ConnectionString);
 			List<HeadSlide> lHeadSlide;
 			try
 			{
@@ -37,7 +34,7 @@ namespace WebApi.Data
 
 		public async Task<HeadSlide> Insert(HeadSlide headslide)
 		{
-			IRepository<HeadSlide> HeadSlideRepository = new ContextSQL<HeadSlide>(_ConnectionString);
+			IRead<HeadSlide> HeadSlideRepository = new ContextSQL<HeadSlide>(_ConnectionString);
 			HeadSlide oHeadSlide;
 			DataTable dt;
 			try
@@ -55,7 +52,7 @@ namespace WebApi.Data
 
 		public async Task Delete(int Id)
 		{
-			IRepository<HeadSlide> HeadSlideRepository = new ContextSQL<HeadSlide>(_ConnectionString);
+			IWrite<HeadSlide> HeadSlideRepository = new ContextSQL<HeadSlide>(_ConnectionString);
 			try
 			{
 				 await HeadSlideRepository.Delete(Id);

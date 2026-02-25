@@ -23,7 +23,7 @@ namespace WebApi.Data
             List<Question> lQuestion;
             try
             {
-                IRepository<Question> Serv = new ContextSQL<Question>(_ConnectionString);
+                IRead<Question> Serv = new ContextSQL<Question>(_ConnectionString);
                 lParam.Add("IdDependency", IdDependency.ToString());
                 lParam.Add("CodLevel", CodLevel.ToString());
                 dt = await Serv.Fill("ListByDependency", lParam);
@@ -39,7 +39,7 @@ namespace WebApi.Data
 
         public async Task<Question> Get(int Id)
         {
-            IRepository<Question> QuestionRepository = new ContextSQL<Question>(_ConnectionString);
+            IRead<Question> QuestionRepository = new ContextSQL<Question>(_ConnectionString);
             Question oQuestion;
             try
             {
@@ -55,7 +55,7 @@ namespace WebApi.Data
 
         public async Task Update(Question question)
         {
-            IRepository<Question> QuestionRepository = new ContextSQL<Question>(_ConnectionString);
+            IWrite<Question> QuestionRepository = new ContextSQL<Question>(_ConnectionString);
             try
             {
                 await QuestionRepository.Update(question);
@@ -69,7 +69,7 @@ namespace WebApi.Data
 
         public async Task<Question> Insert(Question question)
         {
-            IRepository<Question> QuestionRepository = new ContextSQL<Question>(_ConnectionString);
+            IRead<Question> QuestionRepository = new ContextSQL<Question>(_ConnectionString);
             Question oQuestion;
             DataTable dt;
             try
@@ -87,7 +87,7 @@ namespace WebApi.Data
 
         public async Task Delete(int Id)
         {
-            IRepository<Question> QuestionRepository = new ContextSQL<Question>(_ConnectionString);
+            IWrite<Question> QuestionRepository = new ContextSQL<Question>(_ConnectionString);
             try
             {
                  await QuestionRepository.Delete(Id);
@@ -101,7 +101,7 @@ namespace WebApi.Data
 
         public async Task Disabled(int Id, bool Disabled)
         {
-            IRepository<Question> SettingRepository = new ContextSQL<Question>(_ConnectionString);
+            IWrite<Question> SettingRepository = new ContextSQL<Question>(_ConnectionString);
             Dictionary<string, string> lParam = new Dictionary<string, string>();
             try
             {

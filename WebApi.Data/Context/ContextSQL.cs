@@ -18,9 +18,8 @@ namespace WebApi.Data
     /// la entidad TEntity es una entidad abstracta hasta que se implementa de forma concreta para poder interactuar con el List o demas metodos
     /// TEntity solo puede existir SOLO si esta heredada por EntityBase y tiene un constructor sin parametros asi lo exige la implementacion.
     /// </typeparam>
-    public sealed class ContextSQL<TEntity> : IRepository<TEntity> where TEntity : EntityBase, new()
+    public sealed class ContextSQL<TEntity> : IRead<TEntity>,IWrite<TEntity> where TEntity : EntityBase, new()
     {
-
         #region Declaration
 
         private readonly string _conectionString;

@@ -5,7 +5,7 @@ using WebApi.Entity;
 
 namespace WebApi.Data
 {
-    public interface IRepository<TEntity> where TEntity : EntityBase, new ()
+    public interface IRead<TEntity> where TEntity : EntityBase, new()
     {
         Task<List<TEntity>> List();
 
@@ -13,15 +13,8 @@ namespace WebApi.Data
 
         Task<List<dynamic>> Find(Dictionary<string, string> lParam);
 
-        Task Delete(int Id);
-
-        Task Insert(TEntity oEntity);
-
-        Task Update(TEntity oEntity);
-
         Task<DataTable> Fill(string FunctionName, Dictionary<string, string> lParam = null);
-
-        Task ExecuteNonQuery(string FunctionName, Dictionary<string, string> lParam = null);
 
     }
 }
+

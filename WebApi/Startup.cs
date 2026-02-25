@@ -17,7 +17,6 @@ namespace WebApi
 {
     public class Startup
     {
-
         #region Declaraciones
 
         public IConfiguration _Configuration { get; }
@@ -188,11 +187,6 @@ namespace WebApi
 
             #endregion
         }
-
-
-
-
-
 
     }
 }
