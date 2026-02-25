@@ -11,7 +11,7 @@ namespace WebApi.Data
 
         public UserApp Get(string Name, string Pass)
         {
-            List<UserApp> lUser = new List<UserApp>();
+            List<UserApp> lUser = new ();
             UserApp oUser;
             try
             {

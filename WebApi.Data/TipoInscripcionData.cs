@@ -18,7 +18,7 @@ namespace WebApi.Data
 
         public async Task<List<TipoInscripcion>> List()
         {
-            IRepository<TipoInscripcion> TipoInscripcionRepository = new ContextSQL<TipoInscripcion>(_ConnectionString);
+            IRead<TipoInscripcion> TipoInscripcionRepository = new ContextSQL<TipoInscripcion>(_ConnectionString);
             List<TipoInscripcion> lTipoInscripcion;
             try
             {
@@ -34,7 +34,7 @@ namespace WebApi.Data
 
         public async Task Update(TipoInscripcion tipoInscripcion)
         {
-            IRepository<TipoInscripcion> TipoInscripcionRepository = new ContextSQL<TipoInscripcion>(_ConnectionString);
+            IWrite<TipoInscripcion> TipoInscripcionRepository = new ContextSQL<TipoInscripcion>(_ConnectionString);
             try
             {
                 await TipoInscripcionRepository.Update(tipoInscripcion);
@@ -47,7 +47,7 @@ namespace WebApi.Data
 
         public async Task<TipoInscripcion> Get(int Id)
         {
-            IRepository<TipoInscripcion> TipoInscripcionRepository = new ContextSQL<TipoInscripcion>(_ConnectionString);
+            IRead<TipoInscripcion> TipoInscripcionRepository = new ContextSQL<TipoInscripcion>(_ConnectionString);
             TipoInscripcion oTipoInscripcion;
             try
             {
@@ -62,7 +62,7 @@ namespace WebApi.Data
 
         public async Task<List<TipoInscripcion>> ListMenu() 
         {
-            IRepository<TipoInscripcion> TipoInscripcionRepository = new ContextSQL<TipoInscripcion>(_ConnectionString);
+            IRead<TipoInscripcion> TipoInscripcionRepository = new ContextSQL<TipoInscripcion>(_ConnectionString);
             List<TipoInscripcion> lTipoInscripcion;
             DataTable dt;
             try

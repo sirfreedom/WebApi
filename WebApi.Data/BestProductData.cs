@@ -21,7 +21,7 @@ namespace WebApi.Data
 
 		public async Task<List<BestProduct>> List()
 		{
-			IRepository<BestProduct> ProductRepository = new ContextSQL<BestProduct>(_ConnectionString);
+			IRead<BestProduct> ProductRepository = new ContextSQL<BestProduct>(_ConnectionString);
 			List<BestProduct> lBestProduct;
 			try
 			{
@@ -37,7 +37,7 @@ namespace WebApi.Data
 
 		public async Task<BestProduct> Get(int Id)
 		{
-			IRepository<BestProduct> ProductRepository = new ContextSQL<BestProduct>(_ConnectionString);
+			IRead<BestProduct> ProductRepository = new ContextSQL<BestProduct>(_ConnectionString);
 			BestProduct oProduct;
 			try
 			{
@@ -53,7 +53,7 @@ namespace WebApi.Data
 
 		public async Task Update(BestProduct bestproduct)
 		{
-			IRepository<BestProduct> BestProductRepository = new ContextSQL<BestProduct>(_ConnectionString);
+			IWrite<BestProduct> BestProductRepository = new ContextSQL<BestProduct>(_ConnectionString);
 			try
 			{
 				await BestProductRepository.Update(bestproduct);
@@ -67,7 +67,7 @@ namespace WebApi.Data
 
 		public async Task<BestProduct> Insert(BestProduct bestproduct)
 		{
-			IRepository<BestProduct> BestProductRepository = new ContextSQL<BestProduct>(_ConnectionString);
+			IRead<BestProduct> BestProductRepository = new ContextSQL<BestProduct>(_ConnectionString);
 			DataTable dt;
 			try
 			{
@@ -84,7 +84,7 @@ namespace WebApi.Data
 
 		public async Task Delete(int Id)
 		{
-			IRepository<BestProduct> BestProductRepository = new ContextSQL<BestProduct>(_ConnectionString);
+			IWrite<BestProduct> BestProductRepository = new ContextSQL<BestProduct>(_ConnectionString);
 			try
 			{
 				await BestProductRepository.Delete(Id);

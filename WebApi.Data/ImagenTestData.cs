@@ -18,7 +18,7 @@ namespace WebApi.Data
 
         public async Task Delete(int Id)
         {
-            IRepository<ImagenTest> Serv = new ContextSQL<ImagenTest>(_ConnectionString);
+            IWrite<ImagenTest> Serv = new ContextSQL<ImagenTest>(_ConnectionString);
             try
             {
                 await Serv.Delete(Id);
@@ -31,7 +31,7 @@ namespace WebApi.Data
 
         public async Task<ImagenTest> Insert(ImagenTest entity)
         {
-            IRepository<ImagenTest> Serv = new ContextSQL<ImagenTest>(_ConnectionString);
+            IRead<ImagenTest> Serv = new ContextSQL<ImagenTest>(_ConnectionString);
             ImagenTest oImagenTest;
             DataTable dt;
             try
@@ -48,7 +48,7 @@ namespace WebApi.Data
 
         public async Task<List<ImagenTest>> List()
         {
-            IRepository<ImagenTest> Serv = new ContextSQL<ImagenTest>(_ConnectionString);
+            IRead<ImagenTest> Serv = new ContextSQL<ImagenTest>(_ConnectionString);
             List<ImagenTest> lImagenTest;
             try
             {

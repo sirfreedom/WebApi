@@ -21,7 +21,7 @@ namespace WebApi.Data
         {
             Dictionary<string,string> lParam = new ();
             DataTable dt;
-            IRepository<FinalTestMessage> Serv = new ContextSQL<FinalTestMessage>(_ConnectionString);
+            IRead<FinalTestMessage> Serv = new ContextSQL<FinalTestMessage>(_ConnectionString);
             List<FinalTestMessage> lFinalMessage;
             try
             {
@@ -38,7 +38,7 @@ namespace WebApi.Data
 
         public async Task<FinalTestMessage> Get(int Id)
         {
-            IRepository<FinalTestMessage> FinalTestMessageRepository = new ContextSQL<FinalTestMessage>(_ConnectionString);
+            IRead<FinalTestMessage> FinalTestMessageRepository = new ContextSQL<FinalTestMessage>(_ConnectionString);
             FinalTestMessage oFinalTestMessage;
             try
             {
@@ -54,7 +54,7 @@ namespace WebApi.Data
 
         public async Task Update(FinalTestMessage finaltestmessage)
         {
-            IRepository<FinalTestMessage> FinalTestMessageRepository = new ContextSQL<FinalTestMessage>(_ConnectionString);
+            IWrite<FinalTestMessage> FinalTestMessageRepository = new ContextSQL<FinalTestMessage>(_ConnectionString);
             try
             {
                 await FinalTestMessageRepository.Update(finaltestmessage);
@@ -68,7 +68,7 @@ namespace WebApi.Data
 
         public async Task<FinalTestMessage> Insert(FinalTestMessage finaltestmessage)
         {
-            IRepository<FinalTestMessage> FinalTestMessageRepository = new ContextSQL<FinalTestMessage>(_ConnectionString);
+            IRead<FinalTestMessage> FinalTestMessageRepository = new ContextSQL<FinalTestMessage>(_ConnectionString);
             FinalTestMessage oFinalTestMessage;
             DataTable dt;
             try
@@ -86,7 +86,7 @@ namespace WebApi.Data
 
         public async Task Delete(int Id)
         {
-            IRepository<FinalTestMessage> FinalTestMessageRepository = new ContextSQL<FinalTestMessage>(_ConnectionString);
+            IWrite<FinalTestMessage> FinalTestMessageRepository = new ContextSQL<FinalTestMessage>(_ConnectionString);
             try
             {
                 await FinalTestMessageRepository.Delete(Id);
@@ -99,7 +99,7 @@ namespace WebApi.Data
 
         public async Task Disabled(int Id, bool Disabled)
         {
-            IRepository<FinalTestMessage> SettingRepository = new ContextSQL<FinalTestMessage>(_ConnectionString);
+            IWrite<FinalTestMessage> SettingRepository = new ContextSQL<FinalTestMessage>(_ConnectionString);
             Dictionary<string, string> lParam = new Dictionary<string, string>();
             try
             {
