@@ -1052,7 +1052,7 @@ namespace WebApi.Entity
                         {
                             try
                             {
-                                sTempValue = ((IDictionary<string, object>)item)[p.Name].ToString();
+                                sTempValue = ((IDictionary<string, object>)item)[p.Name.ToLower()].ToString();
                             }
                             catch (KeyNotFoundException)
                             {

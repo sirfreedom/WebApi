@@ -8,7 +8,7 @@ namespace WebApi.Services
     {
 
 
-        Task<LoginResult> IsValidUser(string userName, string password);
+        LoginResult IsValidUser(string userName, string password);
 
 
     }

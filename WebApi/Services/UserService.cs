@@ -22,14 +22,14 @@ namespace WebApi.Services
             _ConectionString = _configuration.GetConnectionString("DefaultConnection");
         }
 
-        public async Task<LoginResult> IsValidUser(string userName, string password)
+        public LoginResult IsValidUser(string userName, string password)
         {
-            UserAppBiz u = new UserAppBiz(_ConectionString);
+            UserAppBiz u = new (_ConectionString);
             UserApp oUser;
-            LoginResult oLoginResult = new LoginResult();
+            LoginResult oLoginResult = new ();
             try
             {
-                oUser = await u.Find(userName, password);
+                oUser = u.Find(userName, password).GetAwaiter().GetResult(); 
                 oLoginResult.UserName = oUser.UserName;
                 oLoginResult.AdminType = oUser.RoleCode;
             }

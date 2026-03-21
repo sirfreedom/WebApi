@@ -42,7 +42,7 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [AllowAnonymous]
         [HttpPost("login")]
-        public async Task<ActionResult> Login([FromBody] LoginRequest request)
+        public ActionResult Login([FromBody] LoginRequest request)
         {
             JwtSecurityToken jwtToken;
             SigningCredentials credentials;
@@ -50,10 +50,11 @@ namespace WebApi.Controllers
             Claim[] claims;
             string token;
             DateTime ExpirationDateUTC = DateTime.UtcNow.AddMinutes(_tokenManagement.AccessExpiration).AddHours(_tokenManagement.UniversalTimeZone);
-            LoginResult loginResult = new LoginResult();
+            LoginResult loginResult = new ();
             try
             {
-                loginResult = await _userService.IsValidUser(request.user, request.pass);
+
+                loginResult = _userService.IsValidUser(request.user, request.pass);
 
                 if (!ModelState.IsValid || loginResult.UserName.Length == 0 )
                 {
