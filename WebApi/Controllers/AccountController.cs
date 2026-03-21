@@ -11,6 +11,7 @@ using WebApi.Services;
 using System.Net;
 using WebApi.Model;
 using Microsoft.Extensions.Configuration;
+using System.Threading.Tasks;
 
 namespace WebApi.Controllers
 {
@@ -23,6 +24,7 @@ namespace WebApi.Controllers
         private readonly IUserService _userService;
         private readonly TokenManagement _tokenManagement;
         private readonly IConfiguration _configuration;
+        private readonly string _ConectionString;
 
         public AccountController(ILogger<AccountController> logger, IUserService userService, TokenManagement tokenManagement, IConfiguration configuration)
         {
@@ -30,6 +32,7 @@ namespace WebApi.Controllers
             _userService = userService;
             _tokenManagement = tokenManagement;
             _configuration = configuration;
+            _ConectionString = _configuration.GetConnectionString("DefaultConnection");
         }
 
         /// <summary>
@@ -39,7 +42,7 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [AllowAnonymous]
         [HttpPost("login")]
-        public ActionResult Login([FromBody] LoginRequest request)
+        public async Task<ActionResult> Login([FromBody] LoginRequest request)
         {
             JwtSecurityToken jwtToken;
             SigningCredentials credentials;
@@ -50,7 +53,7 @@ namespace WebApi.Controllers
             LoginResult loginResult = new LoginResult();
             try
             {
-                loginResult = _userService.IsValidUser(request.user, request.pass);
+                loginResult = await _userService.IsValidUser(request.user, request.pass);
 
                 if (!ModelState.IsValid || loginResult.UserName.Length == 0 )
                 {

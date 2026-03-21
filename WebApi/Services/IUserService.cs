@@ -1,4 +1,5 @@
-﻿using WebApi.Model;
+﻿using System.Threading.Tasks;
+using WebApi.Model;
 
 namespace WebApi.Services
 {
@@ -7,7 +8,7 @@ namespace WebApi.Services
     {
 
 
-        LoginResult IsValidUser(string userName, string password);
+        Task<LoginResult> IsValidUser(string userName, string password);
 
 
     }

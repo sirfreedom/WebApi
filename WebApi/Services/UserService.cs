@@ -1,5 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System;
+using System.Threading.Tasks;
 using WebApi.Biz;
 using WebApi.Entity;
 using WebApi.Model;
@@ -10,21 +12,25 @@ namespace WebApi.Services
     public class UserService : IUserService
     {
         private readonly ILogger<UserService> _logger;
-        
-        public UserService(ILogger<UserService> logger)
+        private readonly IConfiguration _configuration;
+        private readonly string _ConectionString;
+
+        public UserService(ILogger<UserService> logger, IConfiguration configuration)
         {
             _logger = logger;
+            _configuration = configuration;
+            _ConectionString = _configuration.GetConnectionString("DefaultConnection");
         }
 
-        public LoginResult IsValidUser(string userName, string password)
+        public async Task<LoginResult> IsValidUser(string userName, string password)
         {
-            UserBiz u = new UserBiz();
+            UserAppBiz u = new UserAppBiz(_ConectionString);
             UserApp oUser;
             LoginResult oLoginResult = new LoginResult();
             try
             {
-                oUser = u.Get(userName, password);
-                oLoginResult.UserName = oUser.Name;
+                oUser = await u.Find(userName, password);
+                oLoginResult.UserName = oUser.UserName;
                 oLoginResult.AdminType = oUser.RoleCode;
             }
             catch (Exception) 

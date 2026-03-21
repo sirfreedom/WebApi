@@ -14,14 +14,14 @@ namespace WebApi.Controllers
 {
 	[ApiController]
 	[Route("api/[controller]")]
-	public class UsuarioDependencyController : Controller 
+	public class UserAppDependencyController : Controller 
 	{
-		private readonly ILogger<UsuarioDependencyController> _logger;
+		private readonly ILogger<UserAppDependencyController> _logger;
 		private readonly IConfiguration _configuration;
 		private readonly string _ConectionString;
 
 
-		public UsuarioDependencyController(ILogger<UsuarioDependencyController> logger, IConfiguration configuration)
+		public UserAppDependencyController(ILogger<UserAppDependencyController> logger, IConfiguration configuration)
 		{
 			_logger = logger;
 			_configuration = configuration;
@@ -38,7 +38,7 @@ namespace WebApi.Controllers
 		[AllowAnonymous]
 		public async Task<ActionResult> List()
 		{
-		UsuarioDependencyBiz oUsuarioDependencyBiz = new (_ConectionString); 
+		UserAppDependencyBiz oUsuarioDependencyBiz = new (_ConectionString); 
 		List<UsuarioDependency> lUsuarioDependency;
 		try 
 		{
@@ -72,7 +72,7 @@ namespace WebApi.Controllers
 		[AllowAnonymous]
 		public async Task<ActionResult> Insert([FromBody] UsuarioDependencyModel usuariodependencyModel)
 		{
-			UsuarioDependencyBiz oUsuarioDependencyBiz = new (_ConectionString);
+			UserAppDependencyBiz oUsuarioDependencyBiz = new (_ConectionString);
 			try
 			{
                 await Task.Run(() => oUsuarioDependencyBiz.Insert(usuariodependencyModel.lUsuarioDependency));
