@@ -11,6 +11,7 @@ using WebApi.Services;
 using System.Net;
 using WebApi.Model;
 using Microsoft.Extensions.Configuration;
+using System.Threading.Tasks;
 
 namespace WebApi.Controllers
 {
@@ -23,6 +24,7 @@ namespace WebApi.Controllers
         private readonly IUserService _userService;
         private readonly TokenManagement _tokenManagement;
         private readonly IConfiguration _configuration;
+        private readonly string _ConectionString;
 
         public AccountController(ILogger<AccountController> logger, IUserService userService, TokenManagement tokenManagement, IConfiguration configuration)
         {
@@ -30,6 +32,7 @@ namespace WebApi.Controllers
             _userService = userService;
             _tokenManagement = tokenManagement;
             _configuration = configuration;
+            _ConectionString = _configuration.GetConnectionString("DefaultConnection");
         }
 
         /// <summary>
@@ -47,9 +50,10 @@ namespace WebApi.Controllers
             Claim[] claims;
             string token;
             DateTime ExpirationDateUTC = DateTime.UtcNow.AddMinutes(_tokenManagement.AccessExpiration).AddHours(_tokenManagement.UniversalTimeZone);
-            LoginResult loginResult = new LoginResult();
+            LoginResult loginResult = new ();
             try
             {
+
                 loginResult = _userService.IsValidUser(request.user, request.pass);
 
                 if (!ModelState.IsValid || loginResult.UserName.Length == 0 )

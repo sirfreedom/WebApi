@@ -17,13 +17,13 @@ namespace WebApi.Biz
 			_ConnectionString = ConnectionString;
 		}
 
-		public async Task<List<HeadSlide>> List()
+		public async Task<List<HeadSlide>> Find(int IdAppConfig)
 		{
 			HeadSlideData oHeadSlideData = new (_ConnectionString);
 			List<HeadSlide> lHeadSlide;
 			try
 			{
-				lHeadSlide = await oHeadSlideData.List();
+				lHeadSlide = await oHeadSlideData.Find(IdAppConfig);
 			}
 			catch (Exception)
 			{

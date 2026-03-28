@@ -9,16 +9,23 @@ namespace WebApi.Entity
 
         public UserApp() { }
 
-        public UserApp(int Id, string name, string pass, string rolecode) 
+        public UserApp(int Id, string username, string pass, string rolecode) 
         {
-            Name = name;
+            UserName = username;
             Pass = pass;
             RoleCode = rolecode;
         }
 
-        public string Name { get; set; }
+        public int IdTipoUserApp { get; set; }
+        public string Apellido { get; set; }
+        public string Nombre { get; set; }
+        public string Email { get; set; }
+        public string Telefono { get; set; }
+
+        public string UserName { get; set; }
         public string Pass { get; set; }
         public string RoleCode { get; set; }
+        public bool IsDisabled { get; set; }
 
     }
 }
