@@ -34,7 +34,7 @@ namespace WebApi.Controllers
 		/// <returns>
 		/// devuelve la lista de HeadSlide. generalmente usado para combos y lugares donde no necesitarias un filtro
 		/// </returns>
-		[HttpGet("List")]
+		[HttpGet("Find")]
 		[AllowAnonymous]
 		public async Task<ActionResult> Find(int IdAppConfig)
 		{
