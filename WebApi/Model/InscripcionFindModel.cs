@@ -13,6 +13,7 @@
         public string tiponumero { get; set; }
         public string tipocontacto { get; set; }
         public string texto { get; set; }
+        public string sinvacante { get; set; }
 
     }
 }
