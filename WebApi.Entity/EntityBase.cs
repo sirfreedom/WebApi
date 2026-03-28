@@ -13,7 +13,6 @@ using System.Reflection;
 using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Text.Json;
-using System.Xml.Linq;
 
 namespace WebApi.Entity
 {
@@ -277,7 +276,7 @@ namespace WebApi.Entity
         public static DataSet ToDataTable(string Json)
         {
             DataSet ds = new DataSet("ds");
-            List<string> childTokens = new List<string>();
+            List<string> childTokens = new ();
             JObject jsonObject;
             jsonObject = JObject.Parse(Json);
             try
@@ -318,7 +317,7 @@ namespace WebApi.Entity
 
         public static DataTable ToDataTable<T>(List<T> lista)
         {
-            DataTable dataTable = new DataTable();
+            DataTable dataTable = new ();
             try
             {
                 // Obtener las propiedades del tipo T
@@ -350,7 +349,7 @@ namespace WebApi.Entity
 
         public static DataTable ToDataTable(DataTable dt, string Condicion)
         {
-            DataTable dtReturn = new DataTable();
+            DataTable dtReturn = new ();
             try
             {
                 if (dt.Rows.Count > 0 && dt.Select(Condicion).Length > 0)
@@ -372,7 +371,7 @@ namespace WebApi.Entity
 
         public static DataTable ToDataTable(Dictionary<int, string> sourceDictionary, string keyColumnName = "Id", string valueColumnName = "Text")
         {
-            DataTable dt = new DataTable();
+            DataTable dt = new ();
             dt.Columns.Add(keyColumnName, typeof(int));
             dt.Columns.Add(valueColumnName, typeof(string));
 
@@ -388,7 +387,7 @@ namespace WebApi.Entity
 
         public static DataTable ToDataTable(Dictionary<string, string> sourceDictionary, string keyColumnName = "Id", string valueColumnName = "Text")
         {
-            DataTable dt = new DataTable();
+            DataTable dt = new ();
             dt.Columns.Add(keyColumnName, typeof(int));
             dt.Columns.Add(valueColumnName, typeof(string));
 
