@@ -28,8 +28,8 @@ namespace WebApi.Controllers
         public ActionResult Get(Byte dd, Byte mm, int yyyy)
         {
             Quini oQuini;
-            List<Quini> lQuini = new List<Quini>();
-            QuiniBiz oQuiniBiz = new QuiniBiz();
+            List<Quini> lQuini = new ();
+            QuiniBiz oQuiniBiz = new ();
             try
             {
 

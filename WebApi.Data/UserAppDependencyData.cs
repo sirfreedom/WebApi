@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace WebApi.Data
 {
-	public class UsuarioDependencyData
+	public class UserAppDependencyData
 	{
 		private readonly string _ConnectionString = string.Empty;
 
-		public UsuarioDependencyData (string ConnectionString)
+		public UserAppDependencyData (string ConnectionString)
 		{
 			_ConnectionString = ConnectionString;
 		}

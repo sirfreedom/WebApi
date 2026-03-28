@@ -29,20 +29,20 @@ namespace WebApi.Controllers
 		}
 
 		/// <summary>
-		/// Lista HeadSlide
+		/// Lista HeadSlide, por IdAppConfig
 		/// </summary>
 		/// <returns>
 		/// devuelve la lista de HeadSlide. generalmente usado para combos y lugares donde no necesitarias un filtro
 		/// </returns>
-		[HttpGet("List")]
+		[HttpGet("Find")]
 		[AllowAnonymous]
-		public async Task<ActionResult> List()
+		public async Task<ActionResult> Find(int IdAppConfig)
 		{
 			HeadSlideBiz oHeadSlideBiz = new (_ConectionString);
 			List<HeadSlide> lHeadSlide;
 			try
 			{
-				lHeadSlide = await Task.Run(() => oHeadSlideBiz.List());
+				lHeadSlide = await Task.Run(() => oHeadSlideBiz.Find(IdAppConfig));
             }
 			catch (WebException ex)
 			{

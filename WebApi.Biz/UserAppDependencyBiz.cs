@@ -7,20 +7,20 @@ using System.Threading.Tasks;
 namespace WebApi.Biz
 {
 
-	public class UsuarioDependencyBiz
+	public class UserAppDependencyBiz
 	{
 
 		private readonly string _ConnectionString = string.Empty;
 
 
-		public UsuarioDependencyBiz (string ConnectionString)
+		public UserAppDependencyBiz (string ConnectionString)
 		{
 			_ConnectionString = ConnectionString;
 		}
 
 		public async Task<List<UsuarioDependency>> List()
 		{
-			UsuarioDependencyData oUsuarioDependencyData = new(_ConnectionString);
+			UserAppDependencyData oUsuarioDependencyData = new(_ConnectionString);
 			List<UsuarioDependency> lUsuarioDependency;
 			try
 			{
@@ -36,7 +36,7 @@ namespace WebApi.Biz
 
 		public async Task Insert(List<UsuarioDependency> lusuariodependency)
 		{
-			UsuarioDependencyData oUsuarioDependencyData = new(_ConnectionString);
+			UserAppDependencyData oUsuarioDependencyData = new(_ConnectionString);
 			try
 			{
 				await oUsuarioDependencyData.Insert(lusuariodependency);

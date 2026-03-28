@@ -16,21 +16,24 @@ namespace WebApi.Data
 			_ConnectionString = ConnectionString;
 		}
 
-		public async Task<List<HeadSlide>> List()
+		public async Task<List<HeadSlide>> Find(int IdAppConfig)
 		{
 			IRead<HeadSlide> HeadSlideRepository = new ContextSQL<HeadSlide>(_ConnectionString);
 			List<HeadSlide> lHeadSlide;
+			Dictionary<string, string> lParam = new ();
+			List<dynamic> lResult;
 			try
 			{
-				lHeadSlide = await HeadSlideRepository.List();
-			}
+				lParam.Add("IdAppConfig", IdAppConfig.ToString());
+				lResult = await HeadSlideRepository.Find(lParam);
+				lHeadSlide = HeadSlide.ToList<HeadSlide>(lResult);
+            }
 			catch (Exception)
 			{
 				throw;
 			}
 			return lHeadSlide;
 		}
-
 
 		public async Task<HeadSlide> Insert(HeadSlide headslide)
 		{
