@@ -9,6 +9,7 @@ namespace WebApi.Entity
 		public string ImgText { get; set; }
 		public string DescriptionText { get; set; }
 		public int Orden { get; set; }
+		public string Color { get; set; }
 	}
 
 }
