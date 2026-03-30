@@ -61,7 +61,7 @@ namespace WebApi.Controllers
 
 
         /// <summary>
-        /// Post
+        /// Solo devuelve lo mismo que le envias, a modo de prueba. 
         /// </summary>
         /// <param name="imagentext"></param>
         /// <returns></returns>
@@ -69,12 +69,9 @@ namespace WebApi.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> Post([FromBody] FileModel imagentext)
         {
-            ImagenBiz Serv = new (_ConnectionString);
-            ImagenTest oImagen = new ();
             try
             {
-                oImagen = ImagenTest.Merge<FileModel, ImagenTest>(imagentext);
-                await Task.Run(() => Serv.Insert(oImagen));
+
             }
             catch (WebException ex)
             {
@@ -86,7 +83,7 @@ namespace WebApi.Controllers
                 _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
                 return ValidationProblem("Error", "Post", 500, ex.Message);
             }
-            return Created(); //OK 201
+            return Ok(new { Image = imagentext }); //OK 200
         }
 
 
@@ -99,11 +96,9 @@ namespace WebApi.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> Delete(int Id)
         {
-            ImagenBiz Serv = new (_ConnectionString);
-            ImagenTest oImagen = new ();
             try
             {
-                await Task.Run(() => Serv.Delete(Id));
+                
             }
             catch (WebException ex)
             {
@@ -115,7 +110,7 @@ namespace WebApi.Controllers
                 _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
                 return ValidationProblem("Error", "Post", 500, ex.Message);
             }
-            return Ok(); //OK 200
+            return Ok(new { id = Id }); //OK 200
         }
 
 
