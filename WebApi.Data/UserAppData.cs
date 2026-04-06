@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using WebApi.Entity;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Data;
 
 namespace WebApi.Data
 {
@@ -16,16 +17,16 @@ namespace WebApi.Data
             _ConnectionString = ConnectionString;
         }
 
-        public async Task<UserApp> Find(string Name, string Pass)
+        public async Task<UserApp> Login(string Name, string Pass)
         {
             List<UserApp> lUser = new ();
             UserApp oUser;
             IRead<UserApp> UserAppRepository = new ContextSQL<UserApp>(_ConnectionString);
-            List<dynamic> lResult = new ();
+            DataTable dt;
             try
             {
-                lResult = await UserAppRepository.Find(new Dictionary<string, string>() { { "UserName", Name }, { "Pass", Pass } });
-                lUser = UserApp.ToList<UserApp>(lResult);
+                dt = await UserAppRepository.Fill("Login",new () { { "UserName", Name }, { "Pass", Pass } });
+                lUser = UserApp.ToList<UserApp>(dt);
                 oUser = lUser.FirstOrDefault(); 
             }
             catch (Exception)
@@ -35,9 +36,45 @@ namespace WebApi.Data
             return oUser;
         }
 
+        public async Task Insert(UserApp userApp)
+        {
+            IWrite<UserApp> UserAppRepository = new ContextSQL<UserApp>(_ConnectionString);
+            try
+            {
+                await UserAppRepository.Insert(userApp);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
+        public async Task Update(UserApp userApp)
+        {
+            IWrite<UserApp> UserAppRepository = new ContextSQL<UserApp>(_ConnectionString);
+            try
+            {
+                await UserAppRepository.Update(userApp);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
-
-
+        public async Task<UserApp> Get(int Id)
+        {
+            IRead<UserApp> UserAppRepository = new ContextSQL<UserApp>(_ConnectionString);
+            UserApp oUserApp;
+            try
+            {
+                oUserApp = await UserAppRepository.Get(Id);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return oUserApp;
+        }
     }
 }

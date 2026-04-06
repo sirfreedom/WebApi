@@ -67,7 +67,7 @@ namespace WebApi.Data
             DataTable dt;
             try
             {
-                dt = await TipoInscripcionRepository.Fill("Menu", new Dictionary<string, string>());
+                dt = await TipoInscripcionRepository.Fill("Menu", new ());
                 lTipoInscripcion = TipoInscripcion.ToList<TipoInscripcion>(dt);
             }
             catch (Exception)

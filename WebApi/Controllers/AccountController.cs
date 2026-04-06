@@ -1,17 +1,19 @@
-﻿using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using WebApi.Infrastructure.Jwt;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
-using WebApi.Services;
+using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net;
-using WebApi.Model;
-using Microsoft.Extensions.Configuration;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
+using WebApi.Biz;
+using WebApi.Entity;
+using WebApi.Infrastructure.Jwt;
+using WebApi.Model;
+using WebApi.Services;
 
 namespace WebApi.Controllers
 {
@@ -102,6 +104,105 @@ namespace WebApi.Controllers
             }
             return Ok(loginResult);
         }
+
+
+        /// <summary>
+        /// Devuelve un Answer
+        /// </summary>
+        /// <param name="Id">
+        /// El Id es la clave unica PK de la entidad UserApp.
+        /// </param>
+        /// <returns>
+        /// devuelve un objeto unico del userApp .
+        /// </returns>
+        [HttpGet("Get")]
+        [Authorize(Policy = "Admin")]
+        public async Task<ActionResult> Get(int Id)
+        {
+            UserAppBiz oUserAppBiz = new(_ConectionString);
+            UserApp userApp;
+            try
+            {
+                userApp = await Task.Run(() => oUserAppBiz.Get(Id));
+            }
+            catch (WebException ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get", 500, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get", 500, ex.Message);
+            }
+            return Ok(new { userApp = userApp }); //OK 200);
+        }
+
+
+
+        /// <summary>
+        /// Actualiza un UserApp
+        /// </summary>
+        /// <param name="userapp"></param>
+        /// <returns>
+        /// si fue correctamente actualizado devuelve un status: 200/204, sino devuelve un status: 500 con el mensaje de error.
+        /// </returns>
+        [HttpPut("Update")]
+        [Authorize(Policy = "Admin")]
+        public async Task<ActionResult> Update([FromBody] UserApp userapp)
+        {
+            UserAppBiz oUserAppBiz = new(_ConectionString);
+            try
+            {
+                await Task.Run(() => oUserAppBiz.Update(userapp));
+            }
+            catch (WebException ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Update", 500, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Update", 500, ex.Message);
+            }
+            return Ok(); //OK 200
+        }
+
+
+        /// <summary>
+        /// Inserta un nuevo usuario
+        /// </summary>
+        /// <param name="userApp"></param>
+        /// <returns>
+        /// devuelve un created status: 201/204 si se inserto correctamente, sino devuelve un status: 500 con el mensaje de error.
+        /// </returns>
+        [HttpPost("Insert")]
+        [Authorize(Policy = "Admin")]
+        public async Task<ActionResult> Insert([FromBody] UserApp userApp)
+        {
+            UserAppBiz oUserAppBiz = new(_ConectionString);
+            try
+            {
+                await Task.Run(() => oUserAppBiz.Insert(userApp));
+            }
+            catch (WebException ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Insert", 500, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Insert", 500, ex.Message);
+            }
+            return Created(); //OK 201/204
+        }
+
+
+
+
+
     }
 
    

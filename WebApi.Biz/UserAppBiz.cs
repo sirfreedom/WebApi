@@ -15,13 +15,13 @@ namespace WebApi.Biz
             _ConnectionString = ConnectionString;
         }
 
-        public async Task<UserApp> Find(string Name, string Pass)
+        public async Task<UserApp> Login(string Name, string Pass)
 		{
             UserApp oUser;
-			UserAppData userAppData = new UserAppData(_ConnectionString);
+			UserAppData userAppData = new (_ConnectionString);
             try
 			{
-				oUser = await userAppData.Find(Name, Pass);
+				oUser = await userAppData.Login(Name, Pass);
             }
 			catch (Exception)
 			{
@@ -30,9 +30,45 @@ namespace WebApi.Biz
 			return oUser;
 		}
 
+        public async Task Insert(UserApp userApp)
+        {
+            UserAppData userAppData = new (_ConnectionString);
+            try
+            {
+                await userAppData.Insert(userApp);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
+        public async Task Update(UserApp userApp)
+        {
+            UserAppData userAppData = new (_ConnectionString);
+            try
+            {
+                await userAppData.Update(userApp);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
-
-
-	}
+        public async Task<UserApp> Get(int Id)
+        {
+            UserAppData userAppData = new(_ConnectionString);
+            UserApp oUserApp;
+            try
+            {
+                oUserApp = await userAppData.Get(Id);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return oUserApp;
+        }
+    }
 }
