@@ -28,7 +28,7 @@ namespace WebApi.Services
             LoginResult oLoginResult = new ();
             try
             {
-                oUser = u.Find(userName, password).GetAwaiter().GetResult(); 
+                oUser = u.Login(userName, password).GetAwaiter().GetResult(); 
                 oLoginResult.UserName = oUser.UserName;
                 oLoginResult.AdminType = oUser.RoleCode;
             }
