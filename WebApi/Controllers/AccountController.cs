@@ -168,23 +168,19 @@ namespace WebApi.Controllers
             }
             return Ok(); //OK 200
         }
+    
 
-
-        /// <summary>
-        /// Inserta un nuevo usuario
-        /// </summary>
-        /// <param name="userApp"></param>
-        /// <returns>
-        /// devuelve un created status: 201/204 si se inserto correctamente, sino devuelve un status: 500 con el mensaje de error.
-        /// </returns>
         [HttpPost("Insert")]
-        [Authorize(Policy = "Admin")]
-        public async Task<ActionResult> Insert([FromBody] UserApp userApp)
+        [AllowAnonymous]
+        //[Authorize(Policy = "Admin")]
+        public async Task<ActionResult> Insert([FromBody] UserAppInsertModel userAppModel)
         {
             UserAppBiz oUserAppBiz = new(_ConectionString);
+            UserApp oUserApp;
             try
             {
-                await Task.Run(() => oUserAppBiz.Insert(userApp));
+                oUserApp = UserApp.Merge<UserAppInsertModel,UserApp>(userAppModel);
+                await Task.Run(() => oUserAppBiz.Insert(oUserApp));
             }
             catch (WebException ex)
             {
