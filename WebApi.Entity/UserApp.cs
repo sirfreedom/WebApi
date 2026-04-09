@@ -16,21 +16,20 @@ namespace WebApi.Entity
             RoleCode = rolecode;
         }
 
-        public int IdTipoUserApp { get; set; }
+        public int IdTypeUserApp { get; set; }
         public string Nombre { get; set; }
         public string Apellido { get; set; }
         public string Pass { get; set; }
 
         public string UserName { get; set; }
         public string DescriptionText { get; set; }
-        public string Region { get; set; }
         public string LogoImgText { get; set; }
         public string Email { get; set; }
         public string Contact { get; set; }
         public string Provincia { get; set; }
         public string Calle { get; set; }
-        public decimal Lat { get; set; }
-        public double Long { get; set; }
+        public decimal Latitud { get; set; }
+        public double Longitud { get; set; }
 
         [NotMapped]
         public string RoleCode { get; set; }

@@ -2,6 +2,7 @@
 using System;
 using WebApi.Entity;
 using System.Threading.Tasks;
+using System.Data;
 
 namespace WebApi.Data
 {
@@ -15,17 +16,17 @@ namespace WebApi.Data
             _ConnectionString = ConnectionString;
         }
 
-        public async Task<List<Category>> Find(int IdAppConfig)
+        public async Task<List<Category>> Marquee(int IdAppConfig)
         {
             IRead<Category> CategoryRepository = new ContextSQL<Category>(_ConnectionString);
             List<Category> lCategory;
             Dictionary<string, string> lParam = new();
-            List<dynamic> lResult;
+            DataTable dt;
             try
             {
                 lParam.Add("IdAppConfig", IdAppConfig.ToString());
-                lResult = await CategoryRepository.Find(lParam);
-                lCategory = Category.ToList<Category>(lResult);
+                dt = await CategoryRepository.Fill("Marquee",lParam);
+                lCategory = Category.ToList<Category>(dt);
             }
             catch (Exception)
             {
@@ -33,9 +34,6 @@ namespace WebApi.Data
             }
             return lCategory;
         }
-
-
-
 
 
     }
