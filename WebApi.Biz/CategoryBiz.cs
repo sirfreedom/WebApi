@@ -15,13 +15,13 @@ namespace WebApi.Biz
             _ConnectionString = ConnectionString;
         }
 
-        public async Task<List<Category>> Find(int IdAppConfig)
+        public async Task<List<Category>> Marquee(int IdAppConfig)
         {
             CategoryData oCategoryData = new(_ConnectionString);
             List<Category> lCategory;
             try
             {
-                lCategory = await oCategoryData.Find(IdAppConfig);
+                lCategory = await oCategoryData.Marquee(IdAppConfig);
             }
             catch (Exception)
             {

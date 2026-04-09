@@ -9,10 +9,8 @@ using System;
 using WebApi.Entity;
 using WebApi.Biz;
 
-
 namespace WebApi.Controllers
 {
-
     [ApiController]
     [Route("api/[controller]")]
     public class CategoryController : Controller
@@ -34,15 +32,15 @@ namespace WebApi.Controllers
         /// <returns>
         /// devuelve la lista de HeadSlide. generalmente usado para combos y lugares donde no necesitarias un filtro
         /// </returns>
-        [HttpGet("Find")]
+        [HttpGet("Marquee")]
         [AllowAnonymous]
-        public async Task<ActionResult> Find(int IdAppConfig)
+        public async Task<ActionResult> Marquee(int IdAppConfig)
         {
             CategoryBiz oCategoryBiz = new(_ConectionString);
             List<Category> lCategory;
             try
             {
-                lCategory = await Task.Run(() => oCategoryBiz.Find(IdAppConfig));
+                lCategory = await Task.Run(() => oCategoryBiz.Marquee(IdAppConfig));
             }
             catch (WebException ex)
             {
