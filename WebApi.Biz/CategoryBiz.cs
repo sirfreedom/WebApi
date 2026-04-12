@@ -30,6 +30,21 @@ namespace WebApi.Biz
             return lCategory;
         }
 
+        public async Task<List<Category>> List(int IdAppConfig)
+        {
+            CategoryData oCategoryData = new(_ConnectionString);
+            List<Category> lCategory;
+            try
+            {
+                lCategory = await oCategoryData.List(IdAppConfig);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return lCategory;
+        }
+
 
     }
 }
