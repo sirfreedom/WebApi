@@ -116,7 +116,8 @@ namespace WebApi.Controllers
         /// devuelve un objeto unico del userApp .
         /// </returns>
         [HttpGet("Get")]
-        [Authorize(Policy = "Admin")]
+        [AllowAnonymous]
+        //[Authorize(Policy = "Admin")]
         public async Task<ActionResult> Get(int Id)
         {
             UserAppBiz oUserAppBiz = new(_ConectionString);
@@ -135,7 +136,7 @@ namespace WebApi.Controllers
                 _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
                 return ValidationProblem("Error", "Get", 500, ex.Message);
             }
-            return Ok(new { userApp = userApp }); //OK 200);
+            return Ok(new { userdata = userApp }); //OK 200);
         }
 
 
