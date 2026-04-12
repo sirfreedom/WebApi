@@ -19,8 +19,7 @@ namespace WebApi.Entity
         public int IdTypeUserApp { get; set; }
         public string Nombre { get; set; }
         public string Apellido { get; set; }
-        public string Pass { get; set; }
-
+        public string Pass { get; set; } = string.Empty;
         public string UserName { get; set; }
         public string DescriptionText { get; set; }
         public string LogoImgText { get; set; }
@@ -29,7 +28,7 @@ namespace WebApi.Entity
         public string Provincia { get; set; }
         public string Calle { get; set; }
         public decimal Latitud { get; set; }
-        public double Longitud { get; set; }
+        public decimal Longitud { get; set; }
 
         [NotMapped]
         public string RoleCode { get; set; }
