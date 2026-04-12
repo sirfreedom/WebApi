@@ -56,5 +56,34 @@ namespace WebApi.Controllers
         }
 
 
+        /// <summary>
+        /// Lista Categorias por IdAppConfig
+        /// </summary>
+        /// <returns>
+        /// devuelve la lista de HeadSlide. generalmente usado para combos y lugares donde no necesitarias un filtro
+        /// </returns>
+        [HttpGet("List")]
+        [AllowAnonymous]
+        public async Task<ActionResult> List(int IdAppConfig)
+        {
+            CategoryBiz oCategoryBiz = new(_ConectionString);
+            List<Category> lCategory;
+            try
+            {
+                lCategory = await Task.Run(() => oCategoryBiz.List(IdAppConfig));
+            }
+            catch (WebException ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get", 500, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
+                return ValidationProblem("Error", "Get ", 500, ex.Message);
+            }
+            return Ok(new { listcategory = lCategory }); //OK 200);
+        }
+
     }
 }
