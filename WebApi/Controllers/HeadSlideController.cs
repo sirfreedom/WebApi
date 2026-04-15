@@ -8,7 +8,6 @@ using System.Net;
 using System.Threading.Tasks;
 using WebApi.Entity;
 using WebApi.Biz;
-using WebApi.Model;
 
 namespace WebApi.Controllers
 {
@@ -57,70 +56,6 @@ namespace WebApi.Controllers
 			return Ok(new { listheadslide = lHeadSlide }); //OK 200);
 		}
 
-
-		/// <summary>
-		/// Inserta HeadSlide
-		/// </summary>
-		/// <param name="HeadSlideModel">
-		/// Inserta todos los campos de la entidad HeadSlide.
-		/// </param>
-		/// <returns>
-		/// devuelve un status: 201/204 si inserto correctamente 
-		/// </returns>
-		[HttpPost("Insert")]
-		[AllowAnonymous]
-		public async Task<ActionResult> Insert([FromBody] HeadSlideModel HeadSlideModel)
-		{
-			HeadSlideBiz oHeadSlideBiz = new (_ConectionString);
-			HeadSlide oHeadSlide;
-			try
-			{
-		        oHeadSlide = HeadSlide.Merge<HeadSlideModel, HeadSlide>(HeadSlideModel);
-				oHeadSlide = await Task.Run(() => oHeadSlideBiz.Insert(oHeadSlide));
-			}
-			catch (WebException ex)
-			{
-				_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
-				return ValidationProblem("Error", "Get", 500, ex.Message);
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
-				return ValidationProblem("Error", "Get ", 500, ex.Message);
-			}
-			return Ok(new { headslide = oHeadSlide }); //OK 200);
-		}
-
-		/// <summary>
-		/// Elimina un registro de  HeadSlide
-		/// </summary>
-		/// <param name="Id">
-		/// El Id es la clave unica PK de la entidad HeadSlide.
-		/// </param>
-		/// <returns>
-		/// devuelve Status: 200 en caso de haber eliminado correctamente 
-		/// </returns>
-		[HttpDelete("Delete")]
-		[AllowAnonymous]
-		public async Task<ActionResult> Delete(int Id)
-		{
-			HeadSlideBiz oHeadSlideBiz = new (_ConectionString);
-			try
-			{
-                await Task.Run(async () => oHeadSlideBiz.Delete(Id));
-			}
-			catch (WebException ex)
-			{
-				_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
-				return ValidationProblem("Error", "Get", 500, ex.Message);
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError(ex.Message, ex.InnerException, ex.StackTrace);
-				return ValidationProblem("Error", "Get ", 500, ex.Message);
-			}
-			return Ok(); //OK 200
-		}
 
 	}
 

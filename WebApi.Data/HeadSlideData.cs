@@ -35,37 +35,6 @@ namespace WebApi.Data
 			return lHeadSlide;
 		}
 
-		public async Task<HeadSlide> Insert(HeadSlide headslide)
-		{
-			IRead<HeadSlide> HeadSlideRepository = new ContextSQL<HeadSlide>(_ConnectionString);
-			HeadSlide oHeadSlide;
-			DataTable dt;
-			try
-			{
-				dt = await HeadSlideRepository.Fill("Insert", headslide.ToDictionary());
-				oHeadSlide = HeadSlide.ToList<HeadSlide>(dt).SingleOrDefault();
-			}
-			catch (Exception)
-			{
-				throw;
-			}
-			return oHeadSlide;
-		}
-
-
-		public async Task Delete(int Id)
-		{
-			IWrite<HeadSlide> HeadSlideRepository = new ContextSQL<HeadSlide>(_ConnectionString);
-			try
-			{
-				 await HeadSlideRepository.Delete(Id);
-			}
-			catch (Exception)
-			{
-				throw;
-			}
-		}
-
 	}
 
 }

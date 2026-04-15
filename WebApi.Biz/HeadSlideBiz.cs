@@ -33,34 +33,7 @@ namespace WebApi.Biz
 		}
 
 
-		public async Task<HeadSlide> Insert(HeadSlide headslide)
-		{
-			HeadSlideData oHeadSlideData = new (_ConnectionString);
-			HeadSlide oHeadSlide;
-			try
-			{
-				oHeadSlide = await oHeadSlideData.Insert(headslide);
-			}
-			catch (Exception)
-			{
-				throw;
-			}
-			return oHeadSlide;
-		}
-
-
-		public async Task Delete(int Id)
-		{
-			HeadSlideData oHeadSlideData = new (_ConnectionString);
-			try
-			{
-				await oHeadSlideData.Delete(Id);
-			}
-			catch (Exception)
-			{
-				throw;
-			}
-		}
+		
 
 	}
 
