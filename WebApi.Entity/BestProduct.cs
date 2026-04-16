@@ -1,7 +1,7 @@
 ﻿
 namespace WebApi.Entity
 {
-    public class BestProduct : EntityBase
+    public class VaperProduct : EntityBase
     {
         public string imagetext { get; set; }
         public string brand { get; set; }
@@ -9,7 +9,7 @@ namespace WebApi.Entity
         public string flavor { get; set; }
         public string title { get; set; }
         public string stock { get; set; }
-        public bool offer { get; set; }
+        public bool isoffer { get; set; }
 
     }
 }
