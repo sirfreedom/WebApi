@@ -16,6 +16,7 @@ namespace WebApi.Entity
             RoleCode = rolecode;
         }
 
+        public int IdUserDataStore { get; set; }
         public int IdTypeUserApp { get; set; }
         public string Nombre { get; set; }
         public string Apellido { get; set; }

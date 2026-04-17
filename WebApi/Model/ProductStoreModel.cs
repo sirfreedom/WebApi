@@ -3,7 +3,7 @@ namespace WebApi.Model
 {
 	public class ProductStoreModel
 	{
-        public int iduserstoredata { get; set; }
+        public int iduserdatastore { get; set; }
         public string descriptiontext { get; set; }
 		public int idcategory { get; set; }
 		public bool isnew { get; set; } = false;
