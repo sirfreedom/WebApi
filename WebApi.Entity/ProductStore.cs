@@ -5,7 +5,7 @@ namespace WebApi.Entity
 	{
 		public string DescriptionText { get; set; }
 		public int IdCategory { get; set; }
-		public int IdUserStoreData { get; set; }
+		public int IdUserDataStore { get; set; }
 		public bool isnew { get; set; } = false;
 		public decimal price { get; set; }
 		public int Quantity { get; set; }
